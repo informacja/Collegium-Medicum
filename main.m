@@ -35,6 +35,7 @@ else
     segmentActions
 end
 %--------------------------------------------------------------------------
+nrFw = 101; % nr fig widma
 lfrow= 4; lc=2; 
 Tsyg=ceil(ceil(m*dtpom)/2)*2; % [sek]
 lSyg=round(Tsyg/dtpom);
