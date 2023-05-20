@@ -112,9 +112,10 @@ for (j = 1:length(v))
     dW2=Widma(j,1).Ayf2-Widma(j,2).Ayf2; S2(j,1)=sqrt(dW2'*dW2);
     dW2wygl=wyglWidma(j,1).Af2-wyglWidma(j,2).Af2; S2(j,2)=sqrt(dW2wygl*dW2wygl');
 end
+return
 DWsr=Wsr(1).Wsr-Wsr(2,:); 
 Ssr(1)=sqrt(DWsr'*DWsr);
-DWsr=Wsrwygl(1,:)-Wsrwygl(2,:) Ssr(2)=sqrt(DWsr'*DWsr);
+DWsr=Wsrwygl(1,:)-Wsrwygl(2,:); Ssr(2)=sqrt(DWsr'*DWsr);
 
  figure, plot(1:length(Wsr), Wsr,'r', 1:length(Widma(1,1).Ayf),Widma(1,1).Ayf,'c', 1:length(Widma(1,2).Ayf),Widma(1,2).Ayf,'k')% czerwone srednie widmo
 
