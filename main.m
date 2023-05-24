@@ -1,39 +1,69 @@
-DEBUG = 0;
+DEBUG = 1;
 dirname = 'Archiwum';
-clear v
-v.data = [];
-v.info = [];
+dirname = '23.05.23';
+dirname = '10';
+clear v; % Clear files data
 files = dir(fullfile(dirname,'**','*.mat'));
 datafiles = fullfile({files.folder},{files.name});
 k = 0;
-for f = datafiles
+for f = datafiles    
     k = k + 1;
     df = load(string(f));
     fieldname = fieldnames(df);
     vars = fieldnames(df);
     for i = 1:length(vars)
-        assignin('base', "tmp", df.(vars{i}));
-        v(k).data = tmp.movements.sources.signals.signal_1.data;
-        v(k).info = tmp.info.record_name;
+        assignin('base', "tmp", df.(vars{i}));        
+        tmpData = tmp.movements.sources.signals.signal_1.data;
+        tmpName = tmp.movements.sources.signals.signal_1.name;
+        if ( tmp.movements.sources.signals.signal_1.name == "Ultium EMG-BRACHIORAD. RT")
+            v(k).dataR = tmpData; % Radialis
+            v(k).infoRrecord = tmp.info.record_name;
+            v(k).infoRName = tmpName;
+            v(k).infoRDisp = "Brachioradialis"; 
+        end
+        if ( tmp.movements.sources.signals.signal_1.name == "Ultium EMG-BICEPS BR. RT")
+            v(k).dataB = tmpData; % Biceps
+            v(k).infoBecord = tmp.info.record_name;
+            v(k).infoBName = tmpName;
+            v(k).infoBDisp = "Biceps brachii"; 
+        end
+        
+        tmpData = tmp.movements.sources.signals.signal_2.data;
+        tmpName = tmp.movements.sources.signals.signal_2.name;
+        if ( tmp.movements.sources.signals.signal_2.name == "Ultium EMG-BRACHIORAD. RT")
+            v(k).dataR = tmpData; % Radialis
+            v(k).infoRrecord = tmp.info.record_name;
+            v(k).infoRName = tmpName;
+            v(k).infoRDisp = "Brachioradialis"; 
+        end
+        if ( tmp.movements.sources.signals.signal_2.name == "Ultium EMG-BICEPS BR. RT")
+            v(k).dataB = tmpData; % Biceps
+            v(k).infoBecord = tmp.info.record_name;
+            v(k).infoBName = tmpName;
+            v(k).infoBDisp = "Biceps brachii"; 
+        end
+
     end
 end
+
+fprintf(1,"Macierz plików v: %d\n", length(v));
+
 % get from last sample
 Yunits = tmp.movements.sources.signals.signal_1.units;
 fpom = tmp.movements.sources.signals.signal_1.frequency; dtpom=1/fpom; %  Hz
+name_1 = tmp.movements.sources.signals.signal_1.name;
+name_2 = tmp.movements.sources.signals.signal_2.name;
 % posredni = record_2023_04_20_15_06_BR_po_redni.movements.sources.signals.signal_1.data;
 % podchwyt = record_2023_04_20_15_07_BR_podchwyt.movements.sources.signals.signal_1.data;
-
-% 
-%     a(1).d = [v(1).data; v(2).data];
-%     a(2).d = [v(2).data; v(1).data];
-% v(1).data = a(1).d;
-% v(2).data = a(2).d;
 
 if(exist("segment.mat"))
     load segment.mat
 else
     segmentActions
 end
+
+fprintf(1,"Liczba segmentów: %d\nPrzewidywana ilość segmentów to: (%d)\n", length(segment), length(v)*2*10); % liczba plików * liczba mięśni * ilość powtórzeń
+
 %--------------------------------------------------------------------------
 nrFw = 101; % nr fig widma
 lfrow= 4; lc=2; 
@@ -100,8 +130,8 @@ for(j = 1:length(v)) % grupa
         xlabel(sprintf("Widmo mocy %d f_g=1/Tu Tu=%.1fms",i,Tu*dtpom*1000));
         Widma(j,i+1).Ayf2=Ayf; wyglWidma(j,i+1).Af2=Af;% i*2+j
 
-        sgtitle( sprintf("%s %d",v(j).info, ksyg))
-        figPW("png",5)
+        sgtitle( sprintf("%s %d",v(j).infoBDisp, ksyg))
+%         figPW("png",5)
         figure(nrFw), subplot(1,2,2); hold on; plot([0:nf-1]/Tsyg,Af(1:nf),kol(kf)); %plot(wyglWidma(j,i+1).Af); hold off; 
 
         %nrs = nrs +1;
