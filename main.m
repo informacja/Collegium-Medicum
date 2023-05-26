@@ -1,4 +1,10 @@
 DEBUG = 1;
+if(DEBUG)
+    clear all;
+    delete spectrums.mat
+%     delete segments.mat 
+    DEBUG = 1;
+end
 dirname = 'Archiwum';
 dirname = '23.05.23';
 dirname = '10';
@@ -6,6 +12,7 @@ clear v; % Clear files data
 files = dir(fullfile(dirname,'**','*.mat'));
 datafiles = fullfile({files.folder},{files.name});
 k = 0;
+txBR = "Brachioradialis"; txBB = "Biceps brachii";
 for f = datafiles    
     k = k + 1;
     df = load(string(f));
@@ -19,13 +26,13 @@ for f = datafiles
             v(k).dataR = tmpData; % Radialis
             v(k).infoRrecord = tmp.info.record_name;
             v(k).infoRName = tmpName;
-            v(k).infoRDisp = "Brachioradialis"; 
+            v(k).infoRDisp = txBR; 
         end
         if ( tmp.movements.sources.signals.signal_1.name == "Ultium EMG-BICEPS BR. RT")
             v(k).dataB = tmpData; % Biceps
             v(k).infoBecord = tmp.info.record_name;
             v(k).infoBName = tmpName;
-            v(k).infoBDisp = "Biceps brachii"; 
+            v(k).infoBDisp = txBB; 
         end
         
         tmpData = tmp.movements.sources.signals.signal_2.data;
@@ -34,198 +41,148 @@ for f = datafiles
             v(k).dataR = tmpData; % Radialis
             v(k).infoRrecord = tmp.info.record_name;
             v(k).infoRName = tmpName;
-            v(k).infoRDisp = "Brachioradialis"; 
+            v(k).infoRDisp = txBR; 
         end
         if ( tmp.movements.sources.signals.signal_2.name == "Ultium EMG-BICEPS BR. RT")
             v(k).dataB = tmpData; % Biceps
             v(k).infoBecord = tmp.info.record_name;
             v(k).infoBName = tmpName;
-            v(k).infoBDisp = "Biceps brachii"; 
+            v(k).infoBDisp = txBB; 
         end
-
     end
 end
-
-fprintf(1,"Macierz plików v: %d\n", length(v));
+fprintf(1,"Liczba pacjentów: %d\n", length(v)/2); % / liczba mięśni mierzonych równocześnie lub wykonywanego ćwiczenia
+fprintf(1,"Macierz plików v: %d (ilość pomiarów * liczba ćwiczeń)\n", length(v));
 
 % get from last sample
 Yunits = tmp.movements.sources.signals.signal_1.units;
 fpom = tmp.movements.sources.signals.signal_1.frequency; dtpom=1/fpom; %  Hz
-name_1 = tmp.movements.sources.signals.signal_1.name;
-name_2 = tmp.movements.sources.signals.signal_2.name;
+% name_1 = tmp.movements.sources.signals.signal_1.name;
+% name_2 = tmp.movements.sources.signals.signal_2.name;
 % posredni = record_2023_04_20_15_06_BR_po_redni.movements.sources.signals.signal_1.data;
 % podchwyt = record_2023_04_20_15_07_BR_podchwyt.movements.sources.signals.signal_1.data;
 
-if(exist("segment.mat"))
-    load segment.mat
+if(exist("segments.mat"))
+    load segments.mat
 else
     segmentActions
 end
-
-fprintf(1,"Liczba segmentów: %d\nPrzewidywana ilość segmentów to: (%d)\n", length(segment), length(v)*2*10); % liczba plików * liczba mięśni * ilość powtórzeń
+fprintf(1,"Liczba segmentów: %d (liczba plików * liczba mięśni * ilość powtórzeń)\nSzacowana ilość segmentów: (%d)\n", length(segment), length(v)*2*10); % liczba plików * liczba mięśni * ilość powtórzeń
 
 %--------------------------------------------------------------------------
 nrFw = 101; % nr fig widma
 lfrow= 4; lc=2; 
-Tsyg=ceil(ceil(m*dtpom)/2)*2; % [sek]
+Tsyg=ceil(ceil(m*dtpom)/2)*2; % [sek] Maximal time of action duration
 lSyg=round(Tsyg/dtpom);
 clear Syg;
 ksyg=0;     kol='kbrm'; kf=0;%figure(j)
-for( i = 1:length(segment))
+for( i = 1:length(segment)) % uzupełnianie zerami segmentów
     SygRawLen(i) = length(segment(i).data');
     Syg(i,1:lSyg) = [segment(i).data' zeros(1, lSyg-length(segment(i).data))];
 %     figure(i), plot(Syg(i,:))
 end
-
-for(j = 1:length(v)) % grupa
-    figure(j), nxf = 0; % nie drukuj figur
-    fileSegNr; %TODO
-    for (i = 1:length(find(fileSegNr==j))) % akcje w. grupy
-        i = mod(i,2);
-        figure(j)
-        clear y;
-        ksyg=ksyg+1;
-        y = Syg(ksyg,:)'; %v(j).data(n1:Nbf);
-        X = (y.^2); Esyg(j,i+1)=sum(X)*dtpom/lSyg; 
-        %segment(nrs).data = y;
-        Nf=length(y); %todo
-        nx=[0:Nf-1];
-        subplot(lfrow,lc,1+i),  plot(nx*dtpom, y); xlabel(sprintf("Ruch pośredni %d: y(t) t[sek]", i));
-        if( i == 0) title("                                                                                                                                   Dziedzina czasu"); end
-        ylabel(['Amplituda [' Yunits ']'])
-        subplot(lfrow,lc,1+i+lc),  plot(nx*dtpom, X);
-        % LSyg / nTu jest liczbą próbek w oknie wygładzania
-        Twygl=0.25; nTu = Tsyg/Twygl;
-        Tu=Twygl/dtpom;
-        run("../MTF/filtrWidma.m");
-        xf = [0:LwAm-1];
-        hold on; plot(xf/Tsyg,Ayf,'c',[0:Ldf]/Tsyg,Af,'k'); axis('tight');  hold off;
-        xlabel(sprintf("Kwadrat y i wygł. y(t)^2 %d (Tu=%.1fms): t[sek]", i,Tu*dtpom*1000));
-        A = fft(y); lA = length(A);
-        Afw = abs(A(1:round(lA/2)))/SygRawLen(ksyg); %lA; 
-        Podzial=4; if(j==2) Podzial=10; end
-        nf=round(Nf/2); 
-        X = Afw(1:nf);
-        Twygl=0.05; nTu = Tsyg/Twygl; % LSyg / nTu jest liczbą próbek w oknie wygładzania
-        Tu=Twygl/dtpom;
-        run("../MTF/filtrWidma.m");
-        nk=round(Nf/Podzial);
-        subplot(lfrow,lc,1+i+2*lc),   plot([0:nk-1]/Tsyg,Ayf(1:nk),'c',[0:Ldf]/Tsyg,Af,'k');
-        Widma(j,i+1).Ayf=Ayf; wyglWidma(j,i+1).Af=Af;% i*2+j
-        figure(nrFw), subplot(1,2,1); hold on; kf=mod(kf,4)+1; plot([0:Ldf],Af,kol(kf)); %plot(wyglWidma(j,i+1).Af); hold off; 
-%         figPW("png")
-        figure(j)
-        if( 1+i+2*lc == 5 ) title("                                                                                                                                 Dziedzina częstotliwości"); end
-        xlabel(sprintf("Widmo %d [Hz] Tu=%.1fms f_g=1/Tu=%.0fHz ",i,Tu*dtpom*1000,1/(Tu*dtpom)));
-        Podzial=15; if(j==2) Podzial=30; end
-        Twygl=0.025; nTu = Tsyg/Twygl;
-%         nf=Nf;%round(Nf/Podzial);
-%         Xx=fft(y.^2);Xx=abs(Xx(1:nf));  
-        X=Afw(1:nf).^2;
-%         figure(111), plot(X); hold on; plot(Xx)
-        Tu=Twygl/dtpom;
-        run("../MTF/filtrWidma.m");
-        nf=round(Nf/Podzial);
-        subplot(lfrow,lc,1+i+3*lc), plot([0:nf-1]/Tsyg,Ayf(1:nf),'c',[0:nf-1]/Tsyg,Af(1:nf),'k');
-        xlabel(sprintf("Widmo mocy %d f_g=1/Tu Tu=%.1fms",i,Tu*dtpom*1000));
-        Widma(j,i+1).Ayf2=Ayf; wyglWidma(j,i+1).Af2=Af;% i*2+j
-
-        sgtitle( sprintf("%s %d",v(j).infoBDisp, ksyg))
-%         figPW("png",5)
-        figure(nrFw), subplot(1,2,2); hold on; plot([0:nf-1]/Tsyg,Af(1:nf),kol(kf)); %plot(wyglWidma(j,i+1).Af); hold off; 
-
-        %nrs = nrs +1;
-    end
+MTF(1).Tu = []; MTF(2).Tu = []; MTF(3).Tu = [];
+if(exist("spectrums.mat"))
+    load spectrums.mat
+else
+    spectrumTrend
 end
-figure(nrFw), subplot(1,2,1); hold off; subplot(1,2,2); hold off;
-for (j = 1:length(v))
-    dW=Widma(j,1).Ayf-Widma(j,2).Ayf; S(j,1)=sqrt(dW'*dW);
-    dWwygl=wyglWidma(j,1).Af-wyglWidma(j,2).Af; S(j,2)=sqrt(dWwygl*dWwygl');
-    Esr(j)=mean(Esyg(j,:));
-    lk = size(Widma,2); % liczba powtórzeń gestów j-tej kategrorii 
-    Wsr(j).Wsr = zeros(1, length(Widma(j,1).Ayf'));
-    for (k = 1:lk)
-        Wsr(j).Wsr=Wsr(j).Wsr+Widma(j,k).Ayf';
-    end
-    Wsr(j).Wsr=Wsr(j).Wsr/lk;    %sredne widma % wzorzec
-%     Wsr(j).Wsr=mean(Widma(j,:).Ayf')
-%     Wsrwygl(j).Wsr=(wyglWidma(j,1).Af+wyglWidma(j,2).Af)/2; %S(j,2)=sqrt(dWwygl*dWwygl');
-    minLenWidma = min(length(wyglWidma(j,1).Af),length(wyglWidma(j,1).Af2))
+fprintf(1,"Liczba widm: %d\n", length(Widma)); 
 
-    Wsrwygl(j).Wsr = zeros(1, length(wyglWidma(j,1).Af));
-    Wsrwygl(j).Wsr2 = zeros(1, length(wyglWidma(j,1).Af2));
-    for (k = 1:lk)
-        Wsrwygl(j).Wsr=Wsrwygl(j).Wsr+wyglWidma(j,k).Af;
-        Wsrwygl(j).Wsr2=Wsrwygl(j).Wsr2+wyglWidma(j,k).Af2; % mocy
-%         figure, plot(wyglWidma(j,k).Af2)
-    end
-    Wsrwygl(j).Wsr=Wsrwygl(j).Wsr/lk;    %sredne widma % wzorzec
-    Wsrwygl(j).Wsr2=Wsrwygl(j).Wsr2/lk;    %sredne widma % wzorzec
-    % D2
-    dW2=Widma(j,1).Ayf2-Widma(j,2).Ayf2; S2(j,1)=sqrt(dW2'*dW2);
-    dW2wygl=wyglWidma(j,1).Af2-wyglWidma(j,2).Af2; S2(j,2)=sqrt(dW2wygl*dW2wygl');
-end
-Ssr = [];
-DWsr=Wsr(1).Wsr-Wsr(2).Wsr; Ssr(1)=sqrt(DWsr*DWsr');
-DWsr=Wsrwygl(1).Wsr-Wsrwygl(2).Wsr; Ssr(2)=sqrt(DWsr*DWsr');
+centroid
 
- figure(8), % dla widm nie wygładzonych
- for(j=1:2)
- subplot(2,2,j)
- plot([1:length(Wsr(j).Wsr)]/Tsyg, Wsr(j).Wsr,'r', ...
-      [1:length(Widma(j,1).Ayf)]/Tsyg, Widma(j,1).Ayf,'c', ...
-      [1:length(Widma(j,2).Ayf)]/Tsyg, Widma(j,2).Ayf,'k') % czerwone srednie widmo
- subplot(2,2,j+2)
- plot([1:length(Wsrwygl(j).Wsr)]/Tsyg, Wsrwygl(j).Wsr,'r', ...
-      [1:length(wyglWidma(j,1).Af)]/Tsyg, wyglWidma(j,1).Af,'c', ...
-      [1:length(wyglWidma(j,2).Af)]/Tsyg, wyglWidma(j,2).Af,'k') % czerwone srednie wygładzone widmo
- axis("tight"); xlabel("Hz")
- end
-%  dCG=0; dEG=0;
-% dists_cheby =[];
-nf=2;  
-for (j = 1:length(v) )
-    %dE(j)=0; dC(j)=0; % norma Euklidesowa, City (Manhatan)
-    for(k=1:lk) d=Wsrwygl(j).Wsr-wyglWidma(j,k).Af; 
-        dE(j,k)=sqrt(sum(d.^2)); dC(j,k)=sum(abs(d))/100; dists_cheby(j,k) = max(abs(d),[],2);  %uwaga przesunięcie przecinka
-        d2=Wsrwygl(j).Wsr2-wyglWidma(j,k).Af2; 
-        dE2(j,k)=sqrt(sum(d2.^2)); dC2(j,k)=sum(abs(d2))/100; dists_cheby2(j,k) = max(abs(d2),[],2);  %2-mocy
-        dEsyg(j,k)=abs(Esyg(j,k)-Esr(j));
-    end % odległość w grupie
-    figure(9), subplot(2,2,nf), plot(abs(d))
-    for(i=j+1:length(v))
-        dEsgr(j,i)=abs(Esr(i)-Esr(j))/2;
-        d=abs((Wsrwygl(j).Wsr-Wsrwygl(i).Wsr));  if(j==1) figure(9), subplot(1,2, 1), plot(d); end
-        dCG(j,i)=sum(d)/200; % UWAGA przesunięcie przecinka o dwa miejsca w celu łatwiejszej interpretacji wyników
-        dEG(j,i)=sqrt(sum(d.^2))/2; dists_chebyG(j,k) = max(abs(d),[],2)/2; % odległosv mięfzy grupowa
-        d=[];
-        d=abs((Wsrwygl(j).Wsr2-Wsrwygl(i).Wsr2));  if(j==1) figure(9), subplot(1,2, 1), plot(d); end
-        dCG2(j,i)=sum(d)/200; % UWAGA przesunięcie przecinka o dwa miejsca w celu łatwiejszej interpretacji wyników
-        dEG2(j,i)=sqrt(sum(d.^2))/2; dists_chebyG2(j,k) = max(abs(d),[],2)/2;
-        % dzielimy prrze 2 aby odl. m. grupowe były lepiej porównywanlne z
-        % liczonymi od centroidu
-        nf=4;
-    end
-end
-% dists_cheby
+disppolt
+
+% % 
+% % figure(nrFw), subplot(1,2,1); hold off; subplot(1,2,2); hold off;
+% % for (j = 1:length(v))
+% %     dW=Widma(j,1).Ayf-Widma(j,2).Ayf; S(j,1)=sqrt(dW'*dW);
+% %     dWwygl=wyglWidma(j,1).Af-wyglWidma(j,2).Af; S(j,2)=sqrt(dWwygl*dWwygl');
+% %     Esr(j)=mean(Esyg(j,:)); % cecha
+% %     lk = size(Widma,2); % liczba powtórzeń gestów j-tej kategrorii 
+% %     Wsr(j).Wsr = zeros(1, length(Widma(j,1).Ayf'));
+% %     for (k = 1:lk)
+% %         Wsr(j).Wsr=Wsr(j).Wsr+Widma(j,k).Ayf';
+% %     end
+% %     Wsr(j).Wsr=Wsr(j).Wsr/lk;    %sredne widma % wzorzec
+% % %     Wsr(j).Wsr=mean(Widma(j,:).Ayf')
+% % %     Wsrwygl(j).Wsr=(wyglWidma(j,1).Af+wyglWidma(j,2).Af)/2; %S(j,2)=sqrt(dWwygl*dWwygl');
+% %     minLenWidma = min(length(wyglWidma(j,1).Af),length(wyglWidma(j,1).Af2))
+% % 
+% %     Wsrwygl(j).Wsr = zeros(1, length(wyglWidma(j,1).Af));
+% %     Wsrwygl(j).Wsr2 = zeros(1, length(wyglWidma(j,1).Af2));
+% %     for (k = 1:lk)
+% %         Wsrwygl(j).Wsr=Wsrwygl(j).Wsr+wyglWidma(j,k).Af;
+% %         Wsrwygl(j).Wsr2=Wsrwygl(j).Wsr2+wyglWidma(j,k).Af2; % mocy
+% % %         figure, plot(wyglWidma(j,k).Af2)
+% %     end
+% %     Wsrwygl(j).Wsr=Wsrwygl(j).Wsr/lk;    %sredne widma % wzorzec
+% %     Wsrwygl(j).Wsr2=Wsrwygl(j).Wsr2/lk;    %sredne widma % wzorzec
+% %     % D2
+% %     dW2=Widma(j,1).Ayf2-Widma(j,2).Ayf2; S2(j,1)=sqrt(dW2'*dW2);
+% %     dW2wygl=wyglWidma(j,1).Af2-wyglWidma(j,2).Af2; S2(j,2)=sqrt(dW2wygl*dW2wygl');
+% % end
+% % Ssr = [];
+% % DWsr=Wsr(1).Wsr-Wsr(2).Wsr; Ssr(1)=sqrt(DWsr*DWsr');
+% % DWsr=Wsrwygl(1).Wsr-Wsrwygl(2).Wsr; Ssr(2)=sqrt(DWsr*DWsr');
+% % 
+% %  figure(8), % dla widm nie wygładzonych
+% %  for(j=1:2)
+% %  subplot(2,2,j)
+% %  plot([1:length(Wsr(j).Wsr)]/Tsyg, Wsr(j).Wsr,'r', ...
+% %       [1:length(Widma(j,1).Ayf)]/Tsyg, Widma(j,1).Ayf,'c', ...
+% %       [1:length(Widma(j,2).Ayf)]/Tsyg, Widma(j,2).Ayf,'k') % czerwone srednie widmo
+% %  subplot(2,2,j+2)
+% %  plot([1:length(Wsrwygl(j).Wsr)]/Tsyg, Wsrwygl(j).Wsr,'r', ...
+% %       [1:length(wyglWidma(j,1).Af)]/Tsyg, wyglWidma(j,1).Af,'c', ...
+% %       [1:length(wyglWidma(j,2).Af)]/Tsyg, wyglWidma(j,2).Af,'k') % czerwone srednie wygładzone widmo
+% %  axis("tight"); xlabel("Hz")
+% %  end
+% %  dCG=0; dEG=0;
+% % dists_cheby =[];
+% nf=2;  
+% for (j = 1:length(v) )
+%     %dE(j)=0; dC(j)=0; % norma Euklidesowa, City (Manhatan)
+%     for(k=1:lk) d=Wsrwygl(j).Wsr-wyglWidma(j,k).Af; 
+%         dE(j,k)=sqrt(sum(d.^2)); dC(j,k)=sum(abs(d))/100; dists_cheby(j,k) = max(abs(d),[],2);  %uwaga przesunięcie przecinka
+%         d2=Wsrwygl(j).Wsr2-wyglWidma(j,k).Af2; 
+%         dE2(j,k)=sqrt(sum(d2.^2)); dC2(j,k)=sum(abs(d2))/100; dists_cheby2(j,k) = max(abs(d2),[],2);  %2-mocy
+%         dEsyg(j,k)=abs(Esyg(j,k)-Esr(j));
+%     end % odległość w grupie
+%     figure(9), subplot(2,2,nf), plot(abs(d))
+%     for(i=j+1:length(v))
+%         dEsgr(j,i)=abs(Esr(i)-Esr(j))/2;
+%         d=abs((Wsrwygl(j).Wsr-Wsrwygl(i).Wsr));  if(j==1) figure(9), subplot(1,2, 1), plot(d); end
+%         dCG(j,i)=sum(d)/200; % UWAGA przesunięcie przecinka o dwa miejsca w celu łatwiejszej interpretacji wyników
+%         dEG(j,i)=sqrt(sum(d.^2))/2; dists_chebyG(j,k) = max(abs(d),[],2)/2; % odległosv mięfzy grupowa
+%         d=[];
+%         d=abs((Wsrwygl(j).Wsr2-Wsrwygl(i).Wsr2));  if(j==1) figure(9), subplot(1,2, 1), plot(d); end
+%         dCG2(j,i)=sum(d)/200; % UWAGA przesunięcie przecinka o dwa miejsca w celu łatwiejszej interpretacji wyników
+%         dEG2(j,i)=sqrt(sum(d.^2))/2; dists_chebyG2(j,k) = max(abs(d),[],2)/2;
+%         % dzielimy prrze 2 aby odl. m. grupowe były lepiej porównywanlne z
+%         % liczonymi od centroidu
+%         nf=4;
+%     end
+% end
+% % dists_cheby
 % dists_chebyG
 % iloczyn wektorywy tylko w przestrzeni euclidesa
-miedzyGOrazodCentroidu = [[dEG; dCG ] dE dC ]
-miedzyGOrazodCentroiduGoraEuclidianBottomCity  = [[dEG(1,2);dCG(1,2)] dE(:,1) dC(:,1)]
-fprintf(1,"m.Group \t w.group")
-miedzyGOrazodCentroidu = [[dEG(1,2);dCG(1,2); dists_chebyG(1,2);dEsgr(1,2)] [dE(1,1);dC(1,1); dists_cheby(1,1);dEsyg(1,1)] [dE(2,1);dC(2,1);dists_cheby(2,1);;dEsyg(2,1)]]
-% miedzygrupowa
-% pomiędzygrpuami
-grupa 1, 2 , w gr. 1 2
-% stosunek odległośvi wewnątrz grupowej do mrfxygrupowej / druga jest spójniejsza/ w wierszach odległości E i C, w kolumnach grupy (osobh)
-% jakość klasyfikacji
-% można jeszcze na kwadratach spróbować 
-mg=[dEG(1,2);dCG(1,2);dists_chebyG(1,2);dEsgr(1,2)]; miedzyGOrazodCentroidu = [[dE(1,1);dC(1,1);dists_cheby(1,1);dEsyg(1,1)]./mg [dE(2,1);dC(2,1);dists_cheby(2,1);dEsyg(2,1)]./mg]
-mocy wygł
-mg2=[dEG2(1,2);dCG2(1,2);dists_chebyG2(1,2);dEsgr(1,2)]; miedzyGOrazodCentroidu2 = [[dE2(1,1);dC2(1,1);dists_cheby2(1,1);dEsyg(1,1)]./mg2 [dE2(2,1);dC2(2,1);dists_cheby2(2,1);dEsyg(2,1)]./mg2]
-Widmo = S;
-widmoMocy = sqrt(S2);
-porownywalnoscIrozroznialnosc=[S(1,:)./S(2,:);S(:,1)'./S(:,2)']
+% miedzyGOrazodCentroidu = [[dEG; dCG ] dE dC ]
+% miedzyGOrazodCentroiduGoraEuclidianBottomCity  = [[dEG(1,2);dCG(1,2)] dE(:,1) dC(:,1)]
+% fprintf(1,"m.Group \t w.group")
+% miedzyGOrazodCentroidu = [[dEG(1,2);dCG(1,2); dists_chebyG(1,2);dEsgr(1,2)] [dE(1,1);dC(1,1); dists_cheby(1,1);dEsyg(1,1)] [dE(2,1);dC(2,1);dists_cheby(2,1);;dEsyg(2,1)]]
+% % miedzygrupowa
+% % pomiędzygrpuami
+% grupa 1, 2 , w gr. 1 2
+% % stosunek odległośvi wewnątrz grupowej do mrfxygrupowej / druga jest spójniejsza/ w wierszach odległości E i C, w kolumnach grupy (osobh)
+% % jakość klasyfikacji
+% % można jeszcze na kwadratach spróbować 
+% mg=[dEG(1,2);dCG(1,2);dists_chebyG(1,2);dEsgr(1,2)]; miedzyGOrazodCentroidu = [[dE(1,1);dC(1,1);dists_cheby(1,1);dEsyg(1,1)]./mg [dE(2,1);dC(2,1);dists_cheby(2,1);dEsyg(2,1)]./mg]
+% mocy wygł
+% mg2=[dEG2(1,2);dCG2(1,2);dists_chebyG2(1,2);dEsgr(1,2)]; miedzyGOrazodCentroidu2 = [[dE2(1,1);dC2(1,1);dists_cheby2(1,1);dEsyg(1,1)]./mg2 [dE2(2,1);dC2(2,1);dists_cheby2(2,1);dEsyg(2,1)]./mg2]
+% Widmo = S;
+% widmoMocy = sqrt(S2);
+% porownywalnoscIrozroznialnosc=[S(1,:)./S(2,:);S(:,1)'./S(:,2)']
 % po wierszach duża różnica po kolumnach mała
 Ssr
 % figPSW jedakowe długości, wzorzec musi mieć takie same
