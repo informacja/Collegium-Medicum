@@ -1,4 +1,4 @@
-# Protokół zbierania sygnałów sEMG w Collegium Medicum
+# Protokół zbierania sygnałów sEMG
 Przed przystąpieniem do zapisu należy [przygotować skórę](https://github.com/informacja/EMG/tree/master/matlab/instrukcja#przygotowanie-przed-zbieraniem-sygnałów)
 
 ## Lokalizujemy elektrody pomiarowe na Brachioradialis i Biceps brachii na ręce prawej
