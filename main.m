@@ -184,7 +184,7 @@ disppolt
 % widmoMocy = sqrt(S2);
 % porownywalnoscIrozroznialnosc=[S(1,:)./S(2,:);S(:,1)'./S(:,2)']
 % po wierszach duża różnica po kolumnach mała
-Ssr
+% Ssr
 % figPSW jedakowe długości, wzorzec musi mieć takie same
 %konkluzja wyrównywać zerami widma 
 return
