@@ -1,18 +1,21 @@
 DEBUG = 1;
 if(DEBUG)
     clear all;
-    delete spectrums.mat
 %     delete segments.mat 
+%     delete spectrums.mat
     DEBUG = 1;
 end
 dirname = 'Archiwum';
 dirname = '23.05.23';
 dirname = '10';
+minActions = 10; skipedTrainingReppetinons = 0;
 clear v; % Clear files data
 files = dir(fullfile(dirname,'**','*.mat'));
 datafiles = fullfile({files.folder},{files.name});
-k = 0;
+
+txPr = "Pośredni"; txPc = "Podchwyt";
 txBR = "Brachioradialis"; txBB = "Biceps brachii";
+k = 0;
 for f = datafiles    
     k = k + 1;
     df = load(string(f));
@@ -30,7 +33,7 @@ for f = datafiles
         end
         if ( tmp.movements.sources.signals.signal_1.name == "Ultium EMG-BICEPS BR. RT")
             v(k).dataB = tmpData; % Biceps
-            v(k).infoBecord = tmp.info.record_name;
+            v(k).infoRecord = tmp.info.record_name;
             v(k).infoBName = tmpName;
             v(k).infoBDisp = txBB; 
         end
@@ -45,7 +48,7 @@ for f = datafiles
         end
         if ( tmp.movements.sources.signals.signal_2.name == "Ultium EMG-BICEPS BR. RT")
             v(k).dataB = tmpData; % Biceps
-            v(k).infoBecord = tmp.info.record_name;
+            v(k).infoRecord = tmp.info.record_name;
             v(k).infoBName = tmpName;
             v(k).infoBDisp = txBB; 
         end
@@ -67,10 +70,11 @@ if(exist("segments.mat"))
 else
     segmentActions
 end
-fprintf(1,"Liczba segmentów: %d (liczba plików * liczba mięśni * ilość powtórzeń)\nSzacowana ilość segmentów: (%d)\n", length(segment), length(v)*2*10); % liczba plików * liczba mięśni * ilość powtórzeń
+if (skipedTrainingReppetinons) fprintf(1,"Pominiętych ćwiczeń: %d Rozkład: %d (podchwytów) %d (pośrednich) \n", skipedTrainingReppetinons, countPodchwyt, countPosredni); end;
+fprintf(1,"Liczba segmentów: %d (liczba plików * liczba mięśni * ilość powtórzeń)\nSzacowanych segmentów: (%d)\n", length(segment), length(v)*2*10-skipedTrainingReppetinons*20); % liczba plików * liczba mięśni * ilość powtórzeń
 
 %--------------------------------------------------------------------------
-nrFw = 101; % nr fig widma
+nrFw = 201; % nr fig widma
 lfrow= 4; lc=2; 
 Tsyg=ceil(ceil(m*dtpom)/2)*2; % [sek] Maximal time of action duration
 lSyg=round(Tsyg/dtpom);
@@ -90,6 +94,8 @@ end
 fprintf(1,"Liczba widm: %d\n", length(Widma)); 
 
 centroid
+
+fprintf(1,"Liczba centroidów: %d\n", length(Widma)); 
 
 disppolt
 

@@ -1,5 +1,7 @@
 nrs = 1; %nr segmentu | licznik globalny
 m = 0; % max length of segment 
+countPodchwyt = 0;  countPosredni = 0;
+names = [];
 %--------------------------------------------------------------------------
 % Segmentacja plików
 %--------------------------------------------------------------------------
@@ -10,18 +12,18 @@ for (j = 1:length(v))
     y = v(j).dataR; %a(j).d;%v(j).data;
     tmpData = v(j).dataR + v(j).dataB;
     y = tmpData;
-    Nokno = 12;
-    lY = length(y);
-    if( 0 && j == 8 ) 
-        s = zeros(1,lY); s(1)=y(1);
-        for (n = 2:lY) %Nokno:lY)
-            s(n)=s(n-1)+y(n); %s(n-Nokno+Nokno/2) = mean(y(n-Nokno+1:n));
-        end
-        ys=y; y=s;
-        
-        figure(200), plot(ys,'g'); hold on; plot(y,'r');
-        y = s;
-    end
+%     Nokno = 12;
+%     lY = length(y);
+%     if( 0 && j == 8 ) 
+%         s = zeros(1,lY); s(1)=y(1);
+%         for (n = 2:lY) %Nokno:lY)
+%             s(n)=s(n-1)+y(n); %s(n-Nokno+Nokno/2) = mean(y(n-Nokno+1:n));
+%         end
+%         ys=y; y=s;
+%         
+%         figure(100), plot(ys,'g'); hold on; plot(y,'r');
+%         y = s;
+%     end
     if ~DEBUG
         if isempty(y) continue; end;
     end
@@ -40,11 +42,15 @@ for (j = 1:length(v))
     end
     TF = islocalmax(peaksOfSignal);
     numOfActions = sum(TF);
+    if numOfActions < minActions skipedTrainingReppetinons = skipedTrainingReppetinons+1;continue; end % Skip not well segmented training
+%     names = [names; string(v(j).infoRecord)];
+    if (v(j).infoRecord(8) == 'c') countPodchwyt = countPodchwyt+1; end;
+    if (v(j).infoRecord(8) == 'r') countPosredni = countPosredni+1; end;
 %     figure(50+j), plot(peaksOfSignal); hold on;plot(TF*cutoffA*10); hold off; 
 %     p2p = peak2peak(y);
     %mp = p2p/3; not recomended
     md = length(y)/(numOfActions*1.4);
-    figure((j+1)*2), findpeaks(y,'MinPeakProminence',mp,'MinPeakDistance',md,"Annotate","peaks"); title(name);
+    figure(100+(j+1)*2), findpeaks(y,'MinPeakProminence',mp,'MinPeakDistance',md,"Annotate","peaks"); title(name);
 %     clear pks locs,width,prominence
     [pks,locs,width,prominence] = findpeaks(y,'MinPeakProminence',mp,'MinPeakDistance',md,"Annotate","peaks",'Annotate','extents');
     
