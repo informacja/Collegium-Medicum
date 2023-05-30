@@ -1,5 +1,11 @@
 figury/*
-.MATLABDriveTag
+*.MATLABDriveTag
 *.asv
 main.asv
 main.asv
+.DS_Store
+WND
+figuryRAW
+spectrumTrend.m
+spectrums.mat
+segments.mat

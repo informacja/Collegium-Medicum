@@ -1,20 +1,27 @@
+% po odklejeniu elektrody, nie można porównywać amplitud
+%todo
+%centroidy
+%liczba widm
 DEBUG = 1;
 if(DEBUG)
     clear all;
+    close all;
 %     delete segments.mat 
-%     delete spectrums.mat
+    delete spectrums.mat
+    delete centroids.mat
     DEBUG = 1;
 end
+windowing = 1;
 dirname = 'Archiwum';
 dirname = '23.05.23';
 dirname = '10';
-minActions = 10; skipedTrainingReppetinons = 0;
 clear v; % Clear files data
 files = dir(fullfile(dirname,'**','*.mat'));
 datafiles = fullfile({files.folder},{files.name});
 
 txPr = "Pośredni"; txPc = "Podchwyt";
 txBR = "Brachioradialis"; txBB = "Biceps brachii";
+minActions = 10; skipedTrainingReppetinons = 0; % for segmentation selecting
 k = 0;
 for f = datafiles    
     k = k + 1;
@@ -42,7 +49,7 @@ for f = datafiles
         tmpName = tmp.movements.sources.signals.signal_2.name;
         if ( tmp.movements.sources.signals.signal_2.name == "Ultium EMG-BRACHIORAD. RT")
             v(k).dataR = tmpData; % Radialis
-            v(k).infoRrecord = tmp.info.record_name;
+            v(k).infoRecord = tmp.info.record_name;
             v(k).infoRName = tmpName;
             v(k).infoRDisp = txBR; 
         end
@@ -60,19 +67,18 @@ fprintf(1,"Macierz plików v: %d (ilość pomiarów * liczba ćwiczeń)\n", leng
 % get from last sample
 Yunits = tmp.movements.sources.signals.signal_1.units;
 fpom = tmp.movements.sources.signals.signal_1.frequency; dtpom=1/fpom; %  Hz
-% name_1 = tmp.movements.sources.signals.signal_1.name;
-% name_2 = tmp.movements.sources.signals.signal_2.name;
-% posredni = record_2023_04_20_15_06_BR_po_redni.movements.sources.signals.signal_1.data;
-% podchwyt = record_2023_04_20_15_07_BR_podchwyt.movements.sources.signals.signal_1.data;
 
 if(exist("segments.mat"))
     load segments.mat
 else
     segmentActions
 end
-if (skipedTrainingReppetinons) fprintf(1,"Pominiętych ćwiczeń: %d Rozkład: %d (podchwytów) %d (pośrednich) \n", skipedTrainingReppetinons, countPodchwyt, countPosredni); end;
-fprintf(1,"Liczba segmentów: %d (liczba plików * liczba mięśni * ilość powtórzeń)\nSzacowanych segmentów: (%d)\n", length(segment), length(v)*2*10-skipedTrainingReppetinons*20); % liczba plików * liczba mięśni * ilość powtórzeń
 
+if (skipedTrainingReppetinons) fprintf(1,"Rozkład: %d (podchwytów) %d (pośrednich) Sumarycznie pominiętych ćwiczeń: %d \n", countPodchwyt, countPosredni, skipedTrainingReppetinons); end;
+fprintf(1,"Liczba segmentów: %d (liczba plików * liczba mięśni * ilość powtórzeń)\nSzacowanych segmentów: (%d)\n", length(segment), length(v)*2*10); % liczba plików * liczba mięśni * ilość powtórzeń
+        for i = 1:length(segment)
+    plot(segment(i).data)
+end
 %--------------------------------------------------------------------------
 nrFw = 201; % nr fig widma
 lfrow= 4; lc=2; 
@@ -82,23 +88,35 @@ clear Syg;
 ksyg=0;     kol='kbrm'; kf=0;%figure(j)
 for( i = 1:length(segment)) % uzupełnianie zerami segmentów
     SygRawLen(i) = length(segment(i).data');
+    if (windowing)
+        win = hann(SygRawLen(i));
+        segment(i).data = segment(i).data.*win;
+    end
     Syg(i,1:lSyg) = [segment(i).data' zeros(1, lSyg-length(segment(i).data))];
 %     figure(i), plot(Syg(i,:))
 end
 MTF(1).Tu = []; MTF(2).Tu = []; MTF(3).Tu = [];
+
 if(exist("spectrums.mat"))
     load spectrums.mat
 else
-    spectrumTrend
+    nrF = 300; spectrumTrend
 end
 fprintf(1,"Liczba widm: %d\n", length(Widma)); 
 
-centroid
+if(exist("centroids.mat"))
+    load centroids.mat
+else
+    nrF = 400; centroid
+end
+fprintf(1,"Liczba centroidów: %d\n", length(CentrWidm)); 
+return
+nrF = 800; disppolt
 
-fprintf(1,"Liczba centroidów: %d\n", length(Widma)); 
-
-disppolt
-
+nrF = 900;
+figureNubers = [134 136];
+for( i = 200:100:nrF) figureNubers = [figureNubers i+16 i+17]; end
+figPSW
 % % 
 % % figure(nrFw), subplot(1,2,1); hold off; subplot(1,2,2); hold off;
 % % for (j = 1:length(v))

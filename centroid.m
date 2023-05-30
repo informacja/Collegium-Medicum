@@ -1,28 +1,30 @@
 nrs = 0;
-for(j = 19:length(v)) % grupa
-    figure(600+j);
+for(j = 1:2) % grupa
+    figure(nrF-j);
     sgtitle(v(j).infoRrecord);
     for (i = 1:length(find(fileSegNr==j))) 
         nrs = nrs + 1;        
         if(fileSegMio(nrs) == txBR) subplot(2,2,1), plot(segment(nrs).data); hold on; title(txBR);end
         if(fileSegMio(nrs) == txBB) subplot(2,2,2), plot(segment(nrs).data); hold on; title(txBB);end
-        if(fileSegMio(nrs) == txBR) subplot(2,2,3), plot(segment(nrs).data); hold on; end
-        if(fileSegMio(nrs) == txBB) subplot(2,2,4), plot(segment(nrs).data); hold on; end
+%         if(fileSegMio(nrs) == txBR) subplot(2,2,3), plot(segment(nrs).data); hold on; end
+%         if(fileSegMio(nrs) == txBB) subplot(2,2,4), plot(segment(nrs).data); hold on; end
     end
     subplot(2,2,1), hold off; 
     subplot(2,2,2), hold off; 
     subplot(2,2,3), hold off; 
     subplot(2,2,4), hold off; 
+    sgtitle(sprintf("Grupa dla ćwiczenia %s", v(j).infoRecord))
 end
 
 f = [1:8500+1]; xf = (f-1)/Tsyg;
 clear dCentrM dCentrE;
 nf=2;  
 nrs = 0;
+nrF = nrF + length(v);
 % normowanie widma
 for(j = 1:length(v)) % grupa
-    figure(nrFw+j);close(nrFw+j);
-    figure(nrFw+j); 
+%     figure(nrFw+j);close(nrFw+j);
+%     figure(nrF+j); 
        % normowanie widma
     lAf=length(wyglWidma(j,1).Af);
     CentrWidm(j, 1).AfM=zeros(lAf,1); nAf(1)=0;
@@ -38,10 +40,10 @@ for(j = 1:length(v)) % grupa
 %     Centr(j, 1).AfE = zeros(lAf,1);
 %     Centr(j, 2).AfM = zeros(lAf,1);
 %     Centr(j, 2).AfE = zeros(lAf,1);
-
+    figure(j+nrF)
     for (i = 1:length(find(fileSegNr==j))) 
         nrs = nrs + 1;
-        figure(j+700)
+        
         if(fileSegMio(nrs) == txBR) kat = 1; end
         if(fileSegMio(nrs) == txBB) kat = 2; end
         wyglWidma(j,i).maxAf = max(wyglWidma(j,i).Af);
@@ -57,8 +59,8 @@ for(j = 1:length(v)) % grupa
 %         Centr(j, kat).AfM = Centr(j, kat).AfM + CentrWidm(j,kat).AfM;
 %         Centr(j, kat).AfE = Centr(j, kat).AfE + CentrWidm(j,kat).AfE;
 
-        subplot(2,2,kat);    hold on; plot(xf, wyglWidma(j,i).Af(f)/wyglWidma(j,i).maxAf);
-        subplot(2,2,kat+2);  hold on; plot(xf, wyglWidma(j,i).Af(f)/(Esyg(j,i)/SygRawLen(nrs)));
+        subplot(2,2,kat);    hold on; plot(xf, wyglWidma(j,i).Af(f)/wyglWidma(j,i).maxAf);title("ee")
+        subplot(2,2,kat+2);  hold on; plot(xf, wyglWidma(j,i).Af(f)/(Esyg(j,i)/SygRawLen(nrs))); 
 %         subplot(2,2,kat);    hold on; plot(xf, wyglWidma(j,i).Af(f)/wyglWidma(j,i).maxAf);
 %         subplot(2,2,2+kat);  hold on; plot(xf, wyglWidma(j,i).Af(f)/(Esyg(j,i)/SygRawLen(nrs)));
         title(fileSegMio(nrs));
@@ -68,29 +70,31 @@ for(j = 1:length(v)) % grupa
         CentrWidm(j, kat).AfM=CentrWidm(j, kat).AfM/nAf(kat); CentrWidm(j, kat).Af2M=CentrWidm(j,kat).Af2M/nAf(kat);
         CentrWidm(j, kat).AfE=CentrWidm(j, kat).AfE/nAf(kat); CentrWidm(j, kat).Af2E=CentrWidm(j,kat).Af2E/nAf(kat);
     end
-    dCentrM(j,:)=abs(CentrWidm(j, 1).AfM'-CentrWidm(j, 2).AfM')/2; 
-    dCentrE(j,:)=abs(CentrWidm(j, 1).AfE'-CentrWidm(j, 2).AfE')/2; 
+% TODO
+%     dCentrM(j,:)=abs(CentrWidm(j, 1).AfM'-CentrWidm(j, 2).AfM')/2; 
+%     dCentrE(j,:)=abs(CentrWidm(j, 1).AfE'-CentrWidm(j, 2).AfE')/2; 
     %City
-    dCentrM(j,:)=abs(CentrWidm(j, 1).AfM'-CentrWidm(j, 2).AfM')/2; 
-    dCentrE(j,:)=abs(CentrWidm(j, 1).AfE'-CentrWidm(j, 2).AfE')/2; 
+%     dCentrM(j,:)=abs(CentrWidm(j, 1).AfM'-CentrWidm(j, 2).AfM')/2; 
+%     dCentrE(j,:)=abs(CentrWidm(j, 1).AfE'-CentrWidm(j, 2).AfE')/2; 
     %Euclid
     %Cheby
     for(kat=1:2)
         %Centr(j, kat).AfE = Centr(j,kat).AfE 
         Psr(j) = mean(Psyg(j,:));
         Esr(j)=mean(Esyg(j,:)); % cecha
-        
-        subplot(4,2,kat);  hold on; plot(xf, CentrWidm(j,kat).AfM(f),'k--'); hold off; axis('tight'); xlabel('Widma wygładzone unorm.Max [hz]')
-        subplot(4,2,kat+2);  hold on; plot(xf, CentrWidm(j,kat).AfE(f),'k--');  hold off; axis('tight'); xlabel('Widma wygładzone unorm.Energia [Hz]')
+        figure(nrF+50)
+        subplot(4,2,kat);  hold on; plot(xf, CentrWidm(j,kat).AfM(f),'k--'); hold off; axis('tight'); xlabel('Widma wygładzone unorm.Max [hz]'); if kat == 1 title(v(1).infoRDisp); end; if kat == 2 title(v(1).infoBDisp); end
+        subplot(4,2,kat+2);  hold on; plot(xf, CentrWidm(j,kat).AfE(f),'k--');  hold off; axis('tight'); xlabel('Widma wygładzone unorm.Energia [Hz]'); if kat == 1 title(v(1).infoRDisp); end; if kat == 2 title(v(1).infoBDisp); end
 %         dCentr dla miejsciej eucli 
 % TODO        subplot(4,2,kat+4);  hold on; plot(xf, CentrWidm(j,kat).AfM(f)'./dCentrM(j,f),'k--'); hold off; axis('tight'); xlabel('Widma wygładzone unorm.Max [hz]')
 %         subplot(4,2,kat+6);  hold on; plot(xf, dC(j,kat).AfE(f)'./dCentrE(j,f),'k--');  hold off; axis('tight'); xlabel('Widma wygładzone unorm.Energia [Hz]')
 
-        sgtitle(v(j).infoRrecord);
     end
 end
+sgtitle(sprintf("Centroidy z wszystkich ćwiczeń (%d)", length(CentrWidm)));
+
 % dCentr %toDo
-nrs = 0;
+nrs = 0;  nf=2; nrF = nrF+100;
 % odleglosci
 for(j = 1:length(v)) % grupa
     %dE(j)=0; dC(j)=0; % norma Euklidesowa, City (Manhatan)
@@ -107,14 +111,15 @@ for(j = 1:length(v)) % grupa
         dE2(j,k)=sqrt(sum(d2.^2)); dC2(j,k)=sum(abs(d2))/100; dists_cheby2(j,k) = max(abs(d2),[],1);  %2-mocy
         dEsyg(j,k)=abs(Psyg(j,k)-Psr(j));
     end % odległość w grupie
-    figure(9), subplot(2,2,nf), plot(abs(d))
-    for(i=j+1:length(v))abs(Esr(i)-Esr(j))/2
+    figure(nrF-2), subplot(2,2,nf), plot(abs(d)); title("abs(d)"); hold on;
+    for(i=j+1:length(v))
+%         abs(Esr(i)-Esr(j))/2
         dEsgr(j,i)=abs(Esr(i)-Esr(j))/2;
-        d=abs((CentrWidm(j).AfM-CentrWidm(i).AfM));  if(j==1) figure(9), subplot(1,2, 1), plot(d); end
+        d=abs((CentrWidm(j).AfM-CentrWidm(i).AfM));  if(j==1) figure(nrF+j), subplot(1,2, 1), plot(d); title("distatans"); hold on; end
         dCG(j,i)=sum(d)/200; % UWAGA przesunięcie przecinka o dwa miejsca w celu łatwiejszej interpretacji wyników
         dEG(j,i)=sqrt(sum(d.^2))/2; dists_chebyG(j,k) = max(abs(d),[],1)/2; % odległosv mięfzy grupowa
         d=[];
-        d=abs((CentrWidm(j).Af2M-CentrWidm(i).Af2M));  if(j==1) figure(9), subplot(1,2, 1), plot(d); end
+        d=abs((CentrWidm(j).Af2M-CentrWidm(i).Af2M));  if(j==1) figure(nrF+j), subplot(1,2, 1), plot(d); title("d. mocy"); hold on; end
         dCG2(j,i)=sum(d)/200; % UWAGA przesunięcie przecinka o dwa miejsca w celu łatwiejszej interpretacji wyników
         dEG2(j,i)=sqrt(sum(d.^2))/2; dists_chebyG2(j,k) = max(abs(d),[],1)/2;
         % dzielimy prrze 2 aby odl. m. grupowe były lepiej porównywanlne z
@@ -122,17 +127,12 @@ for(j = 1:length(v)) % grupa
         nf=4;
     end
 end
-
+figure(nrF-2), subplot(1,2, 1), plot(d); hold off;
+figure(nrF-2), subplot(1,2, 1), plot(d); hold off;
 nag = ["między", "wew"]
 % dists_cheby
 % dists_chebyG
 % iloczyn wektorywy tylko w przestrzeni euclidesa
-% miedzyGOrazodCentroidu = [[dEG; dCG ] dE dC ]
-% miedzyGOrazodCentroiduGoraEuclidianBottomCity  = [[dEG(1,2);dCG(1,2)] dE(:,1) dC(:,1)]
-% fprintf(1,"m.Group \t w.group")
-% miedzyGOrazodCentroidu = [[dEG(1,2);dCG(1,2); dists_chebyG(1,2);dEsgr(1,2)] [dE(1,1);dC(1,1); dists_cheby(1,1);dEsyg(1,1)] [dE(2,1);dC(2,1);dists_cheby(2,1);;dEsyg(2,1)]]
-% miedzygrupowa
-% pomiędzygrpuami
 
 % nag = ["między", "wew"]
 fprintf(1,'\n\teuc. Max\tCity\tCheby\tEnerg')
@@ -142,9 +142,11 @@ for(j = 1:length(v)) % grupa
     for (k = 1:length(find(fileSegNr==j))) 
         fprintf(1,';  %6.3f %.3f %.3f %8.3g',dEM(j,k),dCM(j,k),dists_chebyM(j,k),dEsyg(j,k)); %] [dE(2,1);dC(2,1);dists_cheby(2,1);;dEsyg(2,1)
     end
-    figure(500); plot(dEM(j,:),'k.')
+    figure(nrF+90); plot(dEM(j,:),'k.')
 end
 
 
 % odległości centroidów
         % grupa 1, 2 , w gr. 1 2
+ 
+save centroids.mat CentrWidm dEM dCM dists_chebyM dEsyg

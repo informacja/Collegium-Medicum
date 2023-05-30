@@ -1,9 +1,12 @@
 for(j = 1:length(v)) % grupa
-    figure(j), nxf = 0; % nie drukuj figur
+%     figure(nrF+j),
+    nxf = 0; % nie drukuj figur
     fileSegNr; %TODO
     for (i = 1:length(find(fileSegNr==j))) % akcje w. grupy
         ifig = mod(i,2); % ifigure
-        figure(j)
+        if(j == length(v))
+            figure(nrF+j)
+        end
         clear y;
         ksyg=ksyg+1;
         y = Syg(ksyg,:)'; %v(j).data(n1:Nbf);
@@ -40,7 +43,7 @@ for(j = 1:length(v)) % grupa
             subplot(lfrow,lc,1+ifig+2*lc),   plot([0:nk-1]/Tsyg,Ayf(1:nk),'c',[0:Ldf]/Tsyg,Af,'k');
             figure(nrFw), subplot(1,2,1); hold on; kf=mod(kf,4)+1; plot([0:Ldf],Af,kol(kf)); %plot(wyglWidma(j,i).Af); hold off; 
 %         figPW("png")
-            figure(j)
+            figure(nrF+j)
             if( 1+ifig+2*lc == 5 ) title("                                                                                                                                 Dziedzina częstotliwości"); end
             xlabel(sprintf("Widmo %d [Hz] Tu=%.1fms f_g=1/Tu=%.0fHz ",i,Tu*dtpom*1000,1/(Tu*dtpom)));
         end
@@ -84,6 +87,6 @@ for(j = 1:length(v)) % grupa
     end
     CentrWidm(j).Ayf=CentrWidm(j).Ayf/nAyf;
 end
-m
-figure(nrFw+1); subplot(1,2,1) 
+
+% figure(nrFw+1); subplot(1,2,1) 
 save spectrums.mat Widma wyglWidma Esyg
