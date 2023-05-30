@@ -20,5 +20,5 @@ Przed przystąpieniem do zapisu należy [przygotować skórę](https://github.co
 <img width="532" alt="image" src="https://github.com/informacja/Collegium-Medicum/assets/22752828/68a00cbc-4290-47a8-a9dc-cbc93f842548">
 
 #### Dziękujemy!
-Ciekawostaka:
+Ciekawostka:
 Czy wiesz że sygnałów mięśniowych można słuchać jak mowy?
