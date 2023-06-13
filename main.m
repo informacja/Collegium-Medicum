@@ -2,16 +2,24 @@
 %todo
 %centroidy
 %liczba widm
+% centroidy dla jednego ćw od wszystkich osób
+% autokorelacja
+% sprawdicz czygrupy się nie mies`ają
+% roznicde dla posredniego BR-BR
+% dists_cheby OR dists_chebyM
 DEBUG = 1;
 if(DEBUG)
     clear all;
     close all;
 %     delete segments.mat 
-    delete spectrums.mat
+%     delete spectrums.mat
     delete centroids.mat
     DEBUG = 1;
 end
+allElapsedTime = tic;
 windowing = 1;
+printCentroids = 0;
+deprecated = 0; % unused code
 dirname = 'Archiwum';
 dirname = '23.05.23';
 dirname = '10';
@@ -34,7 +42,7 @@ for f = datafiles
         tmpName = tmp.movements.sources.signals.signal_1.name;
         if ( tmp.movements.sources.signals.signal_1.name == "Ultium EMG-BRACHIORAD. RT")
             v(k).dataR = tmpData; % Radialis
-            v(k).infoRrecord = tmp.info.record_name;
+            v(k).infoRecord = tmp.info.record_name;
             v(k).infoRName = tmpName;
             v(k).infoRDisp = txBR; 
         end
@@ -61,7 +69,7 @@ for f = datafiles
         end
     end
 end
-fprintf(1,"Liczba pacjentów: %d\n", length(v)/2); % / liczba mięśni mierzonych równocześnie lub wykonywanego ćwiczenia
+fprintf(1,"Liczba pacjentów: %d\n", length(v)/2); toc(allElapsedTime); % / liczba mięśni mierzonych równocześnie lub wykonywanego ćwiczenia
 fprintf(1,"Macierz plików v: %d (ilość pomiarów * liczba ćwiczeń)\n", length(v));
 
 % get from last sample
@@ -71,14 +79,15 @@ fpom = tmp.movements.sources.signals.signal_1.frequency; dtpom=1/fpom; %  Hz
 if(exist("segments.mat"))
     load segments.mat
 else
-    segmentActions
+    segmentActions;
 end
 
 if (skipedTrainingReppetinons) fprintf(1,"Rozkład: %d (podchwytów) %d (pośrednich) Sumarycznie pominiętych ćwiczeń: %d \n", countPodchwyt, countPosredni, skipedTrainingReppetinons); end;
 fprintf(1,"Liczba segmentów: %d (liczba plików * liczba mięśni * ilość powtórzeń)\nSzacowanych segmentów: (%d)\n", length(segment), length(v)*2*10); % liczba plików * liczba mięśni * ilość powtórzeń
-        for i = 1:length(segment)
+for i = 1:length(segment)
     plot(segment(i).data)
 end
+
 %--------------------------------------------------------------------------
 nrFw = 201; % nr fig widma
 lfrow= 4; lc=2; 
@@ -100,23 +109,33 @@ MTF(1).Tu = []; MTF(2).Tu = []; MTF(3).Tu = [];
 if(exist("spectrums.mat"))
     load spectrums.mat
 else
-    nrF = 300; spectrumTrend
+    nrF = 300; spectrumTrend;
 end
 fprintf(1,"Liczba widm: %d\n", length(Widma)); 
 
 if(exist("centroids.mat"))
     load centroids.mat
 else
-    nrF = 400; centroid
+    nrF = 400; centroid;
 end
 fprintf(1,"Liczba centroidów: %d\n", length(CentrWidm)); 
+
+dCentr;
+
+nrF = 800; bf = 0; disppolt; cc4; bf = 4; disppolt;
+toc(allElapsedTime)
+
 return
-nrF = 800; disppolt
+
+stereo_mtx = [v(11).dataR/max(abs(v(11).dataR)), v(11).dataB/max(abs(v(11).dataB))];
+audiowrite('stereo sound normalized.wav', stereo_mtx, fpom);
 
 nrF = 900;
 figureNubers = [134 136];
 for( i = 200:100:nrF) figureNubers = [figureNubers i+16 i+17]; end
+tic;
 figPSW
+toc;
 % % 
 % % figure(nrFw), subplot(1,2,1); hold off; subplot(1,2,2); hold off;
 % % for (j = 1:length(v))

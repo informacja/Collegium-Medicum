@@ -1,3 +1,4 @@
+tic; 
 for(j = 1:length(v)) % grupa
 %     figure(nrF+j),
     nxf = 0; % nie drukuj figur
@@ -87,6 +88,6 @@ for(j = 1:length(v)) % grupa
     end
     CentrWidm(j).Ayf=CentrWidm(j).Ayf/nAyf;
 end
-
+toc;
 % figure(nrFw+1); subplot(1,2,1) 
 save spectrums.mat Widma wyglWidma Esyg
