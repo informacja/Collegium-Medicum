@@ -13,13 +13,14 @@ if(DEBUG)
     close all;
 %     delete segments.mat % 10s
 %     delete signals.mat  % hann window 10s
-    delete spectrums.mat%           
-    delete centroids.mat%
+%     delete spectrums.mat%           
+    delete centroids.mat
     DEBUG = 1;
 end
 allElapsedTime = tic;
 windowing = 1;
-printCentroids = 0;
+printCentroids = 0; % a lot of console tables
+plotAllFigures = 0;
 deprecated = 0; % unused code
 dirname = 'Archiwum';
 dirname = '23.05.23';
@@ -131,7 +132,7 @@ fprintf(1,"Rozmiar widm: %dx%d\n", size(Widma));
 if(exist("centroids.mat"))
     load centroids.mat
 else
-    nrF = 400; centroid;
+    nrF = 400; fprintf(1, "Liczenie centroidów... ");centroid;
 end
 fprintf(1,"Rozmiar centroidów: %dx%d\n", size(CentrWidm)); 
 

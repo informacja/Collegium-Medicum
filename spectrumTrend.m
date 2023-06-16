@@ -4,14 +4,17 @@ for(j = 1:length(v)) % grupa
 %     figure(nrF+j),
     nxf = 0; % nie drukuj figur
     fileSegNr; %TODO
-    for (i = 1:length(find(fileSegNr==j))) % akcje w. grupy
-        ifig = mod(i,2); % ifigure
+    nseg=find(fileSegNr==j);
+    for (i = 1:length(nseg))
+        ifig = segMio(nseg(i))-1; % ifigure SygKat
+%         ifig = SygKat(nseg(i))-1; % ifigure SygKat
+       
         if(j == length(v))
             figure(nrF+j)
         end
         clear y;
         ksyg=ksyg+1;
-        y = Syg(ksyg,:)'; %v(j).data(n1:Nbf);
+        y = Syg(ksyg,:)'; %v(jdata(n1:Nbf);
         X = (y.^2); Esyg(j,i)=sum(X)*dtpom;%/lSyg;         
         %segment(nrs).data = y;
         Nf=length(y); %todo
@@ -79,18 +82,24 @@ end
 
 % normowanie widma
 for(j = 1:length(v)) % grupa
-       % normowanie widma
     lAyf=length(Widma(j,1).Ayf);
-    CentrWidm(j).Ayf=zeros(lAyf,1); nAyf=0;
-    CentrWidm(j).Ayf2=zeros(lAyf,1);
-    for (i = 1:length(find(fileSegNr==j))) 
+    CentrWidm(j,1).Ayf=zeros(lAyf,1); nAyf(1)=0; nAyf(2)=0; 
+    CentrWidm(j,1).Ayf2=zeros(lAyf,1);
+    CentrWidm(j,2).Ayf=zeros(lAyf,1); nAyf(1)=0; nAyf(2)=0; 
+    CentrWidm(j,2).Ayf2=zeros(lAyf,1);
+    nseg=find(fileSegNr==j);
+    for (i = 1:length(nseg)) 
         Widma(j,i).maxAyf = max(Widma(j,i).Ayf);
         Widma(j,i).maxAyf2 = max(Widma(j,i).Ayf2);
-        nAyf=nAyf+1;
-        CentrWidm(j).Ayf=CentrWidm(j).Ayf+Widma(j,i).Ayf; 
-        CentrWidm(j).Ayf2=CentrWidm(j).Ayf2+Widma(j,i).Ayf2; 
+        if (segMio(nseg(i)) == 1 ) kat = 1; else kat = 2; end
+        nAyf(kat)=nAyf(kat)+1;
+        CentrWidm(j, kat).Ayf=CentrWidm(j, kat).Ayf+Widma(j,i).Ayf/Widma(j,i).maxAyf; 
+        CentrWidm(j, kat).Ayf2=CentrWidm(j, kat).Ayf2+Widma(j,i).Ayf2/Widma(j,i).maxAyf2; 
     end
-    CentrWidm(j).Ayf=CentrWidm(j).Ayf/nAyf; %  czy to normuje wszystkie (j,i)?
+    CentrWidm(j, 1).Ayf=CentrWidm(j,1).Ayf/nAyf(1); 
+    CentrWidm(j, 2).Ayf=CentrWidm(j,2).Ayf/nAyf(2);
+    CentrWidm(j, 1).Ayf2=CentrWidm(j,1).Ayf2/nAyf(1); 
+    CentrWidm(j, 2).Ayf2=CentrWidm(j,2).Ayf2/nAyf(2); 
 end
 toc;
 % figure(nrFw+1); subplot(1,2,1) 

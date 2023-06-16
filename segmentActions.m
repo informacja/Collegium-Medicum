@@ -77,7 +77,7 @@ while (j <= length(v))
 %         figure(200+nrs), plot(e);
         Nbf = (locs(k)+find(min(e)==e)); % minimum punkt podziału
         if Nbf > length(v(j).dataB) 
-            Nbf = length(v(j).dataB); [ j, k, nrs]
+            Nbf = length(v(j).dataB); paraSegmentowOgraniczonych = [ nrs]
 %             continue;
         end
 %         Nbf = Nbf(1);
