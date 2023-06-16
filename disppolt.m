@@ -29,7 +29,7 @@ for(i = 1:4)
             if v(j).infoTraining == 1
                 plotDistance(nrF, bf, n, j, zakres1, k, Psyg, dEM, dCM, dists_chebyM)
 
-        figure(30), plot(j,dists_chebyM(j,nrs),'k.'); hold on;
+%         figure(30), plot(j,dists_chebyM(j,nrs),'k.'); hold on;
             end
             if v(j).infoTraining == 2
                 plotDistance(nrF, bf, n, j, zakres2, k, Psyg, dEM, dCM, dists_chebyM);

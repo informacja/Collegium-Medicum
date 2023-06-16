@@ -11,9 +11,10 @@ DEBUG = 1;
 if(DEBUG)
     clear all;
     close all;
-%     delete segments.mat 
-%     delete spectrums.mat
-    delete centroids.mat
+%     delete segments.mat % 10s
+%     delete signals.mat  % hann window 10s
+    delete spectrums.mat%           
+    delete centroids.mat%
     DEBUG = 1;
 end
 allElapsedTime = tic;
@@ -79,14 +80,15 @@ fpom = tmp.movements.sources.signals.signal_1.frequency; dtpom=1/fpom; %  Hz
 if(exist("segments.mat"))
     load segments.mat
 else
-    segmentActions;
+    nrF = 20; segmentActions;
 end
 
-if (skipedTrainingReppetinons) fprintf(1,"Rozkład: %d (podchwytów) %d (pośrednich) Sumarycznie pominiętych ćwiczeń: %d \n", countPodchwyt, countPosredni, skipedTrainingReppetinons); end;
+if (skipedTrainingReppetinons) fprintf(1,"Rozkład: %d (pośrednich) %d (podchwytów) Sumarycznie pominiętych ćwiczeń: %d \n", countPosredni, countPodchwyt, skipedTrainingReppetinons); end;
 fprintf(1,"Liczba segmentów: %d (liczba plików * liczba mięśni * ilość powtórzeń)\nSzacowanych segmentów: (%d)\n", length(segment), length(v)*2*10); % liczba plików * liczba mięśni * ilość powtórzeń
-for i = 1:length(segment)
-    plot(segment(i).data)
-end
+% figure;
+% for i = 1:length(segment)
+%     plot(segment(i).data)
+% end
 
 %--------------------------------------------------------------------------
 nrFw = 201; % nr fig widma
@@ -95,40 +97,81 @@ Tsyg=ceil(ceil(m*dtpom)/2)*2; % [sek] Maximal time of action duration
 lSyg=round(Tsyg/dtpom);
 clear Syg;
 ksyg=0;     kol='kbrm'; kf=0;%figure(j)
-for( i = 1:length(segment)) % uzupełnianie zerami segmentów
-    SygRawLen(i) = length(segment(i).data');
-    if (windowing)
-        win = hann(SygRawLen(i));
-        segment(i).data = segment(i).data.*win;
+
+if(exist("signals.mat"))
+    load signals.mat
+else
+    
+    tic
+    for( i = 1:length(segment)) % uzupełnianie zerami segmentów
+        SygRawLen(i) = length(segment(i).data');
+        if (windowing)
+            win = hann(SygRawLen(i));
+            segment(i).data = segment(i).data.*win;
+        end
+        Syg(i,1:lSyg) = [segment(i).data' zeros(1, lSyg-length(segment(i).data))];
+    
+        SygKat(i) = segMio(i)+(segTraining(i)-1)*2; %plikSegMio(fileSegNr(nrs),nrB).i=2;  n+v(j).infoTraining-1*2; % training
+        % 1 - Pośred BR, 2 Poś BB, 3 - Podchwyt BRadialis, 4 Podch BBiceps          
     end
-    Syg(i,1:lSyg) = [segment(i).data' zeros(1, lSyg-length(segment(i).data))];
-%     figure(i), plot(Syg(i,:))
+    fprintf(1, "Okienkowanie Hanna ")
+    toc;
+    save signals.mat Syg SygKat SygRawLen
 end
+
 MTF(1).Tu = []; MTF(2).Tu = []; MTF(3).Tu = [];
 
 if(exist("spectrums.mat"))
     load spectrums.mat
 else
-    nrF = 300; spectrumTrend;
+    nrF = 300; fprintf(1, "Liczenie widm... "); spectrumTrend;
 end
-fprintf(1,"Liczba widm: %d\n", length(Widma)); 
+fprintf(1,"Rozmiar widm: %dx%d\n", size(Widma)); 
 
 if(exist("centroids.mat"))
     load centroids.mat
 else
     nrF = 400; centroid;
 end
-fprintf(1,"Liczba centroidów: %d\n", length(CentrWidm)); 
+fprintf(1,"Rozmiar centroidów: %dx%d\n", size(CentrWidm)); 
 
 dCentr;
 
 nrF = 800; bf = 0; disppolt; cc4; bf = 4; disppolt;
 toc(allElapsedTime)
-
 return
 
-stereo_mtx = [v(11).dataR/max(abs(v(11).dataR)), v(11).dataB/max(abs(v(11).dataB))];
-audiowrite('stereo sound normalized.wav', stereo_mtx, fpom);
+mnoznik = 24;
+BR = v(11).dataR; BB = v(11).dataB; % radialis, biceps
+L = resample(BR,mnoznik,1); R = resample(BB,mnoznik,1);
+L = L/max(abs(L)); R = R/max(abs(R));
+stereo_mtx = [L, R];%, v(11).dataB/max(abs(v(11).dataB))];
+audiowrite('stereo sound normalized.wav', stereo_mtx, fpom*mnoznik);
+
+
+% 11 to ja, 22 też
+ X = []; 
+for(i=1:length(v))
+    if (v(i).infoRecord == """11 pośredni""")
+        figure(i), subplot(211); plot(v(i).dataR); hold on; plot(v(i).dataB); axis('tight');
+        Lf = length(v(i).dataB)/2; dtpom = 1/fpom*25;
+        subplot(212); X = abs(fft(v(i).dataR)); plot([0:Lf-1]*dtpom, X(1:Lf)/Lf); hold on
+        X = abs(fft(v(i).dataB)); plot([0:Lf-1]*dtpom, X(1:Lf)/Lf); hold off; axis('tight')
+    end
+    if (v(i).infoRecord == """22 pośredni NORAXON ELEKTRODY """)
+        figure(i), subplot(211); plot(v(i).dataR); hold on; plot(v(i).dataB); axis('tight');
+        Lf = length(v(i).dataB)/2; dtpom = 1/fpom*25;
+        subplot(212); X = abs(fft(v(i).dataR)); plot([0:Lf-1]*dtpom, X(1:Lf)/Lf); hold on
+        X = abs(fft(v(i).dataB)); plot([0:Lf-1]*dtpom, X(1:Lf)/Lf); hold off; axis('tight')
+    end
+    if (v(i).infoRecord == """22 podchwyt NORAXON ELEKTRODY""")
+        figure(i), subplot(211); plot(v(i).dataR); hold on; plot(v(i).dataB); axis('tight');
+        Lf = length(v(i).dataB)/2; dtpom = 1/fpom*25;
+        subplot(212); X = abs(fft(v(i).dataR)); plot([0:Lf-1]*dtpom, X(1:Lf)/Lf); hold on
+        X = abs(fft(v(i).dataB)); plot([0:Lf-1]*dtpom, X(1:Lf)/Lf); hold off; axis('tight')
+    end
+end
+
 
 nrF = 900;
 figureNubers = [134 136];

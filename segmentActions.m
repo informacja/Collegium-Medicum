@@ -76,11 +76,15 @@ while (j <= length(v))
         e = envelope(y(locs(k):locs(k+1)),1111,'rms'); %[n1,locs(k),locs(k+1), locs(k)+find(min(e)==e)]
 %         figure(200+nrs), plot(e);
         Nbf = (locs(k)+find(min(e)==e)); % minimum punkt podziału
+        if Nbf > length(v(j).dataB) 
+            Nbf = length(v(j).dataB); [ j, k, nrs]
+%             continue;
+        end
 %         Nbf = Nbf(1);
-        for(n = 0:1) % muscules signals const TODO 1
-            if (n) s = v(j).dataR(n1:Nbf); fileSegMio(nrs) = txBR; nrR=nrR+1; plikSegMio(j,nrR).i=1;
+        for(n = 1:2) % muscules signals const TODO 1
+            if (n==1) s = v(j).dataR(n1:Nbf); fileSegMio(nrs) = txBR; segMio(nrs) = 1; nrR=nrR+1; segTraining(nrs) = v(j).infoTraining; plikSegMio(j,nrR).i=1;
 %             plikSegMio(j,nrR). = nrs dla segmentu
-            else   s = v(j).dataB(n1:Nbf); fileSegMio(nrs) = txBB; nrB=nrB+1; plikSegMio(j,nrB).i=2;end
+            else   s = v(j).dataB(n1:Nbf); fileSegMio(nrs) = txBB; segMio(nrs) = 2; nrB=nrB+1; segTraining(nrs) = v(j).infoTraining; plikSegMio(j,nrB).i=2; end
     
     %         figure(100+nrs), plot (s);
             fileSegNr(nrs) = j; % w przypadku różnych ilości segmentów w plikach
@@ -97,12 +101,12 @@ end
 
 % if liczba segmentó mniejsza niż 9 skip
 
-save segments.mat segment fileSegNr fileSegMio m skipedTrainingReppetinons v countPodchwyt countPosredni
+save segments.mat segment fileSegNr fileSegMio m skipedTrainingReppetinons v countPodchwyt countPosredni segTraining segMio
 
 if(DEBUG) 
-    figure(100+(j+1)*2+1); hist(fileSegNr); title("Rozkład segmentów w plikach"); ylabel("Segmenty per ćwiczenie"); xlabel("Liczba ćwiczeń");  % ilość segmentów per plik
+    figure(nrF+(j+1)*2+1); hist(fileSegNr); title("Rozkład segmentów w plikach"); ylabel("Segmenty per ćwiczenie"); xlabel("Liczba ćwiczeń");  % ilość segmentów per plik
     sLens = []; for i = 1:length(segment) sLens(i) = length(segment(i).data);end
-    figure(100+(j+1)*2+2); plot(sLens/fpom,'.'); hold on; title("Rozkład długości segmentów"); ylabel("Długość segmentu [s]"); xlabel("Nr segmentu");
+    figure(nrF+(j+1)*2+2); plot(sLens/fpom,'.'); hold on; title("Rozkład długości segmentów"); ylabel("Długość segmentu [s]"); xlabel("Nr segmentu");
     if(deprecated) 
         for i = 554:555%length(segment) % color anomaly
             sLens(i) = length(segment(i).data);
@@ -119,6 +123,7 @@ if(DEBUG)
     end
 %     A = length(segment(i).data)/fpom;
     % plot(segment(i).data(TF+1),TF,'r*')
-    toc;
+  
     % sum(TF)
 end
+  toc;

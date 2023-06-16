@@ -1,4 +1,7 @@
 tic;
+if(size(CentrWidm)==[1, length(Widma)])
+    CentrWidm = CentrWidm';
+end
 nrs = 0;
 for(j = 1:2) % grupa
     figure(nrF-j);
@@ -28,7 +31,7 @@ for(j = 1:length(v)) % grupa
 %     figure(nrF+j); 
        % normowanie widma
     lAf=length(wyglWidma(j,1).Af);
-    CentrWidm(j, 1).AfM=zeros(lAf,1); nAf(1)=0;
+%     CentrWidm(j, 1).AfM=zeros(lAf,1); nAf(1)=0;
     CentrWidm(j, 1).AfM=zeros(lAf,1); nAf(1)=0;
     CentrWidm(j, 1).Af2M=zeros(lAf,1);
     CentrWidm(j, 1).AfE=zeros(lAf,1); 
@@ -46,10 +49,13 @@ for(j = 1:length(v)) % grupa
     for (i = 1:length(find(fileSegNr==j))) 
         nrs = nrs + 1;
         
+%         if(v(j).plikeSegMio(i) == txBR) kat = 1; end
+
         if(fileSegMio(nrs) == txBR) kat = 1; end
         if(fileSegMio(nrs) == txBB) kat = 2; end
         wyglWidma(j,i).maxAf = max(wyglWidma(j,i).Af);
         wyglWidma(j,i).maxAf2 = max(wyglWidma(j,i).Af2);
+%         if (wyglWidma() todo
         nAf(kat)=nAf(kat)+1;
         Psyg(j,i)=Esyg(j,i)/SygRawLen(nrs);
 
@@ -57,7 +63,9 @@ for(j = 1:length(v)) % grupa
         CentrWidm(j, kat).Af2M=CentrWidm(j, kat).Af2M+wyglWidma(j,i).Af2'/wyglWidma(j,i).maxAf2; %mocy
         CentrWidm(j, kat).AfE= CentrWidm(j, kat).AfE+wyglWidma(j,i).Af'/Psyg(j,i); 
         CentrWidm(j, kat).Af2E=CentrWidm(j, kat).Af2E+wyglWidma(j,i).Af2'/Psyg(j,i); 
-
+        if isnan(CentrWidm(j, kat).AfM)
+            e_ind = [j,i,kat]
+        end
 %         Centr(j, kat).AfM = Centr(j, kat).AfM + CentrWidm(j,kat).AfM;
 %         Centr(j, kat).AfE = Centr(j, kat).AfE + CentrWidm(j,kat).AfE;
 
@@ -183,6 +191,9 @@ nrs = 0; nf=2; %nrF = nrF+1;
 for(j = 1:length(v)) % grupa training
     for (k = 1:length(find(fileSegNr==j))) % training
         nrs = nrs + 1;
+        if isempty(wyglWidma(j,k).maxAf)
+            empty_index=[j, k, nrs]
+        end
         if(fileSegMio(nrs)==txBR)
             if v(j).infoTraining == 1
                 c=1;
@@ -215,6 +226,8 @@ for(j = 1:length(v)) % grupa training
     end % odległość w grupie
     figure(nrF-2), subplot(2,2,nf), plot(abs(d)); title("abs(d)"); hold on;
 end
+
+for i = length(wyglWidma) TEST(i) = wyglWidma(i,1).maxAf; end
 % nag = ["między", "wew"];
 % dists_cheby
 % dists_chebyG
@@ -233,7 +246,7 @@ for(j = 1:length(v)) % grupa
     figure(nrF+90); plot(dEM(j,:),'k.')
 end
 else
-    disp("Pominęto wyposywanie odległości dla centroidów")
+    disp("Pominęto wypisywanie odległości dla centroidów")
 end
 
 % cc4 %nadpisz odległości
@@ -243,3 +256,5 @@ end
  
 save centroids.mat CentrWidm dEM dCM dists_chebyM dEsyg Psyg dEM dCM dists_chebyM
 toc;
+
+% TEST =[]; for i = 1:length(wyglWidma) TEST(i) = isempty(CentrWidm(i).AfM); end; max(TEST)
