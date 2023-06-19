@@ -29,7 +29,7 @@ while (j <= length(v))
     if ~DEBUG
         if isempty(y) continue; end;
     end
-    name = [ v(j).infoRecord v(j).infoRDisp ];
+    name = [ v(j).infoRecord v(j).infoRDisp ]; % założenie o byciu w fazie
     %         run("../MTF/filtrWidma.m");
     %         figure, plot(Af);
     md = 3.9; %[ seconds] 3.8 was
@@ -53,7 +53,7 @@ while (j <= length(v))
     numOfActions = sum(peaksOfSignal);
     if numOfActions < minActions %||  numOfActions > 12 %|| j > 2
         figure(100+(j+1)*2), findpeaks(y,fpom,'MinPeakProminence',mp,'MinPeakDistance',md,'Threshold',15,"Annotate","peaks"); title(name);        
-        v(j) = [];
+        v(j) = []; % usuń record z macierzy wejściowej
         skipedTrainingReppetinons = skipedTrainingReppetinons+1;continue; 
     end % Skip not well segmented training
 %     names = [names; string(v(j).infoRecord)];
@@ -77,7 +77,7 @@ while (j <= length(v))
 %         figure(200+nrs), plot(e);
         Nbf = (locs(k)+find(min(e)==e)); % minimum punkt podziału
         if Nbf > length(v(j).dataB) 
-            Nbf = length(v(j).dataB); paraSegmentowOgraniczonych = [ nrs]
+            Nbf = length(v(j).dataB); paraSegmentowOgraniczonych = [nrs nrs+1]
 %             continue;
         end
 %         Nbf = Nbf(1);

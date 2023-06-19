@@ -14,7 +14,7 @@ if(DEBUG)
 %     delete segments.mat % 10s
 %     delete signals.mat  % hann window 10s
 %     delete spectrums.mat%           
-    delete centroids.mat
+%     delete centroids.mat
     DEBUG = 1;
 end
 allElapsedTime = tic;
@@ -102,7 +102,6 @@ ksyg=0;     kol='kbrm'; kf=0;%figure(j)
 if(exist("signals.mat"))
     load signals.mat
 else
-    
     tic
     for( i = 1:length(segment)) % uzupełnianie zerami segmentów
         SygRawLen(i) = length(segment(i).data');
@@ -111,7 +110,6 @@ else
             segment(i).data = segment(i).data.*win;
         end
         Syg(i,1:lSyg) = [segment(i).data' zeros(1, lSyg-length(segment(i).data))];
-    
         SygKat(i) = segMio(i)+(segTraining(i)-1)*2; %plikSegMio(fileSegNr(nrs),nrB).i=2;  n+v(j).infoTraining-1*2; % training
         % 1 - Pośred BR, 2 Poś BB, 3 - Podchwyt BRadialis, 4 Podch BBiceps          
     end
@@ -139,7 +137,7 @@ fprintf(1,"Rozmiar centroidów: %dx%d\n", size(CentrWidm));
 dCentr;
 
 nrF = 800; bf = 0; disppolt; cc4; bf = 4; disppolt;
-toc(allElapsedTime)
+fprintf(1, "main = "); toc(allElapsedTime)
 return
 
 mnoznik = 24;

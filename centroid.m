@@ -67,7 +67,6 @@ for(j = 1:length(v)) % grupa
         nAf(kat)=nAf(kat)+1;
         Psyg(j,i)=Esyg(j,i)/SygRawLen(nrs);
         
-
         CentrWidm(j, kat).AfM= CentrWidm(j, kat).AfM +wyglWidma(j,i).Af'/wyglWidma(j,i).maxAf; 
         CentrWidm(j, kat).Af2M=CentrWidm(j, kat).Af2M+wyglWidma(j,i).Af2'/wyglWidma(j,i).maxAf2; %mocy
         
@@ -98,7 +97,7 @@ for(j = 1:length(v)) % grupa
     
         if( length(nj) > 0 || plotAllFigures )
             subplot(2,2,kat); hold on; plot(xf, CentrWidm(j, kat).AfM(f),'k--'); hold off; axis('tight');
-            subplot(2,2,kat+2);  hold on; plot(xf, CentrWidm(j, kat).AfE(f),'k--'); hold off; axis('tight');
+            subplot(2,2,kat+2); hold on; plot(xf, CentrWidm(j, kat).AfE(f),'k--'); hold off; axis('tight');
             title(fileSegMio(nrs)); xlabel("Widmo mocy")
         end
     end
@@ -153,14 +152,12 @@ for( i = 1:length(v))
 end
 CC =[ (mean(cwrr)); (mean(cwrb)); (mean(cwcr)); (mean(cwcb)); ]; % Centroidy Centroidów
 
-figure(nrF+1), subplot(2,1,1), plot(mean(cwrr)); hold on; plot(mean(cwrb)); title("Posredni");
-legend(txBR,txBB);hold off;
-figure(nrF+1), subplot(2,1,2), plot(mean(cwcr(:,:))); hold on; plot(mean(cwcb(:,:))); title("Podchwyt");
-legend(txBR,txBB);hold off;
+figure(nrF+1), subplot(2,1,1), plot(CC(1)); hold on; plot(CC(2)); title("Posredni"); legend(txBR,txBB);hold off;
+figure(nrF+1), subplot(2,1,2), plot(mean(CC(3))); hold on; plot(mean(CC(4))); title("Podchwyt"); legend(txBR,txBB);hold off;
 sgtitle("Średnia z centroidów")
 
-figure(nrF+2), hold on; plot(mean(cwrr(:,:))); plot(mean(cwrb(:,:)));
-plot(mean(cwcr(:,:))); plot(mean(cwcb(:,:))); title("średnia z centroidów mięśni i ćwiczeń"); 
+figure(nrF+2), hold on; plot(mean(CC(1))); plot(mean(CC(2)));
+plot(mean(CC(3))); plot(mean(CC(4))); title("średnia z centroidów mięśni i ćwiczeń"); 
 legend("Pośredni Radialis", "Pośredni Biceps", "Podchwyt Radialis", "Podchwyt Biceps");
 %--------------------------------------------------------------------------
  % dCentr posrRad, posrBiceps, podChwytRad, podChwytBiceps
@@ -179,7 +176,7 @@ for(j = 1:length(v)) % grupa trainig
         d=CentrWidm(j, kat).AfM-wyglWidma(j,k).Af'/wyglWidma(j,k).maxAf; 
         dEM(j,k)=sqrt(sum(d.^2)); 
         dCM(j,k)=sum(abs(d))/100; 
-        dists_chebyM(j,k) = max(abs(d),[],1);  %uwaga przesunięcie przecinka
+        dists_chebyM(j,k) = max(abs(d));  %uwaga przesunięcie przecinka
         Psyg(j,k) = Esyg(j,k)/SygRawLen(nrs); % unormowany
         d=CentrWidm(j, kat).AfE-wyglWidma(j,k).Af'/Psyg(j,k); 
         dE(j,k)=sqrt(sum(d.^2)); dC(j,k)=sum(abs(d))/100; dists_cheby(j,k) = max(abs(d));  %uwaga przesunięcie przecink
@@ -192,16 +189,17 @@ for(j = 1:length(v)) % grupa trainig
     figure(nrF-2), subplot(2,2,nf), plot(abs(d)); title("abs(d)"); hold on;
     for(i=j+1:length(v))
 %         abs(Esr(i)-Esr(j))/2
-        dEsgr(j,i)=abs(Esr(i)-Esr(j))/2;
-        for(kat = 1:2)
-            d=abs((CentrWidm(j,kat).AfM-CentrWidm(i, kat).AfM));  if(j==1) figure(nrF+j-3), subplot(1,2, 1), plot(d); title("distatans"); hold on; end
-            dCG(j,i)=sum(d)/200; % UWAGA przesunięcie przecinka o dwa miejsca w celu łatwiejszej interpretacji wyników
-            dEG(j,i)=sqrt(sum(d.^2))/2; dists_chebyG(j,k) = max(abs(d),[],1)/2; % odległosv mięfzy grupowa
-            d=[];
-            d=abs((CentrWidm(j, kat).Af2M-CentrWidm(i, kat).Af2M));  %if(j==1) figure(nrF+j), subplot(1,2, 1), plot(d); title("d. mocy"); hold on; end
-            dCG2(j,i)=sum(d)/200; % UWAGA przesunięcie przecinka o dwa miejsca w celu łatwiejszej interpretacji wyników
-            dEG2(j,i)=sqrt(sum(d.^2))/2; dists_chebyG2(j,k) = max(abs(d),[],1)/2;
-        end
+%         dEsgr(j,i)=abs(Esr(i)-Esr(j))/2;
+%         for(kat = 1:2)
+%             % bezsensowne odejmowanie wzajemnych
+%             d=abs((CentrWidm(j,kat).AfM-CentrWidm(i, kat).AfM));  if(j==1) figure(nrF+j-3), subplot(1,2, 1), plot(d); title("distatans"); hold on; end
+%             dCG(j,i)=sum(d)/200; % UWAGA przesunięcie przecinka o dwa miejsca w celu łatwiejszej interpretacji wyników
+%             dEG(j,i)=sqrt(sum(d.^2))/2; dists_chebyG(j,k) = max(abs(d),[],1)/2; % odległosv mięfzy grupowa
+%             d=[];
+%             d=abs((CentrWidm(j, kat).Af2M-CentrWidm(i, kat).Af2M));  %if(j==1) figure(nrF+j), subplot(1,2, 1), plot(d); title("d. mocy"); hold on; end
+%             dCG2(j,i)=sum(d)/200; % UWAGA przesunięcie przecinka o dwa miejsca w celu łatwiejszej interpretacji wyników
+%             dEG2(j,i)=sqrt(sum(d.^2))/2; dists_chebyG2(j,k) = max(abs(d),[],1)/2;
+%         end
         % dzielimy prrze 2 aby odl. m. grupowe były lepiej porównywanlne z
         % liczonymi od centroidu
         nf=4;
@@ -242,16 +240,16 @@ for(j = 1:length(v)) % grupa training
         dCM(j,k)=sum(abs(d))/100; 
         dists_chebyM(j,k) = max(abs(d),[],1);  %uwaga przesunięcie przecinka
         Psyg(j,k) = Esyg(j,k)/SygRawLen(nrs); % unormowany
-        d=CentrWidm(j).AfE-wyglWidma(j,k).Af'/Psyg(j,k); 
+        d=CentrWidm(j, v(j).infoTraining).AfE-wyglWidma(j,k).Af'/Psyg(j,k); 
         dE(j,k)=sqrt(sum(d.^2)); dC(j,k)=sum(abs(d))/100; dists_cheby(j,k) = max(abs(d),[],1);  %uwaga przesunięcie przecink
-        d2=CentrWidm(j).Af2M-wyglWidma(j,k).Af2'; 
-        dE2(j,k)=sqrt(sum(d2.^2)); dC2(j,k)=sum(abs(d2))/100; dists_cheby2(j,k) = max(abs(d2),[],1);  %2-mocy
+        d2=CentrWidm(j, v(j).infoTraining).Af2M-wyglWidma(j,k).Af2'; 
+        dE2(j,k)=sqrt(sum(d2.^2)); dC2(j,k)=sum(abs(d2))/100; dists_cheby2(j,k) = max(abs(d2));  %2-mocy
         dEsyg(j,k)=abs(Psyg(j,k)-Psr(j));
     end % odległość w grupie
     figure(nrF-2), subplot(2,2,nf), plot(abs(d)); title("abs(d)"); hold on;
 end
 
-for i = length(wyglWidma) TEST(i) = wyglWidma(i,1).maxAf; end
+% for i = length(wyglWidma) TEST(i) = wyglWidma(i,1).maxAf; end
 % nag = ["między", "wew"];
 % dists_cheby
 % dists_chebyG
@@ -273,12 +271,7 @@ else
     disp("Pominęto wypisywanie odległości dla centroidów")
 end
 
-% cc4 %nadpisz odległości
-
-% odległości centroidów
-        % grupa 1, 2 , w gr. 1 2
- 
-save centroids.mat CentrWidm dEM dCM dists_chebyM dEsyg Psyg dEM dCM dists_chebyM CC
+save centroids.mat CentrWidm dEM dCM dists_chebyM dEsyg Psyg dEM dCM dists_chebyM CC Psr
 toc;
 
 % TEST =[]; for i = 1:length(wyglWidma) TEST(i) = isempty(CentrWidm(i).AfM); end; max(TEST)
