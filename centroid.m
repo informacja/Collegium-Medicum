@@ -261,9 +261,11 @@ for(j = 1:length(v)) % grupa trainig
 end
 % figure(nrF-2), subplot(1,2, 1), plot(d); hold off;
 % figure(nrF-2), subplot(1,2, 1), plot(d); hold off;
-
+% disp("UWAGA CENrTroid")
+% return;
 nrs = 0; nf=2; %nrF = nrF+1;
 % global Psyg, dEM, dCM, dists_chebyM; %ISTOTNE
+if(1)
 for(j = 1:length(v)) % grupa training
     nseg=find(fileSegNr==j);
     for (i = 1:length(nseg))
@@ -272,35 +274,42 @@ for(j = 1:length(v)) % grupa training
         if(fileSegMio(nrs)==txBR)
             if v(j).infoTraining == 1
                 c=1;
-                d=CC(c)-wyglWidma(j,i).Af'/wyglWidma(j,i).maxAf; 
+%                 d=CC(c,:)-wyglWidma(j,i).Af/wyglWidma(j,i).maxAf; 
             end
             if v(j).infoTraining == 2
                c=2+1;
-               d=CC(c)-wyglWidma(j,i).Af'/wyglWidma(j,i).maxAf; 
+%                d=CC(c,:)-wyglWidma(j,i).Af/wyglWidma(j,i).maxAf; 
             end
         end
         if(fileSegMio(nrs)==txBB)
             if v(j).infoTraining == 1
                 c=2;
-                d=CC(c)-wyglWidma(j,i).Af'/wyglWidma(j,i).maxAf; 
             end
             if v(j).infoTraining == 2
                c=2+2;
-               d=CC(c)-wyglWidma(j,i).Af'/wyglWidma(j,i).maxAf; 
             end
         end
-        
+        d=CC(c,:)-wyglWidma(j,i).Af/wyglWidma(j,i).maxAf; 
+        kategoria = segment(nrs).miesien;
         dEM(j,k)=sqrt(sum(d.^2)); 
         dCM(j,k)=sum(abs(d)); 
-        dists_chebyM(j,k) = max(abs(d));  %uwaga przesunięcie przecinka
+        dists_chebyM(j,k) = max(abs(d)); %mx(j,k) = find(abs(d)==max(abs(d)); 
+
+        Ps = sum(wyglWidma(j,k).Af);
         Psyg(j,k) = Esyg(j,k)/SygRawLen(nrs); % unormowany
-        d=CentrWidm(j, v(j).infoTraining).AfE-wyglWidma(j,k).Af'/Psyg(j,k); 
-        dE(j,k)=sqrt(sum(d.^2)); dC(j,k)=sum(abs(d)); dists_cheby(j,k) = max(abs(d));  %uwaga przesunięcie przecink
-        d2=CentrWidm(j, v(j).infoTraining).Af2M-wyglWidma(j,k).Af2'; 
-        dE2(j,k)=sqrt(sum(d2.^2)); dC2(j,k)=sum(abs(d2)); dists_cheby2(j,k) = max(abs(d2));  %2-mocy
+        d=CCE(c,:)-wyglWidma(j,k).Af/Ps;%Psyg(j,k); 
+%         d=CentrWidm(j, kategoria).AfE-wyglWidma(j,k).Af'/Ps;%Psyg(j,k); 
+        dEE(j,k)=sqrt(sum(d.^2)); dCE(j,k)=sum(abs(d)); dists_chebyE(j,k) = max(abs(d));  
+        
+        Ps2= sum(wyglWidma(j,k).Af2);
+        d2=CentrWidm(j, kategoria).Af2E-wyglWidma(j,k).Af2'/Ps2; %TODO CCE2
+%         d2=CentrWidm(j, kategoria).Af2E-wyglWidma(j,k).Af2'/Ps2;
+        dE2E(j,k)=sqrt(sum(d2.^2)); dC2E(j,k)=sum(abs(d2)); 
+        dists_cheby2E(j,k) = max(abs(d2));  %2-mocy
         dEsyg(j,k)=abs(Psyg(j,k)-Psr(j));
     end % odległość w grupie
     figure(nrF-2), subplot(2,2,nf), plot(abs(d)); title("abs(d)"); hold on;
+end
 end
 
 % for i = length(wyglWidma) TEST(i) = wyglWidma(i,1).maxAf; end
@@ -309,23 +318,23 @@ end
 % dists_chebyG
 % iloczyn wektorywy tylko w przestrzeni euclidesa
 if(printCentroids)
-% nag = ["między", "wew"]
-fprintf(1,'\n\teuc. Max\tCity\tCheby\tEnerg')
-for(j = 1:length(v)) % grupa
-    fprintf(1,'\ngr.%-2d',j)
-    %dE(j)=0; dC(j)=0; % norma Euklidesowa, City (Manhatan)
-    if printCentroids
-        for (k = 1:length(find(fileSegNr==j))) 
-            fprintf(1,';  %6.3f %.3f %.3f %8.3g',dEM(j,k),dCM(j,k),dists_chebyM(j,k),dEsyg(j,k)); %] [dE(2,1);dC(2,1);dists_cheby(2,1);;dEsyg(2,1)
+    % nag = ["między", "wew"]
+    fprintf(1,'\n\teuc. Max\tCity\tCheby\tEnerg')
+    for(j = 1:length(v)) % grupa
+        fprintf(1,'\ngr.%-2d',j)
+        %dE(j)=0; dC(j)=0; % norma Euklidesowa, City (Manhatan)
+        if printCentroids
+            for (k = 1:length(find(fileSegNr==j))) 
+                fprintf(1,';  %6.3f %.3f %.3f %8.3g',dEM(j,k),dCM(j,k),dists_chebyM(j,k),dEsyg(j,k)); %] [dE(2,1);dC(2,1);dists_cheby(2,1);;dEsyg(2,1)
+            end
         end
+        figure(nrF+90); plot(dEM(j,:),'k.')
     end
-    figure(nrF+90); plot(dEM(j,:),'k.')
-end
 else
     disp("Pominęto wypisywanie odległości dla centroidów")
 end
 
-save centroids.mat CentrWidm dEM dCM dists_chebyM dEsyg Psyg dEM dCM dists_chebyM CC CCE Psr dC dE dists_cheby
+save centroids.mat CentrWidm dEM dCM dists_chebyM dEsyg Psyg dEM dCM dists_chebyM CC CCE Psr dC dE dists_cheby dEE dCE dists_chebyE dE2E dC2E dists_cheby2E dEsyg mx
 toc;
 
 % TEST =[]; for i = 1:length(wyglWidma) TEST(i) = isempty(CentrWidm(i).AfM); end; max(TEST)

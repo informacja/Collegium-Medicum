@@ -4,11 +4,24 @@ tic; n = 0; inx = 1:length(dEM(1,:));
 % global n;
 offset = size(Syg,1); old = [];
 % for(i = 1:offset)
-figure(nrF)
-distMEtmp = distME; distMCtmp = distMC; distM_chebytmp = distM_cheby;
-if (bf==0) distMEtmp(:) = 0; distMCtmp(:) = 0; distM_chebytmp(:) = 0;
-% else distMEtmp = distME; distMCtmp = distMC; distM_chebytmp = distM_cheby;
+
+% flagaMaxima = 0;
+if (flagaMaxima)
+%     nrF = 3001;
+    distMCtmp = distMC; distMEtmp = distME; distM_chebytmp = distM_cheby;
+    dEx = dEM; dCx = dCM; dCzx = dists_chebyM;
+else % function of distribution of freq in spectrum
+%     nrF = 3002;
+    distMCtmp = distEC; distMEtmp = distEE; distM_chebytmp = distE_cheby;
+    dEx = dEE; dCx = dCE; dCzx = dists_chebyE;
 end
+
+
+
+if (bf==0) distMEtmp(:) = 0; distMCtmp(:) = 0; distM_chebytmp(:) = 0;
+    % else distMEtmp = distME; distMCtmp = distMC; distM_chebytmp = distM_cheby;
+end
+figure(nrF)
 % dists_chebyM = dists_cheby; Psyg; dEM = dE; dCM = dC;
 for(j = 1:length(v))
     %     j = fileSegNr(i);
@@ -42,46 +55,48 @@ for(j = 1:length(v))
 
         % n = i;
         i=nseg(s);
-        switch(mod(SygKat(i),2)+1)
+        switch(SygKat(i))
             %         distEE
             %     distEC
             %     distE_cheby
             case 1
-                k = SygKat(i);
-                plotDistance(nrF, bf, n+offset*(k-1), j, zakres1, k, Psyg, dEM, dCM, dists_chebyM)
-                plotDistance(nrF, bf, n+offset*(k-1), j, zakres2, k, Psyg, dEM, dCM, dists_chebyM);
+                k = SygKat(i); %nrPoz(k) =
+                plotDistance(nrF, bf, n+offset*(k-1), j, zakres1, k, Psyg, dEx, dCx, dCzx);
+%                 plotDistance(nrF, bf, n+offset*(k-1), j, zakres2, k, Psyg, dEx, dCx, dCzx);
             case 2
                 k = SygKat(i);
-                plotDistance(nrF, bf, n+offset*(k-1), j, zakres1, k, Psyg, ...
-                    dEM+distMEtmp(1,1), dCM+distMCtmp(1,1), dists_chebyM+distM_chebytmp(1,1));
+%                 plotDistance(nrF, bf, n+offset*(k-1), j, zakres1, k, Psyg, ...
+%                     dEx+distMEtmp(1,1), dCx+distMCtmp(1,1), dCzx+distM_chebytmp(1,1));
                 plotDistance(nrF, bf, n+offset*(k-1), j, zakres2, k, Psyg, ...
-                    dEM+distMEtmp(1,1), dCM+distMCtmp(1,1), dists_chebyM+distM_chebytmp(1,1));
+                    dEx+distMEtmp(1,1), dCx+distMCtmp(1,1), dCzx+distM_chebytmp(1,1));
             case 3 %+2,1
                 k = SygKat(i);
                 plotDistance(nrF, bf, n+offset*(k-1), j, zakres1, k, Psyg, ...
-                    dEM+distMEtmp(2,1), dCM+distMCtmp(2,1), dists_chebyM+distM_chebytmp(2,1));
-                plotDistance(nrF, bf, n+offset*(k-1), j, zakres2, k, Psyg, ...
-                    dEM+distMEtmp(2,1), dCM+distMCtmp(2,1), dists_chebyM+distM_chebytmp(2,1));
+                    dEx+distMEtmp(2,1), dCx+distMCtmp(2,1), dCzx+distM_chebytmp(2,1));
+%                 plotDistance(nrF, bf, n+offset*(k-1), j, zakres2, k, Psyg, ...
+%                     dEx+distMEtmp(2,1), dCx+distMCtmp(2,1), dCzx+distM_chebytmp(2,1));
             case 4% 2,2+1,2
                 k = SygKat(i);
-                plotDistance(nrF, bf, n+offset*(k-1), j, zakres1, k, Psyg, ...
-                    dEM+distMEtmp(2,2)+distMEtmp(1,2), dCM+distMCtmp(2,2)+distMCtmp(1,2), dists_chebyM+distM_chebytmp(2,2)+distM_chebytmp(1,2));
-                plotDistance(nrF, bf, n+offset*(k-1), j, zakres2, k, Psyg, ...
-                    dEM+distMEtmp(2,2)+distMEtmp(1,2), dCM+distMCtmp(2,2)+distMCtmp(1,2), dists_chebyM+distM_chebytmp(2,2)+distM_chebytmp(1,2));
+%                 plotDistance(nrF, bf, n+offset*(k-1), j, zakres1, k, Psyg, ...
+%                     dEx+distMEtmp(2,2)+distMEtmp(1,2), dCx+distMCtmp(2,2)+distMCtmp(1,2), dCzx+distM_chebytmp(2,2)+distM_chebytmp(1,2));
+                 plotDistance(nrF, bf, n+offset*(k-1), j, zakres2, k, Psyg, ...
+                    dEx+distMEtmp(2,2)+distMEtmp(1,2), dCx+distMCtmp(2,2)+distMCtmp(1,2), dCzx+distM_chebytmp(2,2)+distM_chebytmp(1,2));
         end
         % [ i n j k pom s]
     end
     %         continue;
 end
 
-figure(nrF); sgtitle("mięśnie / treningi (BR-k, BB-r Posredni-b Podchwyt-g)"); xlabels = ["Energia"; "Odległość Manhatan"; "Odległość Eukidesa"; "Odległość Chebysheva";];
-for i = 1:8 subplot(2,4,i); axis('tight');
+figure(nrF); sgtitle("mięśnie / treningi (PS/BR-k, PS/BB-r PC/BR-b PC/BR-g)"); xlabels = ["Energia"; "Odległość Manhatan"; "Odległość Eukidesa"; "Odległość Chebysheva";];
+Nbf = bf;
+for i = bf+1:Nbf+4
+    subplot(2,4,i); axis('tight');
     if(i==2) title("Odległości wewnątrzgrupowe"); end
-    if(i==2+4) title("Odległości od centroidu centroidów"); end;
+    if(i==2+4) title("Odległości od centroidu centroidów"); subtitle(sprintf("flagaMaxima: %d",flagaMaxima)); end;
     if i > 4 i = i-4; end;
     xlabel(xlabels(mod(i,5)));
-
-    hold off; end
+    hold off; 
+end
 % figure(nrF+1); hold off; title("mięśnie / treningi"); xlabel("Odległość City")
 % figure(nrF+2); hold off; title("mięśnie / treningi"); xlabel("Odległość Eukidesa")
 % figure(nrF+3); legend(["BR/pośredni", "BB/podchwyt"]); hold off; title("mięśnie / treningi"); xlabel("Odległość Chebysheva")

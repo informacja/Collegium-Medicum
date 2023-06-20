@@ -35,7 +35,7 @@ for(j = 1:length(v)) % grupa training
             end
             dEM(j,k)=sqrt(sum(d.^2)); 
             dCM(j,k)=sum(abs(d)); 
-            dists_chebyM(j,k) = max(abs(d));  %uwaga przesunięcie przecinka
+            dists_chebyM(j,k) = max(abs(d));  
             Psyg(j,k) = Esyg(j,k)/SygRawLen(nrs); % unormowany
             d=CCE(c,:)-wyglWidma(j,k).Af/length(wyglWidma(j,k).Af); 
             dE(j,k)=sqrt(sum(d.^2)); dC(j,k)=sum(abs(d)); dists_cheby(j,k) = max(abs(d));  %uwaga przesunięcie przecink

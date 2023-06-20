@@ -107,6 +107,7 @@ else
         Syg(i,1:lSyg) = [segment(i).data' zeros(1, lSyg-length(segment(i).data))];
         SygKat(i) = segMio(i)+(segTraining(i)-1)*2; %plikSegMio(fileSegNr(nrs),nrB).i=2;  n+v(j).infoTraining-1*2; % training
         sygKat(i) = segment(i).miesien+(segment(i).gest-1)*2;
+        segment(i).kat = sygKat(i);
         % 1 - Pośred BR, 2 Poś BB, 3 - Podchwyt BRadialis, 4 Podch BBiceps          
     end
     fprintf(1, "Okienkowanie Hanna ")
@@ -132,9 +133,23 @@ fprintf(1,"Rozmiar centroidów: %dx%d\n", size(CentrWidm));
 
 dCentr;
 
-nrF = 3000; bf = 0; disppolt; cc4; bf = 4; disppolt;
-fprintf(1, "main = "); toc(allElapsedTime)
+nrF = 4000; 
+for(jakieDist = 1:4)
+    if(mod(jakieDist,2) == 1 ) nrF = nrF+1; bf = 0; 
+    else bf = 4; end;
+    if(jakieDist>2) flagaMaxima = 0; else flagaMaxima = 1; end
+    jakiDist;
+    disppolt;
+end
+
+for(jakieDist = 5:6)
+    jakiDist;
+    disppolt;
+end
 return
+bf = 0; disppolt; cc4; bf = 4; disppolt;
+fprintf(1, "main = "); toc(allElapsedTime)
+
 
 mnoznik = 24;
 BR = v(11).dataR; BB = v(11).dataB; % radialis, biceps
