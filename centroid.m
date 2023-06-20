@@ -10,13 +10,17 @@ if(size(CentrWidm)==[2, length(Widma)])
     CentrWidm = CentrWidm';
 end
 nrs = 0;
+figure(nrF);
+tmpTxt = "";
 for(j = 1:2) % grupa
-    figure(nrF-j);
-    sgtitle(v(j).infoRecord);
-    for (i = 1:length(find(fileSegNr==j)))
-        nrs = nrs + 1;        
-        if(fileSegMio(nrs) == txBR) subplot(2,2,1), plot(segment(nrs).data); hold on; title(txBR);end
-        if(fileSegMio(nrs) == txBB) subplot(2,2,2), plot(segment(nrs).data); hold on; title(txBB);end
+    tmpTxt = [tmpTxt;v(j).infoRecord];
+     nseg=find(fileSegNr==j);
+    for (i = 1:length(nseg))
+        nrs = nseg(i);    nsp=SygKat(nrs);  
+%         if(fileSegMio(nrs) == txBR) 
+            subplot(2,2,nsp), plot(segment(nrs).data); hold on; title(nsp);
+%     end
+%         if(fileSegMio(nrs) == txBB) subplot(2,2,ns), plot(segment(nrs).data); hold on; title(txBB);end
 %         if(fileSegMio(nrs) == txBR) subplot(2,2,3), plot(segment(nrs).data); hold on; end
 %         if(fileSegMio(nrs) == txBB) subplot(2,2,4), plot(segment(nrs).data); hold on; end
     end
@@ -26,8 +30,9 @@ for(j = 1:2) % grupa
     subplot(2,2,4), hold off; 
     sgtitle(sprintf("Grupa dla ćwiczenia %s", v(j).infoRecord))
 end
+sgtitle(tmpTxt);
 
-f = [1:8500+1]; xf = (f-1)/Tsyg;
+f = [1:8500+1]; f = [1:6200+1]; xf = (f-1)/Tsyg;
 clear dCentrM dCentrE;
 nf=2;  
 nrs = 0;
@@ -65,7 +70,10 @@ for(j = 1:length(v)) % grupa
         wyglWidma(j,i).maxAf2 = max(wyglWidma(j,i).Af2);
 %         if (wyglWidma() todo
         nAf(kat)=nAf(kat)+1;
+
         Psyg(j,i)=Esyg(j,i)/SygRawLen(nrs);
+        Psr(j) = mean(Psyg(j,:)); % Power
+        Esr(j) = mean(Esyg(j,:)); % cecha
         
         CentrWidm(j, kat).AfM= CentrWidm(j, kat).AfM +wyglWidma(j,i).Af'/wyglWidma(j,i).maxAf; 
         CentrWidm(j, kat).Af2M=CentrWidm(j, kat).Af2M+wyglWidma(j,i).Af2'/wyglWidma(j,i).maxAf2; %mocy
@@ -87,7 +95,7 @@ for(j = 1:length(v)) % grupa
             subplot(2,2,kat+2);  hold on; plot(xf, wyglWidma(j,i).Af(f)/sum(wyglWidma(j,i).Af)); 
     %         subplot(2,2,kat);    hold on; plot(xf, wyglWidma(j,i).Af(f)/wyglWidma(j,i).maxAf);
     %         subplot(2,2,2+kat);  hold on; plot(xf, wyglWidma(j,i).Af(f)/(Psyg(j,i);
-            title(fileSegMio(nrs)); xlabel("Widmo mocy")
+            title(segment(nrs).miesien); xlabel("Widmo mocy")
         end
     end
     sgtitle(sprintf("Widma wewnątrzgrupowe, ćwiczenie %s", v(fileSegNr(nrs)).infoRecord))
@@ -109,60 +117,106 @@ for(j = 1:length(v)) % grupa
 %     dCentrE(j,:)=abs(CentrWidm(j, 1).AfE'-CentrWidm(j, 2).AfE')/2; 
     %Euclid
     %Cheby
-    for(kat=1:2)
-        %Centr(j, kat).AfE = Centr(j,kat).AfE 
-        Psr(j) = mean(Psyg(j,:)); % Power
-        Esr(j)=mean(Esyg(j,:)); % cecha
-        figure(nrF+50)
-        if(v(j).infoTraining == 1) % pośredni
-            subplot(4,2,kat);  hold on; plot(xf, CentrWidm(j,kat).AfM(f),'k--'); hold off; axis('tight'); xlabel('Widma wygładzone unorm.Max [hz]'); if kat == 1 title(v(1).infoRDisp); end; if kat == 2 title(v(1).infoBDisp); end
-            subplot(4,2,kat+2);  hold on; plot(xf, CentrWidm(j,kat).AfE(f),'k--');  hold off; axis('tight'); xlabel('Widma wygładzone unorm.Energia [Hz]'); if kat == 1 title(v(1).infoRDisp); end; if kat == 2 title(v(1).infoBDisp); end
-        else
-%         if(v(j).infoTraining == 2)
-            subplot(4,2,4+kat);  hold on; plot(xf, CentrWidm(j,kat).AfM(f),'k--'); hold off; axis('tight'); xlabel('Widma wygładzone unorm.Max [hz]'); if kat == 1 title(v(1).infoRDisp); end; if kat == 2 title(v(1).infoBDisp); end
-            subplot(4,2,6+kat);  hold on; plot(xf, CentrWidm(j,kat).AfE(f),'k--');  hold off; axis('tight'); xlabel('Widma wygładzone unorm.Energia [Hz]'); if kat == 1 title(v(1).infoRDisp); end; if kat == 2 title(v(1).infoBDisp); end
-        end
+    
         %         dCentr dla miejsciej eucli 
 % TODO        subplot(4,2,kat+4);  hold on; plot(xf, CentrWidm(j,kat).AfM(f)'./dCentrM(j,f),'k--'); hold off; axis('tight'); xlabel('Widma wygładzone unorm.Max [hz]')
 %         subplot(4,2,kat+6);  hold on; plot(xf, dC(j,kat).AfE(f)'./dCentrE(j,f),'k--');  hold off; axis('tight'); xlabel('Widma wygładzone unorm.Energia [Hz]')
-    end
+    
 end
-sgtitle(sprintf("Centroidy z wszystkich ćwiczeń (%d) pośredni i podchwyt)", length(CentrWidm)));
 
 %średnia z centoidów
 cwrr = []; cwrb = []; cwcr = []; cwcb = [];
+cwrrE = []; cwrbE = []; cwcrE = []; cwcbE = [];
 for( i = 1:length(v))
     for mkat = 1:2
         if v(i).infoTraining == 1 %&& v(i).mięsien
             if(mkat == 1)
                 cwrr = [cwrr; CentrWidm(i,mkat).AfM']; % CentroidWidmposRedni
+                cwrrE = [cwrrE; CentrWidm(i,mkat).AfE'];
             else
                 cwrb = [cwrb; CentrWidm(i,mkat).AfM']; % CentroidWidmposRedniBiceps
+                cwrbE = [cwrbE; CentrWidm(i,mkat).AfE'];
             end
         end
         if v(i).infoTraining == 2
             if(mkat == 1)
     %     size(CentrWidm(i,v(i).infoTraining).AfM)
                 cwcr = [cwcr; CentrWidm(i,mkat).AfM']; % CentroidWidmpodChwyt
+                cwcrE = [cwcrE; CentrWidm(i,mkat).AfE'];
             else
                 cwcb = [cwcb; CentrWidm(i,mkat).AfM']; % CentroidWidmpodChwyt
+                cwcbE = [cwcbE; CentrWidm(i,mkat).AfE'];
             end
         end
     end
 end
 CC =[ (mean(cwrr)); (mean(cwrb)); (mean(cwcr)); (mean(cwcb)); ]; % Centroidy Centroidów
+CCE =[ (mean(cwrrE)); (mean(cwrbE)); (mean(cwcrE)); (mean(cwcbE)); ]; % Centroidy Centroidów
 
-figure(nrF+1), subplot(2,1,1), plot(CC(1)); hold on; plot(CC(2)); title("Posredni"); legend(txBR,txBB);hold off;
-figure(nrF+1), subplot(2,1,2), plot(mean(CC(3))); hold on; plot(mean(CC(4))); title("Podchwyt"); legend(txBR,txBB);hold off;
-sgtitle("Średnia z centroidów")
+figure(nrF+1), subplot(2,1,1), plot(CC(1,:)); hold on; plot(CC(2,:)); title("Pośredni"); legend(txBR,txBB);hold off;
+figure(nrF+1), subplot(2,1,2), plot(CC(3,:)); hold on; plot(CC(4,:)); title("Podchwyt"); legend(txBR,txBB);hold off;
+sgtitle("Średnia z centroidów (Max)")
 
-figure(nrF+2), hold on; plot(mean(CC(1))); plot(mean(CC(2)));
-plot(mean(CC(3))); plot(mean(CC(4))); title("średnia z centroidów mięśni i ćwiczeń"); 
+figure(nrF+2), hold on; plot(CC(1,:)); plot(CC(2,:)); plot(CC(3,:)); plot(CC(4,:)); title("Średnia z centroidów mięśni i ćwiczeń (Max)"); 
 legend("Pośredni Radialis", "Pośredni Biceps", "Podchwyt Radialis", "Podchwyt Biceps");
 %--------------------------------------------------------------------------
  % dCentr posrRad, posrBiceps, podChwytRad, podChwytBiceps
 
-nrs = 0;  nf=2; nrF = nrF+100;
+figure(nrF+3), subplot(2,1,1), plot(CCE(1,:)); hold on; plot(CCE(2,:)); title("Pośredni"); legend(txBR,txBB);hold off;
+figure(nrF+3), subplot(2,1,2), plot(CCE(3,:)); hold on; plot(CCE(4,:)); title("Podchwyt"); legend(txBR,txBB);hold off;
+sgtitle("Średnia z centroidów (Energia)")
+
+figure(nrF+4), hold on; plot(CCE(1,:)); plot(CCE(2,:)); plot(CCE(3,:)); plot(CCE(4,:)); title("Średnia z centroidów mięśni i ćwiczeń (Energia)"); 
+legend("Pośredni Radialis", "Pośredni Biceps", "Podchwyt Radialis", "Podchwyt Biceps");
+%--------------------------------------------------------------------------
+
+%  rysowanie
+for(j = 1:length(v))
+    nj = find(wybrJ==j);
+        for(kat=1:2)
+            %Centr(j, kat).AfE = Centr(j,kat).AfE 
+            figure(nrF-50)
+            if(v(j).infoTraining == 1) % pośredni
+                subplot(4,2,kat);  hold on; plot(xf, CentrWidm(j,kat).AfM(f),'k--'); plot(xf, CC(kat, f),'r--','LineWidth',1); hold off; axis('tight'); xlabel('Widma wygładzone unorm.Max [hz]'); if kat == 1 title(v(1).infoRDisp); end; if kat == 2 title(v(1).infoBDisp); end
+                subplot(4,2,kat+2);  hold on; plot(xf, CentrWidm(j,kat).AfE(f),'k--'); plot(xf, CCE(kat, f),'r--','LineWidth',1);  hold off; axis('tight'); xlabel('Widma wygładzone unorm.Energia [Hz]'); if kat == 1 title(v(1).infoRDisp); end; if kat == 2 title(v(1).infoBDisp); end
+            else
+    %         if(v(j).infoTraining == 2)
+                subplot(4,2,4+kat);  hold on; plot(xf, CentrWidm(j,kat).AfM(f),'k--'); plot(xf, CC(kat+2, f),'r--','LineWidth',1); hold off; axis('tight'); xlabel('Widma wygładzone unorm.Max [hz]'); if kat == 1 title(v(1).infoRDisp); end; if kat == 2 title(v(1).infoBDisp); end
+                subplot(4,2,6+kat);  hold on; plot(xf, CentrWidm(j,kat).AfE(f),'k--'); plot(xf, CCE(kat+2, f),'r--','LineWidth',1); hold off; axis('tight'); xlabel('Widma wygładzone unorm.Energia [Hz]'); if kat == 1 title(v(1).infoRDisp); end; if kat == 2 title(v(1).infoBDisp); end
+            end
+         end
+    sgtitle(sprintf("Centroidy z wszystkich ćwiczeń (%d) pośredni(1:4) i podchwyt(4:8)", length(CentrWidm)));
+
+    if( length(nj) > 0 || plotAllFigures )
+        figure(j+nrF);
+        for(kat = 1:2)
+            subplot(2,2,kat);    hold on; 
+            plot(xf, CC(kat,f),'k--','LineWidth',1); 
+            plot(xf, CentrWidm(j,kat).AfM(f),'r--','LineWidth',1); 
+            subtitle("k--CC, r--CentrWidm");
+            hold off;
+    %         title(fileSegMio(nrs)); xlabel("Widmo unormowane") %end;
+            subplot(2,2,kat+2);  hold on; 
+            plot(xf,CCE(kat+2,f),'k--','LineWidth',1);
+            plot(xf, CentrWidm(j,kat).AfE(f),'r--','LineWidth',1);
+            hold off;
+
+            %         subplot(2,2,kat);    hold on; plot(xf, wyglWidma(j,i).Af(f)/wyglWidma(j,i).maxAf);
+            %         subplot(2,2,2+kat);  hold on; plot(xf, wyglWidma(j,i).Af(f)/(Psyg(j,i);
+    %         title(fileSegMio(nrs)); xlabel("Widmo mocy")
+        end
+    end
+end
+
+% if(v(j).infoTraining == 1) % pośredni
+%             subplot(4,2,kat);  hold on; plot(xf, CentrWidm(j,kat).AfM(f),'k--','LineWidth',2); plot(xf, CC(kat, f),'r--','LineWidth',2); hold off; axis('tight'); xlabel('Widma wygładzone unorm.Max [hz]'); if kat == 1 title(v(1).infoRDisp); end; if kat == 2 title(v(1).infoBDisp); end
+%             subplot(4,2,kat+2);  hold on; plot(xf, CentrWidm(j,kat).AfE(f),'k--','LineWidth',2); plot(xf, CC(kat, f),'r--','LineWidth',2);  hold off; axis('tight'); xlabel('Widma wygładzone unorm.Energia [Hz]'); if kat == 1 title(v(1).infoRDisp); end; if kat == 2 title(v(1).infoBDisp); end
+%         else
+% %         if(v(j).infoTraining == 2)
+%             subplot(4,2,4+kat);  hold on; plot(xf, CentrWidm(j,kat).AfM(f),'k--'); plot(xf, CC(kat+2, f),'r--','LineWidth',2); hold off; axis('tight'); xlabel('Widma wygładzone unorm.Max [hz]'); if kat == 1 title(v(1).infoRDisp); end; if kat == 2 title(v(1).infoBDisp); end
+%             subplot(4,2,6+kat);  hold on; plot(xf, CentrWidm(j,kat).AfE(f),'k--'); plot(xf, CC(kat+2, f),'r--','LineWidth',2); hold off; axis('tight'); xlabel('Widma wygładzone unorm.Energia [Hz]'); if kat == 1 title(v(1).infoRDisp); end; if kat == 2 title(v(1).infoBDisp); end
+%         end
+nrs = 0;  nf=2; nrF = nrF+length(v);
 % odleglosci
 
 % global Psyg, dEM, dCM, dists_chebyM;
@@ -170,18 +224,18 @@ for(j = 1:length(v)) % grupa trainig
     %dE(j)=0; dC(j)=0; % norma Euklidesowa, City (Manhatan)
     nseg=find(fileSegNr==j);
     for (i = 1:length(nseg)) 
-        nrs = nrs + 1;
+        nrs = nseg(i);
         k = i;
-        if (segMio(nseg(i)) == 1 ) kat = 1; else kat = 2; end
+        kat = segment(nrs).miesien;
         d=CentrWidm(j, kat).AfM-wyglWidma(j,k).Af'/wyglWidma(j,k).maxAf; 
         dEM(j,k)=sqrt(sum(d.^2)); 
-        dCM(j,k)=sum(abs(d))/100; 
-        dists_chebyM(j,k) = max(abs(d));  %uwaga przesunięcie przecinka
+        dCM(j,k)=sum(abs(d)); 
+        dists_chebyM(j,k) = max(abs(d)); 
         Psyg(j,k) = Esyg(j,k)/SygRawLen(nrs); % unormowany
         d=CentrWidm(j, kat).AfE-wyglWidma(j,k).Af'/Psyg(j,k); 
-        dE(j,k)=sqrt(sum(d.^2)); dC(j,k)=sum(abs(d))/100; dists_cheby(j,k) = max(abs(d));  %uwaga przesunięcie przecink
+        dE(j,k)=sqrt(sum(d.^2)); dC(j,k)=sum(abs(d)); dists_cheby(j,k) = max(abs(d));  %uwaga przesunięcie przecink
         d2=CentrWidm(j, kat).Af2M-wyglWidma(j,k).Af2'; 
-        dE2(j,k)=sqrt(sum(d2.^2)); dC2(j,k)=sum(abs(d2))/100; dists_cheby2(j,k) = max(abs(d2));  %2-mocy
+        dE2(j,k)=sqrt(sum(d2.^2)); dC2(j,k)=sum(abs(d2)); dists_cheby2(j,k) = max(abs(d2));  %2-mocy
         dEsyg(j,k)=abs(Psyg(j,k)-Psr(j));
 %         figure(30), plot(j,dists_chebyM(j,k),'k.'); hold on;
     end % odległość w grupie
@@ -209,7 +263,7 @@ end
 % figure(nrF-2), subplot(1,2, 1), plot(d); hold off;
 
 nrs = 0; nf=2; %nrF = nrF+1;
-% global Psyg, dEM, dCM, dists_chebyM;
+% global Psyg, dEM, dCM, dists_chebyM; %ISTOTNE
 for(j = 1:length(v)) % grupa training
     nseg=find(fileSegNr==j);
     for (i = 1:length(nseg))
@@ -237,13 +291,13 @@ for(j = 1:length(v)) % grupa training
         end
         
         dEM(j,k)=sqrt(sum(d.^2)); 
-        dCM(j,k)=sum(abs(d))/100; 
-        dists_chebyM(j,k) = max(abs(d),[],1);  %uwaga przesunięcie przecinka
+        dCM(j,k)=sum(abs(d)); 
+        dists_chebyM(j,k) = max(abs(d));  %uwaga przesunięcie przecinka
         Psyg(j,k) = Esyg(j,k)/SygRawLen(nrs); % unormowany
         d=CentrWidm(j, v(j).infoTraining).AfE-wyglWidma(j,k).Af'/Psyg(j,k); 
-        dE(j,k)=sqrt(sum(d.^2)); dC(j,k)=sum(abs(d))/100; dists_cheby(j,k) = max(abs(d),[],1);  %uwaga przesunięcie przecink
+        dE(j,k)=sqrt(sum(d.^2)); dC(j,k)=sum(abs(d)); dists_cheby(j,k) = max(abs(d));  %uwaga przesunięcie przecink
         d2=CentrWidm(j, v(j).infoTraining).Af2M-wyglWidma(j,k).Af2'; 
-        dE2(j,k)=sqrt(sum(d2.^2)); dC2(j,k)=sum(abs(d2))/100; dists_cheby2(j,k) = max(abs(d2));  %2-mocy
+        dE2(j,k)=sqrt(sum(d2.^2)); dC2(j,k)=sum(abs(d2)); dists_cheby2(j,k) = max(abs(d2));  %2-mocy
         dEsyg(j,k)=abs(Psyg(j,k)-Psr(j));
     end % odległość w grupie
     figure(nrF-2), subplot(2,2,nf), plot(abs(d)); title("abs(d)"); hold on;
@@ -271,7 +325,7 @@ else
     disp("Pominęto wypisywanie odległości dla centroidów")
 end
 
-save centroids.mat CentrWidm dEM dCM dists_chebyM dEsyg Psyg dEM dCM dists_chebyM CC Psr
+save centroids.mat CentrWidm dEM dCM dists_chebyM dEsyg Psyg dEM dCM dists_chebyM CC CCE Psr dC dE dists_cheby
 toc;
 
 % TEST =[]; for i = 1:length(wyglWidma) TEST(i) = isempty(CentrWidm(i).AfM); end; max(TEST)

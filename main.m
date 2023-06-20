@@ -36,19 +36,19 @@ k = 0;
 for f = datafiles    
     k = k + 1;
     df = load(string(f));
-    fieldname = fieldnames(df);
+%     fieldname = fieldnames(df);
     vars = fieldnames(df);
     for i = 1:length(vars)
         assignin('base', "tmp", df.(vars{i}));        
         tmpData = tmp.movements.sources.signals.signal_1.data;
         tmpName = tmp.movements.sources.signals.signal_1.name;
-        if ( tmp.movements.sources.signals.signal_1.name == "Ultium EMG-BRACHIORAD. RT")
+        if ( tmpName == "Ultium EMG-BRACHIORAD. RT")
             v(k).dataR = tmpData; % Radialis
             v(k).infoRecord = tmp.info.record_name;
             v(k).infoRName = tmpName;
             v(k).infoRDisp = txBR; 
         end
-        if ( tmp.movements.sources.signals.signal_1.name == "Ultium EMG-BICEPS BR. RT")
+        if ( tmpName == "Ultium EMG-BICEPS BR. RT")
             v(k).dataB = tmpData; % Biceps
             v(k).infoRecord = tmp.info.record_name;
             v(k).infoBName = tmpName;
@@ -57,13 +57,13 @@ for f = datafiles
         
         tmpData = tmp.movements.sources.signals.signal_2.data;
         tmpName = tmp.movements.sources.signals.signal_2.name;
-        if ( tmp.movements.sources.signals.signal_2.name == "Ultium EMG-BRACHIORAD. RT")
+        if ( tmpName == "Ultium EMG-BRACHIORAD. RT")
             v(k).dataR = tmpData; % Radialis
             v(k).infoRecord = tmp.info.record_name;
             v(k).infoRName = tmpName;
             v(k).infoRDisp = txBR; 
         end
-        if ( tmp.movements.sources.signals.signal_2.name == "Ultium EMG-BICEPS BR. RT")
+        if ( tmpName == "Ultium EMG-BICEPS BR. RT")
             v(k).dataB = tmpData; % Biceps
             v(k).infoRecord = tmp.info.record_name;
             v(k).infoBName = tmpName;
@@ -86,11 +86,6 @@ end
 
 if (skipedTrainingReppetinons) fprintf(1,"Rozkład: %d (pośrednich) %d (podchwytów) Sumarycznie pominiętych ćwiczeń: %d \n", countPosredni, countPodchwyt, skipedTrainingReppetinons); end;
 fprintf(1,"Liczba segmentów: %d (liczba plików * liczba mięśni * ilość powtórzeń)\nSzacowanych segmentów: (%d)\n", length(segment), length(v)*2*10); % liczba plików * liczba mięśni * ilość powtórzeń
-% figure;
-% for i = 1:length(segment)
-%     plot(segment(i).data)
-% end
-
 %--------------------------------------------------------------------------
 nrFw = 201; % nr fig widma
 lfrow= 4; lc=2; 
@@ -111,6 +106,7 @@ else
         end
         Syg(i,1:lSyg) = [segment(i).data' zeros(1, lSyg-length(segment(i).data))];
         SygKat(i) = segMio(i)+(segTraining(i)-1)*2; %plikSegMio(fileSegNr(nrs),nrB).i=2;  n+v(j).infoTraining-1*2; % training
+        sygKat(i) = segment(i).miesien+(segment(i).gest-1)*2;
         % 1 - Pośred BR, 2 Poś BB, 3 - Podchwyt BRadialis, 4 Podch BBiceps          
     end
     fprintf(1, "Okienkowanie Hanna ")
@@ -123,20 +119,20 @@ MTF(1).Tu = []; MTF(2).Tu = []; MTF(3).Tu = [];
 if(exist("spectrums.mat"))
     load spectrums.mat
 else
-    nrF = 300; fprintf(1, "Liczenie widm... "); spectrumTrend;
+    nrF = 1000; fprintf(1, "Liczenie widm... "); spectrumTrend;
 end
 fprintf(1,"Rozmiar widm: %dx%d\n", size(Widma)); 
 
 if(exist("centroids.mat"))
     load centroids.mat
 else
-    nrF = 400; fprintf(1, "Liczenie centroidów... ");centroid;
+    nrF = 2000; fprintf(1, "Liczenie centroidów... ");centroid;
 end
 fprintf(1,"Rozmiar centroidów: %dx%d\n", size(CentrWidm)); 
 
 dCentr;
 
-nrF = 800; bf = 0; disppolt; cc4; bf = 4; disppolt;
+nrF = 3000; bf = 0; disppolt; cc4; bf = 4; disppolt;
 fprintf(1, "main = "); toc(allElapsedTime)
 return
 
@@ -144,7 +140,7 @@ mnoznik = 24;
 BR = v(11).dataR; BB = v(11).dataB; % radialis, biceps
 L = resample(BR,mnoznik,1); R = resample(BB,mnoznik,1);
 L = L/max(abs(L)); R = R/max(abs(R));
-stereo_mtx = [L, R];%, v(11).dataB/max(abs(v(11).dataB))];
+% stereo_mtx = [L, R];%, v(11).dataB/max(abs(v(11).dataB))];
 audiowrite('stereo sound normalized.wav', stereo_mtx, fpom*mnoznik);
 
 
@@ -172,7 +168,7 @@ for(i=1:length(v))
 end
 
 
-nrF = 900;
+nrF = 4000;
 figureNubers = [134 136];
 for( i = 200:100:nrF) figureNubers = [figureNubers i+16 i+17]; end
 tic;

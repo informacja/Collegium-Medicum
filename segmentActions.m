@@ -12,7 +12,7 @@ while (j <= length(v))
     n1 = 1;  
 
     y = v(j).dataR; %a(j).d;%v(j).data;
-    tmpData = v(j).dataR + v(j).dataB;
+    tmpData = v(j).dataR + v(j).dataB; % założenie o byciu w fazie
     y = tmpData;
 %     Nokno = 12;
 %     lY = length(y);
@@ -29,7 +29,7 @@ while (j <= length(v))
     if ~DEBUG
         if isempty(y) continue; end;
     end
-    name = [ v(j).infoRecord v(j).infoRDisp ]; % założenie o byciu w fazie
+    name = [ v(j).infoRecord v(j).infoRDisp ]; 
     %         run("../MTF/filtrWidma.m");
     %         figure, plot(Af);
     md = 3.9; %[ seconds] 3.8 was
@@ -52,13 +52,14 @@ while (j <= length(v))
 % TF = islocalmax(A,'MinSeparation',minutes(45),'SamplePoints',t);
     numOfActions = sum(peaksOfSignal);
     if numOfActions < minActions %||  numOfActions > 12 %|| j > 2
-        figure(100+(j+1)*2), findpeaks(y,fpom,'MinPeakProminence',mp,'MinPeakDistance',md,'Threshold',15,"Annotate","peaks"); title(name);        
+        figure(100+(j)*2), findpeaks(y,fpom,'MinPeakProminence',mp,'MinPeakDistance',md,'Threshold',15,"Annotate","peaks"); title(name);        
         v(j) = []; % usuń record z macierzy wejściowej
-        skipedTrainingReppetinons = skipedTrainingReppetinons+1;continue; 
+        skipedTrainingReppetinons = skipedTrainingReppetinons+1; 
+        continue; 
     end % Skip not well segmented training
 %     names = [names; string(v(j).infoRecord)];
-    if (v(j).infoRecord(8) == 'r' || v(j).infoRecord(9) == 'r') countPosredni = countPosredni+1; v(j).infoTraining = 1; end;
-    if (v(j).infoRecord(8) == 'c' || v(j).infoRecord(9) == 'c') countPodchwyt = countPodchwyt+1; v(j).infoTraining = 2; end;
+    if (length(find(v(j).infoRecord=='r'))) countPosredni = countPosredni+1; v(j).infoTraining = 1; end;
+    if (length(find(v(j).infoRecord=='c'))) countPodchwyt = countPodchwyt+1; v(j).infoTraining = 2; end;
 %     figure(50+j), plot(peaksOfSignal); hold on;plot(TF*cutoffA*10); hold off; 
 %     p2p = peak2peak(y);
     %mp = p2p/3; not recomended
@@ -89,8 +90,10 @@ while (j <= length(v))
     %         figure(100+nrs), plot (s);
             fileSegNr(nrs) = j; % w przypadku różnych ilości segmentów w plikach
             segment(nrs).data = s;
+            segment(nrs).miesien = n;
+            segment(nrs).gest = v(j).infoTraining;
 %             v(j,k).klasyfikacjaSegmentów = nrs;
-            m = max(m,length(s));
+            m = max(m, length(s));
             %n1 = Nbf+1; %Nbf = length(v(j).dataR); [n1 Nbf]
             nrs=nrs+1; 
         end    
