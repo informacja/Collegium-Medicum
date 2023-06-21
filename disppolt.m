@@ -9,14 +9,12 @@ offset = size(Syg,1); old = [];
 if (flagaMaxima)
 %     nrF = 3001;
     distMCtmp = distMC; distMEtmp = distME; distM_chebytmp = distM_cheby;
-    dEx = dEM; dCx = dCM; dCzx = dists_chebyM;
+    dCx = dCM; dEx = dEM;  dCzx = dists_chebyM;
 else % function of distribution of freq in spectrum
 %     nrF = 3002;
     distMCtmp = distEC; distMEtmp = distEE; distM_chebytmp = distE_cheby;
-    dEx = dEE; dCx = dCE; dCzx = dists_chebyE;
+     dCx = dCE; dEx = dEE; dCzx = dists_chebyE;
 end
-
-
 
 if (bf==0) distMEtmp(:) = 0; distMCtmp(:) = 0; distM_chebytmp(:) = 0;
     % else distMEtmp = distME; distMCtmp = distMC; distM_chebytmp = distM_cheby;
@@ -25,9 +23,7 @@ figure(nrF)
 % dists_chebyM = dists_cheby; Psyg; dEM = dE; dCM = dC;
 for(j = 1:length(v))
     %     j = fileSegNr(i);
-
     nseg=find(fileSegNr==j);
-
     for (s = 1:length(nseg))
         zakres1 = [];
         zakres2 = [];
@@ -52,7 +48,11 @@ for(j = 1:length(v))
         old = pom;
         zakres1 = (pom);
         zakres2 = (pom);
-
+        if(4<jakieDist)
+            dEx = ddEM(1,1,1);
+            dCx = ddCM(1,1,1);
+            dCzx = ddists_chebyM(1,1,1);
+        end
         % n = i;
         i=nseg(s);
         switch(SygKat(i))
@@ -61,18 +61,18 @@ for(j = 1:length(v))
             %     distE_cheby
             case 1
                 k = SygKat(i); %nrPoz(k) =
-                plotDistance(nrF, bf, n+offset*(k-1), j, zakres1, k, Psyg, dEx, dCx, dCzx);
+                plotDistance(nrF, bf, n+offset*(k-1), j, zakres1, k, Psyg, dCx, dEx, dCzx);
 %                 plotDistance(nrF, bf, n+offset*(k-1), j, zakres2, k, Psyg, dEx, dCx, dCzx);
             case 2
                 k = SygKat(i);
 %                 plotDistance(nrF, bf, n+offset*(k-1), j, zakres1, k, Psyg, ...
 %                     dEx+distMEtmp(1,1), dCx+distMCtmp(1,1), dCzx+distM_chebytmp(1,1));
                 plotDistance(nrF, bf, n+offset*(k-1), j, zakres2, k, Psyg, ...
-                    dEx+distMEtmp(1,1), dCx+distMCtmp(1,1), dCzx+distM_chebytmp(1,1));
+                    dCx+distMCtmp(1,1), dEx+distMEtmp(1,1), dCzx+distM_chebytmp(1,1));
             case 3 %+2,1
                 k = SygKat(i);
                 plotDistance(nrF, bf, n+offset*(k-1), j, zakres1, k, Psyg, ...
-                    dEx+distMEtmp(2,1), dCx+distMCtmp(2,1), dCzx+distM_chebytmp(2,1));
+                    dCx+distMCtmp(2,1), dEx+distMEtmp(2,1), dCzx+distM_chebytmp(2,1));
 %                 plotDistance(nrF, bf, n+offset*(k-1), j, zakres2, k, Psyg, ...
 %                     dEx+distMEtmp(2,1), dCx+distMCtmp(2,1), dCzx+distM_chebytmp(2,1));
             case 4% 2,2+1,2
@@ -80,7 +80,7 @@ for(j = 1:length(v))
 %                 plotDistance(nrF, bf, n+offset*(k-1), j, zakres1, k, Psyg, ...
 %                     dEx+distMEtmp(2,2)+distMEtmp(1,2), dCx+distMCtmp(2,2)+distMCtmp(1,2), dCzx+distM_chebytmp(2,2)+distM_chebytmp(1,2));
                  plotDistance(nrF, bf, n+offset*(k-1), j, zakres2, k, Psyg, ...
-                    dEx+distMEtmp(2,2)+distMEtmp(1,2), dCx+distMCtmp(2,2)+distMCtmp(1,2), dCzx+distM_chebytmp(2,2)+distM_chebytmp(1,2));
+                    dCx+distMCtmp(2,2)+distMCtmp(1,2), dEx+distMEtmp(2,2)+distMEtmp(1,2), dCzx+distM_chebytmp(2,2)+distM_chebytmp(1,2));
         end
         % [ i n j k pom s]
     end

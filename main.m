@@ -135,21 +135,21 @@ dCentr;
 
 nrF = 4000; 
 for(jakieDist = 1:4)
-    if(mod(jakieDist,2) == 1 ) nrF = nrF+1; bf = 0; 
-    else bf = 4; end;
-    if(jakieDist>2) flagaMaxima = 0; else flagaMaxima = 1; end
-    jakiDist;
+    if(mod(jakieDist,2) == 1 ) nrF = nrF+1; bf = 0; else bf = 4; end
+    if(jakieDist>2) flagaMaxima = 0; else flagaMaxima = 1; end % czy nie odwrotnie?
+    minkowskiDist;
     disppolt;
 end
 
 for(jakieDist = 5:6)
-    jakiDist;
-    disppolt;
+    if(mod(jakieDist,2) == 1 ) nrF = nrF+1; bf = 0; figure(nrF); else bf = 4; end
+%     if(jakieDist>5) flagaMaxima = 1; else flagaMaxima = 0; end
+    minkowskiDist;
+    ddplot;
 end
 return
 bf = 0; disppolt; cc4; bf = 4; disppolt;
 fprintf(1, "main = "); toc(allElapsedTime)
-
 
 mnoznik = 24;
 BR = v(11).dataR; BB = v(11).dataB; % radialis, biceps

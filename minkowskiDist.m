@@ -4,6 +4,8 @@
 % 3 od CC i cenroidów J
 nrs = 0; nf=2; %nrF = nrF+1;
 % global Psyg, dEM, dCM, dists_chebyM; %ISTOTNE
+tic;
+ddEM = []; ddCM = []; ddists_chebyM = [];
 if(1)
     jj= zeros(1,2); 
    
@@ -49,7 +51,7 @@ if(1)
                     Af = CentrWidm(j,kat).AfE';
                 case 5
                     Afw = CC(c,:);
-                    Af = CentrWidm(j,kat).AfM;
+                    Af = CentrWidm(j,kat).AfM';
                 case 6
                     Afw = CCE(c,:);
                     Af = CentrWidm(j,kat).AfE';
@@ -62,29 +64,28 @@ if(1)
 
             switch (jakieDist)
                 case 1
-                    dEM(j,k)= dE;
                     dCM(j,k)= dC;
+                    dEM(j,k)= dE;
                     dists_chebyM(j,k) = dCZ;
                 case 2
-%                     dEM(w,j,k) = dE;
-                    dEM(j,k)= dE;
                     dCM(j,k)= dC;
+                    dEM(j,k)= dE;
                     dists_chebyM(j,k) = dCZ;
                 case 3
-                    dEE(j,k)= dE;
                     dCE(j,k)= dC;
+                    dEE(j,k)= dE;
                     dists_chebyE(j,k) = dCZ;
                 case 4
-                    dEE(j,k)= dE;
                     dCE(j,k)= dC;
+                    dEE(j,k)= dE;                    
                     dists_chebyE(j,k) = dCZ;
                 case 5
-                    ddEM(nrG, jj(nrG), kat)= dE;
-                    ddCM(nrG, jj(nrG), kat)= dC;
+                    ddCM(nrG, jj(nrG), kat) = dC;
+                    ddEM(nrG, jj(nrG), kat) = dE;
                     ddists_chebyM(nrG, jj(nrG), kat) = dCZ;
-                case 6
-                    ddEE(nrG, jj(nrG), kat)= dE;
+                case 6                    
                     ddCE(nrG, jj(nrG), kat)= dC;
+                    ddEE(nrG, jj(nrG), kat)= dE;
                     ddists_chebyE(nrG, jj(nrG), kat) = dCZ;
             end
 
@@ -126,5 +127,5 @@ else
     disp("Pominęto wypisywanie odległości dla centroidów")
 end
 
-save centroids.mat CentrWidm dEM dCM dists_chebyM dEsyg Psyg dEM dCM dists_chebyM CC CCE Psr dC dE dists_cheby dEE dCE dists_chebyE dE2E dC2E dists_cheby2E dEsyg mx
+% save centroids.mat CentrWidm dEM dCM dists_chebyM dEsyg Psyg dEM dCM dists_chebyM CC CCE Psr dC dE dists_cheby dEE dCE dists_chebyE dE2E dC2E dists_cheby2E dEsyg mx
 toc;
