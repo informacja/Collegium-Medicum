@@ -43,25 +43,32 @@ for(j = 1:length(v)) % grupa training
         k = SygKat(i); 
 %         [j,k, jj]
         switch(k)
-            case 1, plotDistance(nrF, bf, nrs+offset*(k-1), 1, zakres1, k, Psyg, dCx, dEx, dCzx);
-            case 2, plotDistance(nrF, bf, nrs+offset*(k-1), 1, zakres1, k, Psyg, dCx, dEx, dCzx);
-            case 3, plotDistance(nrF, bf, nrs+offset*(k-1), 1, zakres1, k, Psyg, dCx, dEx, dCzx);
-            case 4, plotDistance(nrF, bf, nrs+offset*(k-1), 1, zakres1, k, Psyg, dCx, dEx, dCzx);
+            case 1, plotDistance(nrF, bf, nrs+offset*(k-1), 1, zakres1, k, [], dCx, dEx, dCzx);
+            case 2, plotDistance(nrF, bf, nrs+offset*(k-1), 1, zakres1, k, [], dCx, dEx, dCzx);
+            case 3, plotDistance(nrF, bf, nrs+offset*(k-1), 1, zakres1, k, [], dCx, dEx, dCzx);
+            case 4, plotDistance(nrF, bf, nrs+offset*(k-1), 1, zakres1, k, [], dCx, dEx, dCzx);
              
             otherwise
                 SygKat(i)
         end
     end
 end
+
+txCalcus(5) = "CC-CentrWidm";
+txCalcus(6) = "CCE-CentrWidm";
 Nbf = bf; if(flagaMaxima) tx = "Maxsima"; else tx = "Energia"; end
 for i = bf+1:Nbf+4
-    subplot(2,4,i); axis('tight');
+    if( ~length(find(i==[1,5])) ) % pomijaj rysowanie
+        subplot(2,4,i); axis('tight'); hold off; 
+    else
+        continue;
+    end
     if(i==2) title("Odległości wewnątrzgrupowe"); end
     if(i==2+4) title("Odległości od centroidu centroidów"); end; %subtitle( tx ); end;
-    if(i==1+4) subtitle( "Maxsima" ); end;
-    if(i==1+4) subtitle( "Energia" ); end;
-    if i > 4 i = i-4; end;
-    xlabel(xlabels(mod(i,5)));
-    hold off; 
+%     if(i==1+4) subtitle( "Maxsima" ); end;
+%     if(i==1+4) subtitle( "Energia" ); end;
+    if i > 4 i = i-4; end; %podpisy na górze i dole
+    xlabel(xlabels(mod(i,5)));    
+    if (i==4) subtitle( txCalcus(jakieDist) ); end
 end
 toc;

@@ -87,6 +87,11 @@ for(j = 1:length(v))
     %         continue;
 end
 
+
+txCalcus(1) = "CentrWidm-wyglWidma/maxAf";
+txCalcus(2) = "CC-wyglWidma/maxAf";
+txCalcus(3) = "CentrWidm-wyglWidma/Ps";
+txCalcus(4) = "CCE-CentrWidm";
 figure(nrF); sgtitle("mięśnie / treningi (PS/BR-k, PS/BB-r PC/BR-b PC/BR-g)"); xlabels = ["Energia"; "Odległość Manhatan"; "Odległość Eukidesa"; "Odległość Chebysheva";];
 Nbf = bf;
 for i = bf+1:Nbf+4
@@ -96,6 +101,7 @@ for i = bf+1:Nbf+4
     if i > 4 i = i-4; end;
     xlabel(xlabels(mod(i,5)));
     hold off; 
+    if (i==4) title( txCalcus(jakieDist) ); end
 end
 % figure(nrF+1); hold off; title("mięśnie / treningi"); xlabel("Odległość City")
 % figure(nrF+2); hold off; title("mięśnie / treningi"); xlabel("Odległość Eukidesa")

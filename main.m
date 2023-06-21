@@ -11,10 +11,10 @@ DEBUG = 1;
 if(DEBUG)
     clear all;
     close all;
-%     delete segments.mat % 10s
-%     delete signals.mat  % hann window 10s
-%     delete spectrums.mat%           
-%     delete centroids.mat
+    delete segments.mat % 10s
+    delete signals.mat  % hann window 10s
+    delete spectrums.mat%           
+    delete centroids.mat
     DEBUG = 1;
 end
 allElapsedTime = tic;
@@ -147,9 +147,10 @@ for(jakieDist = 5:6)
     minkowskiDist;
     ddplot;
 end
+fprintf(1, "main = "); toc(allElapsedTime);
 return
 bf = 0; disppolt; cc4; bf = 4; disppolt;
-fprintf(1, "main = "); toc(allElapsedTime)
+
 
 mnoznik = 24;
 BR = v(11).dataR; BB = v(11).dataB; % radialis, biceps
@@ -157,7 +158,6 @@ L = resample(BR,mnoznik,1); R = resample(BB,mnoznik,1);
 L = L/max(abs(L)); R = R/max(abs(R));
 % stereo_mtx = [L, R];%, v(11).dataB/max(abs(v(11).dataB))];
 audiowrite('stereo sound normalized.wav', stereo_mtx, fpom*mnoznik);
-
 
 % 11 to ja, 22 też
  X = []; 

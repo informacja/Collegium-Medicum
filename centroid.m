@@ -293,7 +293,7 @@ for(j = 1:length(v)) % grupa training
         kategoria = segment(nrs).miesien;
         dEM(j,k)=sqrt(sum(d.^2)); 
         dCM(j,k)=sum(abs(d)); 
-        dists_chebyM(j,k) = max(abs(d)); %mx(j,k) = find(abs(d)==max(abs(d)); 
+        dists_chebyM(j,k) = max(abs(d)); 
 
         Ps = sum(wyglWidma(j,k).Af);
         Psyg(j,k) = Esyg(j,k)/SygRawLen(nrs); % unormowany
@@ -334,7 +334,7 @@ else
     disp("Pominęto wypisywanie odległości dla centroidów")
 end
 
-save centroids.mat CentrWidm wyglWidma dEM dCM dists_chebyM dEsyg Psyg dEM dCM dists_chebyM CC CCE Psr dC dE dists_cheby dEE dCE dists_chebyE dE2E dC2E dists_cheby2E dEsyg mx 
+save centroids.mat CentrWidm wyglWidma dEM dCM dists_chebyM dEsyg Psyg dEM dCM dists_chebyM CC CCE Psr dC dE dists_cheby dEE dCE dists_chebyE dE2E dC2E dists_cheby2E dEsyg  
 toc;
 
 % TEST =[]; for i = 1:length(wyglWidma) TEST(i) = isempty(CentrWidm(i).AfM); end; max(TEST)
