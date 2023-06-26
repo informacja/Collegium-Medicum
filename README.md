@@ -3,21 +3,24 @@ Przed przystąpieniem do zapisu należy [przygotować skórę](https://github.co
 
 ## Lokalizujemy elektrody pomiarowe na Brachioradialis i Biceps brachii na ręce prawej
 
-![IMG_1290](https://github.com/informacja/Collegium-Medicum/assets/22752828/6fe0a35f-5fc2-4176-a360-d1bd977ee462)
+<img width="261" alt="image" src="https://github.com/informacja/Collegium-Medicum/assets/22752828/044fb5e8-9f01-400b-a3d0-a1566b6f646c">
 
 ## Wykonujemy 2 ćwiczenia
 
 ### Rozpoczynamy i kończymy na pozycji spoczynkowej, dłoń na udzie
 
-<img width="271" alt="image" src="https://github.com/informacja/Collegium-Medicum/assets/22752828/4d13381d-3231-4615-ac92-0ffbe27b38eb">
+<img width="280" alt="image" src="https://github.com/informacja/Collegium-Medicum/assets/22752828/42396592-c57e-4771-8dc1-cf978aaa3f2e">
+
 
 ### Pośredni minimum 2 sekundy i sekundę przerwy. 10 powtórzeń
 
-<img width="500" alt="image" src="https://github.com/informacja/Collegium-Medicum/assets/22752828/49ca96bc-7276-4356-9248-0b9ac56e689b">
+<img width="289" alt="image" src="https://github.com/informacja/Collegium-Medicum/assets/22752828/27bdfe67-8179-46ce-b7e4-1ea65c386a75">
+
 
 ### Podchwyt minimum 2 sekundy i sekundę przerwy. 10 powtórzeń
 
-<img width="532" alt="image" src="https://github.com/informacja/Collegium-Medicum/assets/22752828/68a00cbc-4290-47a8-a9dc-cbc93f842548">
+<img width="396" alt="image" src="https://github.com/informacja/Collegium-Medicum/assets/22752828/992fe2cb-2b99-41e1-a839-e91857de30e8">
+
 
 #### Dziękujemy!
 Ciekawostka:
