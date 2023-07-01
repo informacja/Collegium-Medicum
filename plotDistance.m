@@ -1,11 +1,10 @@
-function plotDistance(nrF, bf, n, j, zakres, k, Psyg, dEM, dCM, dists_chebyM)
-
-    kol = [ "k."; "r."; "b."; "g."];
-%     global n;
-%     n= n+1;
-%     k
+function plotDistance(nrF, bf, n, j, zakres, k, Psyg, dEM, dCM, dists_chebyM,m)
+    if(nargin < 11) m = []; end
+    if isempty(m) kol = [ "k."; "r."; "b."; "g."];
+    else kol = [ strcat('k',m); strcat('r',m); strcat('b',m); strcat('g',m); ];
+    end
 %     figure(nrF); 
-    if( length(Psyg) )
+    if( ~isempty(Psyg) )
         subplot(2,4,1+bf); hold on; plot(n, Psyg(j, zakres), kol(k));
     end
     subplot(2,4,2+bf); hold on; plot(n, dEM(j, zakres), kol(k));

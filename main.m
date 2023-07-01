@@ -7,25 +7,34 @@
 % sprawdicz czygrupy się nie mies`ają
 % roznicde dla posredniego BR-BR
 % dists_cheby OR dists_chebyM
-DEBUG = 1;
+
+DEBUG = 0;
+if (isdeployed)
+    DEBUG = 0;
+end
 if(DEBUG)
     clear all;
     close all;
-    delete segments.mat % 10s
-    delete signals.mat  % hann window 10s
-    delete spectrums.mat%           
-    delete centroids.mat
+%     delete segments.mat % 10s
+%     delete signals.mat  % hann window 10s
+%     delete spectrums.mat%           
+%     delete centroids.mat
     DEBUG = 1;
 end
 allElapsedTime = tic;
 windowing = 1;
 printCentroids = 0; % a lot of console tables
 plotAllFigures = 0;
+compareExampleData = 0;
 deprecated = 0; % unused code
 dirname = 'Archiwum';
 dirname = '23.05.23';
 dirname = '10';
-clear v; % Clear files data
+if(compareExampleData)
+    dirname = '"../2przypadki/dane/Miopatia zapalna/Emg_Qemf.003/MVA_000 (1).wav"';
+end
+% clear v; % Clear files data
+v = [];
 files = dir(fullfile(dirname,'**','*.mat'));
 datafiles = fullfile({files.folder},{files.name});
 
@@ -115,6 +124,7 @@ else
     save signals.mat Syg SygKat SygRawLen
 end
 
+nrF = 500; selectTraining; % wybór indeksów "j"
 MTF(1).Tu = []; MTF(2).Tu = []; MTF(3).Tu = [];
 
 if(exist("spectrums.mat"))
@@ -136,20 +146,28 @@ dCentr;
 nrF = 4000; 
 for(jakieDist = 1:4)
     if(mod(jakieDist,2) == 1 ) nrF = nrF+1; bf = 0; else bf = 4; end
-    if(jakieDist>2) flagaMaxima = 0; else flagaMaxima = 1; end % czy nie odwrotnie?
+    if(jakieDist>2) flagaMaxima = 0; else flagaMaxima = 1; end 
+    nrFig = jakieDist*2+i+500; 
     minkowskiDist;
-    disppolt;
+    figure(nrF);
+%     disppolt;
 end
 
 for(jakieDist = 5:6)
     if(mod(jakieDist,2) == 1 ) nrF = nrF+1; bf = 0; figure(nrF); else bf = 4; end
-%     if(jakieDist>5) flagaMaxima = 1; else flagaMaxima = 0; end
-    minkowskiDist;
+    if(jakieDist>5) flagaMaxima = 0; else flagaMaxima = 1; end
+    nrFig = jakieDist*2+500; 
+     minkowskiDist;
+    figure(nrF); 
     ddplot;
 end
 fprintf(1, "main = "); toc(allElapsedTime);
+
+nrF = 5e4; 
 return
-bf = 0; disppolt; cc4; bf = 4; disppolt;
+
+%%%%%% END OF CODE %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% bf = 0; disppolt; cc4; bf = 4; disppolt;
 
 
 mnoznik = 24;

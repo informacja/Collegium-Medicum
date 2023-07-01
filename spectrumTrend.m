@@ -1,22 +1,17 @@
 tic; 
-wybrJ = [];
-for (j=1:length(v))
-    if (v(j).infoRecord == """22 pośredni NORAXON ELEKTRODY """) wybrJ = [wybrJ j]; end
-    if (v(j).infoRecord == """22 podchwyt NORAXON ELEKTRODY""") wybrJ = [wybrJ j]; end
-%     if (v(j).infoRecord == """11 pośredni""") wybrJ = [wybrJ j]; end
-%     if (v(j).infoRecord == """11 podchwyt""") wybrJ = [wybrJ j]; end 
-end
 ksyg = 0;
 for(j = 1:length(v)) % grupa
 %     figure(nrF+j),
     nxf = 0; % nie drukuj figur
     fileSegNr; %TODO
+    mnoznik = 2;
     nseg=find(fileSegNr==j);
     for (i = 1:length(nseg))
         ifig = segMio(nseg(i))-1; % ifigure SygKat
 %         ifig = SygKat(nseg(i))-1; % ifigure SygKat
         nj = find(wybrJ==j);
-        if( length(nj) > 0 || plotAllFigures) figure(j+nrF); end
+        ifLastSeg = (~isempty(nj) && (i == length(nseg) || i == length(nseg)-1));
+        if( ifLastSeg || plotAllFigures) figure(j+nrF); end
        
         clear y;
         ksyg=nseg(i);
@@ -25,18 +20,18 @@ for(j = 1:length(v)) % grupa
         %segment(nrs).data = y;
         Nf=length(y); %todo
         nx=[0:Nf-1];
-       if( length(nj) > 0 || plotAllFigures )
+       if( ifLastSeg || plotAllFigures )
             subplot(lfrow,lc,1+ifig),  plot(nx*dtpom, y); xlabel(sprintf("Ruch pośredni %d: y(t) t[sek]", i));
             if( ifig == 0) title("                                                                                                                                   Dziedzina czasu"); end
             ylabel(['Amplituda [' Yunits ']'])
             subplot(lfrow,lc,1+ifig+lc),  plot(nx*dtpom, X);
         end 
         % LSyg / nTu jest liczbą próbek w oknie wygładzania
-        Twygl=0.25; nTu = Tsyg/Twygl;
+        Twygl=0.25*mnoznik; nTu = Tsyg/Twygl;
         Tu=Twygl/dtpom; nfw = 1;
         run("../MTF/filtrWidma.m");
         xf = [0:LwAm-1];
-        if( length(nj) > 0 || plotAllFigures )
+        if( ifLastSeg || plotAllFigures )
             hold on; plot(xf/Tsyg,Ayf,'c',[0:Ldf]/Tsyg,Af,'k'); axis('tight');  hold off;
             xlabel(sprintf("Kwadrat y i wygł. y(t)^2 %d (Tu=%.1fms): t[sek]", i,Tu*dtpom*1000));
         end
@@ -45,16 +40,17 @@ for(j = 1:length(v)) % grupa
         Podzial=4; if(j==2) Podzial=10; end
         nf=round(Nf/2); 
         X = Afw(1:nf);
-        Twygl=0.05; nTu = Tsyg/Twygl; % LSyg / nTu jest liczbą próbek w oknie wygładzania
+        Twygl=0.05*mnoznik; nTu = Tsyg/Twygl; % LSyg / nTu jest liczbą próbek w oknie wygładzania
         Tu=Twygl/dtpom; nfw = 2;
         run("../MTF/filtrWidma.m");
         nk=round(Nf/Podzial);
         Widma(j,i).Ayf=Ayf; wyglWidma(j,i).Af=Af;% i*2+j
 %         v(j).kat = n+v(j).infoTraining-1*2; % training
-        if( length(nj) > 0 || plotAllFigures )
+        kf=SygKat(nseg(i));
+        if( ifLastSeg || plotAllFigures )
             subplot(lfrow,lc,1+ifig+2*lc),   plot([0:nk-1]/Tsyg,Ayf(1:nk),'c',[0:Ldf]/Tsyg,Af,'k');
             figure(nrFw), subplot(1,2,1); hold on; 
-            kf=SygKat(nseg(i)); %kf=mod(kf,4)+1; 
+             %kf=mod(kf,4)+1; 
             plot([0:Ldf],Af,kol(kf)); %plot(wyglWidma(j,i).Af); hold off; 
 %         figPW("png")
             figure(nrF+j)
@@ -62,7 +58,7 @@ for(j = 1:length(v)) % grupa
             xlabel(sprintf("Widmo %d [Hz] Tu=%.1fms f_g=1/Tu=%.0fHz ",i,Tu*dtpom*1000,1/(Tu*dtpom)));
         end
         Podzial=15; if(j==2) Podzial=30; end
-        Twygl=0.025; nTu = Tsyg/Twygl;
+        Twygl=0.025*mnoznik; nTu = Tsyg/Twygl;
 %         nf=Nf;%round(Nf/Podzial);
 %         Xx=fft(y.^2);Xx=abs(Xx(1:nf));  
         X=Afw(1:nf).^2;
@@ -75,7 +71,7 @@ for(j = 1:length(v)) % grupa
 %         Widma(j,i).kat = v(j).kat = n+v(j).infoTraining-1*2; % training
 %         to erase
 %         figPW("png",5)
-        if( length(nj) > 0 || plotAllFigures )
+        if( ifLastSeg || plotAllFigures )
 %             figure(nrFw+j),
             subplot(lfrow,lc,1+ifig+3*lc), plot([0:nf-1]/Tsyg,Ayf(1:nf),'c',[0:nf-1]/Tsyg,Af(1:nf),'k');
             xlabel(sprintf("Widmo mocy %d f_g=1/Tu Tu=%.1fms",i,Tu*dtpom*1000));
@@ -87,6 +83,8 @@ for(j = 1:length(v)) % grupa
     end
 end
 hold off;
+disp("Normowanie widma")
+return
 % normowanie widma
 for(j = 1:length(v)) % grupa
     lAyf=length(Widma(j,1).Ayf);

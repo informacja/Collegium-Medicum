@@ -5,7 +5,7 @@ names = [];
 %--------------------------------------------------------------------------
 % Segmentacja plików
 %--------------------------------------------------------------------------
-wybrane = [3 4 19 20];
+% wybrane = [3 4 19 20];
 j = 1; 
 while (j <= length(v))
     nrR = 0; nrB = 0;
@@ -52,7 +52,7 @@ while (j <= length(v))
 % TF = islocalmax(A,'MinSeparation',minutes(45),'SamplePoints',t);
     numOfActions = sum(peaksOfSignal);
     if numOfActions < minActions %||  numOfActions > 12 %|| j > 2
-        figure(100+(j)*2), findpeaks(y,fpom,'MinPeakProminence',mp,'MinPeakDistance',md,'Threshold',15,"Annotate","peaks"); title(name);        
+        figure(100+(j)*2), findpeaks(y,fpom,'MinPeakProminence',mp,'MinPeakDistance',md,'Threshold',15,"Annotate","peaks"); title(name);  xlabel("Czas [s]"); ylabel("Amplituda [uV]");     
         v(j) = []; % usuń record z macierzy wejściowej
         skipedTrainingReppetinons = skipedTrainingReppetinons+1; 
         continue; 
@@ -65,8 +65,11 @@ while (j <= length(v))
     %mp = p2p/3; not recomended
 %     md = length(y)/(numOfActions*1.9);
 
-%     figure(100+(j+1)*2), findpeaks(y,fpom, 'MinPeakProminence',mp,'MinPeakDistance',md,"Annotate","peaks",'Threshold',15); title(name);
-%     clear pks locs,width,prominence
+% if (v(j).infoRecord == """11 pośredni""") || (v(j).infoRecord == """11 podchwyt""") 
+%     figure(100+(j+1)*2), findpeaks(y,fpom, 'MinPeakProminence',mp,'MinPeakDistance',md,"Annotate","peaks",'Threshold',15,'Annotate','extents'); title(name);
+% figPW('nomargin');
+% end
+    %     clear pks locs,width,prominence
     [pks,locs,width,prominence] = findpeaks(y,'MinPeakProminence',mp,'MinPeakDistance',md*fpom,"Annotate","peaks",'Threshold',15,'Annotate','extents');
     
 %     figure(50+j), plot(y); hold on;plot(locs, pks); hold off; 
@@ -75,6 +78,15 @@ while (j <= length(v))
     for(k = 1:numOfActions)
         v(j).segLen = numOfActions;
         e = envelope(y(locs(k):locs(k+1)),1111,'rms'); %[n1,locs(k),locs(k+1), locs(k)+find(min(e)==e)]
+        
+        if wybrJ(1) == j && DEBUG
+            figure("Name", "RMS Envelope")
+            envelope(y(locs(k):locs(k+1)),1111,'rms'); hold on; axis('tight'); xlabel("Nr próbki (względny)"); ylabel("Amplituda")
+            n = find(min(e)==e);
+            ax = axis; plot([n n], ax(3:4), 'k--');
+%             ax = axis; plot([Nbf Nbf], ax(3:4), 'k--');
+        end
+
 %         figure(200+nrs), plot(e);
         Nbf = (locs(k)+find(min(e)==e)); % minimum punkt podziału
         if Nbf > length(v(j).dataB) 
@@ -107,9 +119,13 @@ end
 save segments.mat segment fileSegNr fileSegMio m skipedTrainingReppetinons v countPodchwyt countPosredni segTraining segMio
 
 if(DEBUG) 
-    figure(nrF+(j+1)*2+1); hist(fileSegNr); title("Rozkład segmentów w plikach"); ylabel("Segmenty per ćwiczenie"); xlabel("Liczba ćwiczeń");  % ilość segmentów per plik
+%      figure,histogram(fileSegNr, length(v), 'BinWidth',1); title("Rozkład segmentów w plikach"); ylabel("Segmenty per ćwiczenie"); xlabel("Liczba ćwiczeń");  % ilość segmentów per plik
     sLens = []; for i = 1:length(segment) sLens(i) = length(segment(i).data);end
-    figure(nrF+(j+1)*2+2); plot(sLens/fpom,'.'); hold on; title("Rozkład długości segmentów"); ylabel("Długość segmentu [s]"); xlabel("Nr segmentu");
+    figure,
+    subplot(211),mhistogr(fileSegNr, length(v),1); axis("tight"); title("Rozkład segmentów w plikach"); ylabel("Segmenty per ćwiczenie"); xlabel("Liczba ćwiczeń");
+    subplot(212),plot(sLens/fpom,'.'); hold on; axis("tight"); title("Rozkład długości segmentów"); ylabel("Długość segmentu [s]"); xlabel("Nr segmentu");
+    axis auto 
+    figPW("nomargin")
     if(deprecated) 
         for i = 554:555%length(segment) % color anomaly
             sLens(i) = length(segment(i).data);
@@ -124,9 +140,5 @@ if(DEBUG)
         end
     %     hold off; axis('tight')
     end
-%     A = length(segment(i).data)/fpom;
-    % plot(segment(i).data(TF+1),TF,'r*')
-  
-    % sum(TF)
 end
   toc;

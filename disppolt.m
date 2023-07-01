@@ -48,11 +48,11 @@ for(j = 1:length(v))
         old = pom;
         zakres1 = (pom);
         zakres2 = (pom);
-        if(4<jakieDist)
-            dEx = ddEM(1,1,1);
-            dCx = ddCM(1,1,1);
-            dCzx = ddists_chebyM(1,1,1);
-        end
+%         if(4<jakieDist)
+%             dEx = ddEM(1,1,1);
+%             dCx = ddCM(1,1,1);
+%             dCzx = ddists_chebyM(1,1,1);
+%         end
         % n = i;
         i=nseg(s);
         switch(SygKat(i))
@@ -91,17 +91,18 @@ end
 txCalcus(1) = "CentrWidm-wyglWidma/maxAf";
 txCalcus(2) = "CC-wyglWidma/maxAf";
 txCalcus(3) = "CentrWidm-wyglWidma/Ps";
-txCalcus(4) = "CCE-CentrWidm";
-figure(nrF); sgtitle("mięśnie / treningi (PS/BR-k, PS/BB-r PC/BR-b PC/BR-g)"); xlabels = ["Energia"; "Odległość Manhatan"; "Odległość Eukidesa"; "Odległość Chebysheva";];
+txCalcus(4) = "CCE-wyglWidma";
+figure(nrF); sgtitle("mięśnie / treningi (PS/BR-k, PS/BB-r PC/BR-b PC/BR-g)"); xlabels = ["Moc"; "Odległość Manhattan"; "Odległość Euklidesa"; "Odległość Chebysheva";];
+if (flagaMaxima) txDist = "Maxima"; else txDist = "Energie"; end
 Nbf = bf;
 for i = bf+1:Nbf+4
     subplot(2,4,i); axis('tight');
-    if(i==2) title("Odległości wewnątrzgrupowe"); end
-    if(i==2+4) title("Odległości od centroidu centroidów"); subtitle(sprintf("flagaMaxima: %d",flagaMaxima)); end;
+    if(i==2) title("Odległości wewnątrzgrupowe");  subtitle(txDist); end
+    if(i==2+4) title("Odległości od centroidu centroidów"); end;
     if i > 4 i = i-4; end;
     xlabel(xlabels(mod(i,5)));
     hold off; 
-    if (i==4) title( txCalcus(jakieDist) ); end
+    if (i==4) subtitle( txCalcus(jakieDist) ); end
 end
 % figure(nrF+1); hold off; title("mięśnie / treningi"); xlabel("Odległość City")
 % figure(nrF+2); hold off; title("mięśnie / treningi"); xlabel("Odległość Eukidesa")

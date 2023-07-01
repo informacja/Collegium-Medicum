@@ -18,14 +18,6 @@ for(j = 1:length(v)) % grupa training
         nrs = nseg(i);
         c = SygKat(nrs);  % index
         nrG = v(j).infoTraining; % Gestu
-%         if(fileSegMio(nrs)==txBR)
-%             if v(j).infoTraining == 1 c=1; nrG=1; end
-%             if v(j).infoTraining == 2 c=2+1; nrG=2; end
-%         end
-%         if(fileSegMio(nrs)==txBB)
-%             if v(j).infoTraining == 1 c=2; nrG=1; end
-%             if v(j).infoTraining == 2 c=2+2; nrG = 2; end
-%         end
         kat = segment(nrs).miesien;
         jj(nrG) = jj(nrG)+1;
         switch (jakieDist)            
@@ -39,14 +31,17 @@ for(j = 1:length(v)) % grupa training
                 dCzx= ddists_chebyE(nrG, jj(nrG), kat);
         end
 %         z=[z;nrG, jj(nrG), kat];
+        m = [];
+        if(kat-1) m = "^"; else m = "*"; end;% mięśeń marker
+        if(kat-1) m = "."; else m = "."; end;% mięśeń marker
         zakres1 = 1;
         k = SygKat(i); 
 %         [j,k, jj]
         switch(k)
-            case 1, plotDistance(nrF, bf, nrs+offset*(k-1), 1, zakres1, k, [], dCx, dEx, dCzx);
-            case 2, plotDistance(nrF, bf, nrs+offset*(k-1), 1, zakres1, k, [], dCx, dEx, dCzx);
-            case 3, plotDistance(nrF, bf, nrs+offset*(k-1), 1, zakres1, k, [], dCx, dEx, dCzx);
-            case 4, plotDistance(nrF, bf, nrs+offset*(k-1), 1, zakres1, k, [], dCx, dEx, dCzx);
+            case 1, plotDistance(nrF, bf, nrs+offset*(k-1), 1, zakres1, k, [], dCx, dEx, dCzx, m);
+            case 2, plotDistance(nrF, bf, nrs+offset*(k-1), 1, zakres1, k, [], dCx, dEx, dCzx, m);
+            case 3, plotDistance(nrF, bf, nrs+offset*(k-1), 1, zakres1, k, [], dCx, dEx, dCzx, m);
+            case 4, plotDistance(nrF, bf, nrs+offset*(k-1), 1, zakres1, k, [], dCx, dEx, dCzx, m);
              
             otherwise
                 SygKat(i)
@@ -67,8 +62,10 @@ for i = bf+1:Nbf+4
     if(i==2+4) title("Odległości od centroidu centroidów"); end; %subtitle( tx ); end;
 %     if(i==1+4) subtitle( "Maxsima" ); end;
 %     if(i==1+4) subtitle( "Energia" ); end;
+  
     if i > 4 i = i-4; end; %podpisy na górze i dole
     xlabel(xlabels(mod(i,5)));    
     if (i==4) subtitle( txCalcus(jakieDist) ); end
+    if( i==2) subtitle(tx); end
 end
 toc;
