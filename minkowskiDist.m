@@ -129,7 +129,7 @@ if (jakieDist == 3) txDist = "E (Euklides)"; end
 lbins = 30;
 if(wybrJakieDist)
 
-figure(nrFig-1);
+    figure(nrFig-1);
     for( c = 1:4 )
         subplot(2,2,c);
         switch(c)

@@ -84,7 +84,7 @@ for(j = 1:length(v)) % grupa
 end
 hold off;
 disp("Normowanie widma")
-return
+
 % normowanie widma
 for(j = 1:length(v)) % grupa
     lAyf=length(Widma(j,1).Ayf);

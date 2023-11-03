@@ -6,6 +6,7 @@ names = [];
 % Segmentacja plików
 %--------------------------------------------------------------------------
 % wybrane = [3 4 19 20];
+selectTraining
 j = 1; 
 while (j <= length(v))
     nrR = 0; nrB = 0;
@@ -125,7 +126,7 @@ if(DEBUG)
     subplot(211),mhistogr(fileSegNr, length(v),1); axis("tight"); title("Rozkład segmentów w plikach"); ylabel("Segmenty per ćwiczenie"); xlabel("Liczba ćwiczeń");
     subplot(212),plot(sLens/fpom,'.'); hold on; axis("tight"); title("Rozkład długości segmentów"); ylabel("Długość segmentu [s]"); xlabel("Nr segmentu");
     axis auto 
-    figPW("nomargin")
+%     figPW("nomargin") TODO?
     if(deprecated) 
         for i = 554:555%length(segment) % color anomaly
             sLens(i) = length(segment(i).data);

@@ -54,7 +54,7 @@ for(j = 1:length(v)) % grupa
     nj = find(wybrJ==j);
     if( length(nj) > 0 || plotAllFigures) figure(j+nrF); end
     nseg=find(fileSegNr==j);
-    for (i = 1:length(nseg)) i
+    for (i = 1:length(nseg)) 
         nrs = nseg(i);
 
         %         if(v(j).plikeSegMio(i) == txBR) kat = 1; end

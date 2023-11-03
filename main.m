@@ -8,7 +8,7 @@
 % roznicde dla posredniego BR-BR
 % dists_cheby OR dists_chebyM
 
-DEBUG = 0;
+DEBUG = 1;
 if (isdeployed)
     DEBUG = 0;
 end
