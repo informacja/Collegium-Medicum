@@ -33,8 +33,7 @@ dirname = '10';
 if(compareExampleData)
     dirname = '"../2przypadki/dane/Miopatia zapalna/Emg_Qemf.003/MVA_000 (1).wav"';
 end
-% clear v; % Clear files data
-v = [];
+v = []; % Clear files data
 files = dir(fullfile(dirname,'**','*.mat'));
 datafiles = fullfile({files.folder},{files.name});
 
@@ -87,6 +86,7 @@ fprintf(1,"Macierz plików v: %d (ilość pomiarów * liczba ćwiczeń)\n", leng
 Yunits = tmp.movements.sources.signals.signal_1.units;
 fpom = tmp.movements.sources.signals.signal_1.frequency; dtpom=1/fpom; %  Hz
 
+%------SEGMENTATION--------------------------------------------------------
 if(exist("segments.mat"))
     load segments.mat
 else
@@ -95,7 +95,6 @@ end
 
 if (skipedTrainingReppetinons) fprintf(1,"Rozkład: %d (pośrednich) %d (podchwytów) Sumarycznie pominiętych ćwiczeń: %d \n", countPosredni, countPodchwyt, skipedTrainingReppetinons); end;
 fprintf(1,"Liczba segmentów: %d (liczba plików * liczba mięśni * ilość powtórzeń)\nSzacowanych segmentów: (%d)\n", length(segment), length(v)*2*10); % liczba plików * liczba mięśni * ilość powtórzeń
-%--------------------------------------------------------------------------
 nrFw = 201; % nr fig widma
 lfrow= 4; lc=2; 
 Tsyg=ceil(ceil(m*dtpom)/2)*2; % [sek] Maximal time of action duration
@@ -123,7 +122,7 @@ else
     toc;
     save signals.mat Syg SygKat SygRawLen
 end
-
+%------SPECTRUMS--------------------------------------------------------
 nrF = 500; selectTraining; % wybór indeksów "j"
 MTF(1).Tu = []; MTF(2).Tu = []; MTF(3).Tu = [];
 
@@ -133,7 +132,7 @@ else
     nrF = 1000; fprintf(1, "Liczenie widm... "); spectrumTrend;
 end
 fprintf(1,"Rozmiar widm: %dx%d\n", size(Widma)); 
-
+%------CENTROIDS--------------------------------------------------------
 if(exist("centroids.mat"))
     load centroids.mat
 else
@@ -142,7 +141,7 @@ end
 fprintf(1,"Rozmiar centroidów: %dx%d\n", size(CentrWidm)); 
 
 dCentr;
-
+%------MINKOWSKI-DISTANCE--------------------------------------------------------
 nrF = 4000; 
 for(jakieDist = 1:4)
     if(mod(jakieDist,2) == 1 ) nrF = nrF+1; bf = 0; else bf = 4; end
@@ -152,7 +151,7 @@ for(jakieDist = 1:4)
     figure(nrF);
     disppolt;
 end
-
+%------MINKOWSKI-DISTANCE--------------------------------------------------------
 for(jakieDist = 5:6)
     if(mod(jakieDist,2) == 1 ) nrF = nrF+1; bf = 0; figure(nrF); else bf = 4; end
     if(jakieDist>5) flagaMaxima = 0; else flagaMaxima = 1; end
