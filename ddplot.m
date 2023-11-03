@@ -51,7 +51,7 @@ end
 
 txCalcus(5) = "CC-CentrWidm";
 txCalcus(6) = "CCE-CentrWidm";
-Nbf = bf; if(flagaMaxima) tx = "Maxsima"; else tx = "Energia"; end
+Nbf = bf; if(flagaMaxima) tx = "Maxima"; else tx = "Energia"; end
 for i = bf+1:Nbf+4
     if( ~length(find(i==[1,5])) ) % pomijaj rysowanie
         subplot(2,4,i); axis('tight'); hold off; 

@@ -1,10 +1,6 @@
 % po odklejeniu elektrody, nie można porównywać amplitud
 %todo
-%centroidy
-%liczba widm
 % centroidy dla jednego ćw od wszystkich osób
-% autokorelacja
-% sprawdicz czygrupy się nie mies`ają
 % roznicde dla posredniego BR-BR
 % dists_cheby OR dists_chebyM
 
@@ -122,7 +118,7 @@ else
     toc;
     save signals.mat Syg SygKat SygRawLen
 end
-%------SPECTRUMS--------------------------------------------------------
+%------SPECTRUMS-----------------------------------------------------------
 nrF = 500; selectTraining; % wybór indeksów "j"
 MTF(1).Tu = []; MTF(2).Tu = []; MTF(3).Tu = [];
 
@@ -132,7 +128,7 @@ else
     nrF = 1000; fprintf(1, "Liczenie widm... "); spectrumTrend;
 end
 fprintf(1,"Rozmiar widm: %dx%d\n", size(Widma)); 
-%------CENTROIDS--------------------------------------------------------
+%------CENTROIDS-----------------------------------------------------------
 if(exist("centroids.mat"))
     load centroids.mat
 else
@@ -141,7 +137,7 @@ end
 fprintf(1,"Rozmiar centroidów: %dx%d\n", size(CentrWidm)); 
 
 dCentr;
-%------MINKOWSKI-DISTANCE--------------------------------------------------------
+%------MINKOWSKI-DISTANCE--CentrWidm-wyglWidma/maxAf-..-CCE-wyglWidma------
 nrF = 4000; 
 for(jakieDist = 1:4)
     if(mod(jakieDist,2) == 1 ) nrF = nrF+1; bf = 0; else bf = 4; end
@@ -151,7 +147,7 @@ for(jakieDist = 1:4)
     figure(nrF);
     disppolt;
 end
-%------MINKOWSKI-DISTANCE--------------------------------------------------------
+%------MINKOWSKI-DISTANCE--CC-CentrWidm--CCE-CentrWidm---------------------
 for(jakieDist = 5:6)
     if(mod(jakieDist,2) == 1 ) nrF = nrF+1; bf = 0; figure(nrF); else bf = 4; end
     if(jakieDist>5) flagaMaxima = 0; else flagaMaxima = 1; end
