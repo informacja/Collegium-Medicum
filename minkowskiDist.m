@@ -45,16 +45,16 @@ if(1)
             end
             d=Afw-Af; % wzorcowe
 
-            dE=sqrt(sum(d.^2));
             dC=sum(abs(d));
+            dE=sqrt(sum(d.^2));
             dCZ = max(abs(d));
                   
             if(wybrJakieDist)
                 switch(c) %jakieDist 1 i 3 oraz d E C CZ
-                    case 1, dAll1 = [dAll1 dCZ];  
-                    case 2, dAll2 = [dAll2 dCZ];  
-                    case 3, dAll3 = [dAll3 dCZ];  
-                    case 4, dAll4 = [dAll4 dCZ]; 
+                    case 1, dAll1 = [dAll1 dE];  
+                    case 2, dAll2 = [dAll2 dE];  
+                    case 3, dAll3 = [dAll3 dE];  
+                    case 4, dAll4 = [dAll4 dE]; 
                 end   
             end
                    
@@ -123,8 +123,8 @@ else
     disp("Pominęto wypisywanie odległości dla centroidów")
 end
 txDist = "Niezdefinowano";
-if (jakieDist == 1) txDist = "Moc (Czebyszew)"; end
-if (jakieDist == 3) txDist = "Energia (Czebyszew)"; end
+if (jakieDist == 1) txDist = "M (Euklides)"; end
+if (jakieDist == 3) txDist = "E (Euklides)"; end
 
 lbins = 30;
 if(wybrJakieDist)

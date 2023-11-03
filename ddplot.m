@@ -10,7 +10,7 @@ tic;
 % end
 z=[];
 jj= zeros(1,2);
-
+% offset = 0;
 for(j = 1:length(v)) % grupa training
     nseg=find(fileSegNr==j);
     for (i = 1:length(nseg))

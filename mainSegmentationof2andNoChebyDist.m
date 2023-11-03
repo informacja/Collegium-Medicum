@@ -68,7 +68,7 @@ for(j = 1:length(v))
         subplot(lfrow,lc,1+i),  plot(nx*dtpom, y); xlabel(sprintf("Ruch pośredni %d: y(t) t[sek]", i));
         subplot(lfrow,lc,1+i+lc),  plot(nx*dtpom, X);
         % LSyg / nTu jest liczbą próbek w oknie wygładzania
-        Twygl=0.25; nTu = Tsyg/Twygl;
+        Twygl=0.25*2; nTu = Tsyg/Twygl;
         Tu=Twygl/dtpom;
         run("../MTF/filtrWidma.m");
         xf = [0:LwAm-1];
@@ -79,7 +79,7 @@ for(j = 1:length(v))
         Podzial=4; if(j==2) Podzial=10; end
         nf=round(Nf/2); 
         X = Afw(1:nf);
-        Twygl=0.05; nTu = Tsyg/Twygl; % LSyg / nTu jest liczbą próbek w oknie wygładzania
+        Twygl=0.05*2; nTu = Tsyg/Twygl; % LSyg / nTu jest liczbą próbek w oknie wygładzania
         Tu=Twygl/dtpom;
         run("../MTF/filtrWidma.m");
         nk=round(Nf/Podzial);
@@ -88,7 +88,7 @@ for(j = 1:length(v))
         title("Dziedzina częstotliwości");
         xlabel(sprintf("Widmo %d [Hz] Tu=%.1fms f_g=1/Tu=%.0fHz ",i,Tu*dtpom*1000,1/(Tu*dtpom)));
         Podzial=15; if(j==2) Podzial=30; end
-        Twygl=0.025; nTu = Tsyg/Twygl;
+        Twygl=0.025*2; nTu = Tsyg/Twygl;
         nf=round(Nf/Podzial);
         X=Afw(1:nf).^2;
         Tu=Twygl/dtpom;

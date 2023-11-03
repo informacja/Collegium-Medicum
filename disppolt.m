@@ -92,7 +92,7 @@ txCalcus(1) = "CentrWidm-wyglWidma/maxAf";
 txCalcus(2) = "CC-wyglWidma/maxAf";
 txCalcus(3) = "CentrWidm-wyglWidma/Ps";
 txCalcus(4) = "CCE-wyglWidma";
-figure(nrF); sgtitle("mięśnie / treningi (PS/BR-k, PS/BB-r PC/BR-b PC/BR-g)"); xlabels = ["Moc"; "Odległość Manhattan"; "Odległość Euklidesa"; "Odległość Chebysheva";];
+figure(nrF); sgtitle("mięśnie / treningi (PS/BR-k, PS/BB-r PC/BR-b PC/BR-g)"); xlabels = ["Moc"; "Odległość Manhattan"; "Odległość Euklidesa"; "Odległość Czebyszewa";];
 if (flagaMaxima) txDist = "Maxima"; else txDist = "Energie"; end
 Nbf = bf;
 for i = bf+1:Nbf+4

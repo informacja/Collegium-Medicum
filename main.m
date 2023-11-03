@@ -150,7 +150,7 @@ for(jakieDist = 1:4)
     nrFig = jakieDist*2+i+500; 
     minkowskiDist;
     figure(nrF);
-%     disppolt;
+    disppolt;
 end
 
 for(jakieDist = 5:6)
