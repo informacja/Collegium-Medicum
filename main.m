@@ -23,9 +23,9 @@ printCentroids = 0; % a lot of console tables
 plotAllFigures = 0;
 compareExampleData = 0;
 deprecated = 0; % unused code
-dirname = 'Archiwum';
-dirname = '23.05.23';
-dirname = '10';
+% dirname = 'Archiwum';
+% dirname = '23.05.23';
+dirname = '33unique'; % 2 times author was recorded (34 patients number in sum)
 if(compareExampleData)
     dirname = '"../2przypadki/dane/Miopatia zapalna/Emg_Qemf.003/MVA_000 (1).wav"';
 end
