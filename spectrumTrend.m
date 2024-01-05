@@ -4,7 +4,7 @@ for(j = 1:length(v)) % grupa
 %     figure(nrF+j),
     nxf = 0; % nie drukuj figur
     fileSegNr; %TODO
-    mnoznik = 2;
+    mnoznik = .2;
     nseg=find(fileSegNr==j);
     for (i = 1:length(nseg))
         ifig = segMio(nseg(i))-1; % ifigure SygKat
@@ -21,8 +21,10 @@ for(j = 1:length(v)) % grupa
         Nf=length(y); %todo
         nx=[0:Nf-1];
        if( ifLastSeg || plotAllFigures )
-            subplot(lfrow,lc,1+ifig),  plot(nx*dtpom, y); xlabel(sprintf("Ruch pośredni %d: y(t) t[sek]", i));
+            subplot(lfrow,lc,1+ifig), plot(nx*dtpom, y); 
             if( ifig == 0) title("                                                                                                                                   Dziedzina czasu"); end
+            subtitle(sprintf("Segment nr: %d", ksyg));
+            xlabel(sprintf("Chwyt pośredni nr %d (względny):, y(t) t[sek]", i));
             ylabel(['Amplituda [' Yunits ']'])
             subplot(lfrow,lc,1+ifig+lc),  plot(nx*dtpom, X);
         end 
@@ -32,7 +34,8 @@ for(j = 1:length(v)) % grupa
         run("../MTF/filtrWidma.m");
         xf = [0:LwAm-1];
         if( ifLastSeg || plotAllFigures )
-            hold on; plot(xf/Tsyg,Ayf,'c',[0:Ldf]/Tsyg,Af,'k'); axis('tight');  hold off;
+            hold on; plot(xf*dtpom,Ayf,'Color','#0072BD');
+            plot([0:Ldf]*dtpom,Af,'k'); axis('tight');  hold off;
             xlabel(sprintf("Kwadrat y i wygł. y(t)^2 %d (Tu=%.1fms): t[sek]", i,Tu*dtpom*1000));
         end
         A = fft(y); lA = length(A);
@@ -40,15 +43,18 @@ for(j = 1:length(v)) % grupa
         Podzial=4; if(j==2) Podzial=10; end
         nf=round(Nf/2); 
         X = Afw(1:nf);
+        Podzial=15; if(j==2) Podzial=30; end
         Twygl=0.05*mnoznik; nTu = Tsyg/Twygl; % LSyg / nTu jest liczbą próbek w oknie wygładzania
         Tu=Twygl/dtpom; nfw = 2;
         run("../MTF/filtrWidma.m");
         nk=round(Nf/Podzial);
         Widma(j,i).Ayf=Ayf; wyglWidma(j,i).Af=Af;% i*2+j
 %         v(j).kat = n+v(j).infoTraining-1*2; % training
+        Podzial=15; if(j==2) Podzial=30; end
+        % nf=round(Nf/Podzial);
         kf=SygKat(nseg(i));
         if( ifLastSeg || plotAllFigures )
-            subplot(lfrow,lc,1+ifig+2*lc),   plot([0:nk-1]/Tsyg,Ayf(1:nk),'c',[0:Ldf]/Tsyg,Af,'k');
+            subplot(lfrow,lc,1+ifig+2*lc),   plot([0:nk-1]/Tsyg,Ayf(1:nk),'c',[0:nk-1]/Tsyg,Af(1:nk),'k');
             figure(nrFw), subplot(1,2,1); hold on; 
              %kf=mod(kf,4)+1; 
             plot([0:Ldf],Af,kol(kf)); %plot(wyglWidma(j,i).Af); hold off; 
@@ -65,9 +71,10 @@ for(j = 1:length(v)) % grupa
 %         figure(111), plot(X); hold on; plot(Xx)
         Tu=Twygl/dtpom; nfw = 3;
         run("../MTF/filtrWidma.m");
-        nf=round(Nf/Podzial);
+        
         Widma(j,i).Ayf2=Ayf; wyglWidma(j,i).Af2=Af;% i*2+j
 
+        nf=round(Nf/Podzial);
 %         Widma(j,i).kat = v(j).kat = n+v(j).infoTraining-1*2; % training
 %         to erase
 %         figPW("png",5)
@@ -75,7 +82,7 @@ for(j = 1:length(v)) % grupa
 %             figure(nrFw+j),
             subplot(lfrow,lc,1+ifig+3*lc), plot([0:nf-1]/Tsyg,Ayf(1:nf),'c',[0:nf-1]/Tsyg,Af(1:nf),'k');
             xlabel(sprintf("Widmo mocy %d f_g=1/Tu Tu=%.1fms",i,Tu*dtpom*1000));
-            sgtitle( sprintf("%s %d",v(j).infoBDisp, ksyg))
+            sgtitle( sprintf("%s",v(j).infoBDisp))
             figure(nrFw), subplot(1,2,2); hold on; plot([0:nf-1]/Tsyg,Af(1:nf),kol(kf)); %plot(wyglWidma(j,i).Af); hold off; 
             maxAf(j)=max(Af); 
             sgtitle("Widma sygnałów wewn. grupy dla raw i mocy")
