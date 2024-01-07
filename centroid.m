@@ -59,8 +59,8 @@ for(j = 1:length(v)) % grupa
 
         %         if(v(j).plikeSegMio(i) == txBR) kat = 1; end
 
-        if(fileSegMio(nrs) == txBR) kat = 1; end
-        if(fileSegMio(nrs) == txBB) kat = 2; end
+        if(fileSegMio(nrs) == txBR) nrskat(1) = nrs; kat = 1; end
+        if(fileSegMio(nrs) == txBB) nrskat(2) = nrs; kat = 2; end
         wyglWidma(j,i).maxAf = max(wyglWidma(j,i).Af);
         wyglWidma(j,i).maxAf2 = max(wyglWidma(j,i).Af2);
         %         if (wyglWidma() todo
@@ -99,9 +99,10 @@ for(j = 1:length(v)) % grupa
         CentrWidm(j, kat).AfE=CentrWidm(j, kat).AfE/nAf(kat); CentrWidm(j, kat).Af2E=CentrWidm(j,kat).Af2E/nAf(kat);
 
         if( length(nj) > 0 || plotAllFigures )
-            subplot(2,2,kat); hold on; plot(xf, CentrWidm(j, kat).AfM(f),'k--'); hold off; axis('tight');
+            subplot(2,2,kat); hold on; plot(xf, CentrWidm(j, kat).AfM(f),'k--'); hold off; axis('tight'); 
+            title(fileSegMio(nrskat(kat)));
             subplot(2,2,kat+2); hold on; plot(xf, CentrWidm(j, kat).AfE(f),'k--'); hold off; axis('tight');
-            title(fileSegMio(nrs)); xlabel("Widmo mocy")
+            title(fileSegMio(nrskat(kat))); xlabel("Widmo mocy")
         end
     end
     % TODO

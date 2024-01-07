@@ -11,10 +11,10 @@ end
 if(DEBUG)
     clear all;
     close all;
-%     delete segments.mat % 10s
-%     delete signals.mat  % hann window 10s
-    % delete spectrums.mat%           
-%     delete centroids.mat
+    % delete segments.mat % 10s
+    % delete signals.mat  % hann window 10s
+    delete spectrums.mat           
+    delete centroids.mat
     DEBUG = 1;
 end
 allElapsedTime = tic;
@@ -127,7 +127,8 @@ if(exist("spectrums.mat"))
 else
     nrF = 1000; fprintf(1, "Liczenie widm... "); spectrumTrend;
 end
-fprintf(1,"Rozmiar widm: %dx%d\n", size(Widma)); 
+fprintf(1,"Rozmiar widm: %dx%d\n", size(Widma));
+
 %------CENTROIDS-----------------------------------------------------------
 if(exist("centroids.mat"))
     load centroids.mat
@@ -158,7 +159,7 @@ for(jakieDist = 5:6)
 end
 fprintf(1, "main = "); toc(allElapsedTime);
 
-nrF = 5e4; 
+nrF = 5e3; 
 return
 
 %%%%%% END OF CODE %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
