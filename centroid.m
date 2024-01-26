@@ -86,11 +86,11 @@ for(j = 1:length(v)) % grupa
         if( length(nj) > 0 || plotAllFigures )
 
             subplot(2,2,kat);    hold on; plot(xf, wyglWidma(j,i).Af(f)/wyglWidma(j,i).maxAf);
-            title(fileSegMio(nrs)); xlabel("Widmo unormowane") %end;
+            title(fileSegMio(nrs)); xlabel("Widmo względem wartości maksymalnej") %end;
             subplot(2,2,kat+2);  hold on; plot(xf, wyglWidma(j,i).Af(f)/sum(wyglWidma(j,i).Af));
             %         subplot(2,2,kat);    hold on; plot(xf, wyglWidma(j,i).Af(f)/wyglWidma(j,i).maxAf);
             %         subplot(2,2,2+kat);  hold on; plot(xf, wyglWidma(j,i).Af(f)/(Psyg(j,i);
-            title(segment(nrs).miesien); xlabel("Widmo mocy")
+            title(segment(nrs).miesien); xlabel("Widmo unormowane sumą amplitud")
         end
     end
     sgtitle(sprintf("Widma wewnątrzgrupowe, ćwiczenie %s", v(fileSegNr(nrs)).infoRecord))
@@ -102,7 +102,7 @@ for(j = 1:length(v)) % grupa
             subplot(2,2,kat); hold on; plot(xf, CentrWidm(j, kat).AfM(f),'k--'); hold off; axis('tight'); 
             title(fileSegMio(nrskat(kat)));
             subplot(2,2,kat+2); hold on; plot(xf, CentrWidm(j, kat).AfE(f),'k--'); hold off; axis('tight');
-            title(fileSegMio(nrskat(kat))); xlabel("Widmo mocy")
+            title(fileSegMio(nrskat(kat))); xlabel("Widmo unormowane sumą amplitud")
         end
     end
     % TODO

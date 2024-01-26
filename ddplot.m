@@ -10,9 +10,11 @@ tic;
 % end
 z=[];
 jj= zeros(1,2);
+
 % offset = 0;
 for(j = 1:length(v)) % grupa training
     nseg=find(fileSegNr==j);
+    
     for (i = 1:length(nseg))
 %         k = i;
         nrs = nseg(i);
@@ -34,6 +36,9 @@ for(j = 1:length(v)) % grupa training
         m = [];
         if(kat-1) m = "^"; else m = "*"; end;% mięśeń marker
         if(kat-1) m = "."; else m = "."; end;% mięśeń marker
+        if( find(wybrJ==j) )
+            m = '*';
+        end
         zakres1 = 1;
         k = SygKat(i); 
 %         [j,k, jj]

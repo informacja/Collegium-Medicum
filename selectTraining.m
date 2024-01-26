@@ -1,9 +1,9 @@
 wybrJ = [];
 for (j=1:length(v))
-%     if (v(j).infoRecord == """22 pośredni NORAXON ELEKTRODY """) wybrJ = [wybrJ j]; end
-%     if (v(j).infoRecord == """22 podchwyt NORAXON ELEKTRODY""") wybrJ = [wybrJ j]; end
-    if (v(j).infoRecord == """11 pośredni""") wybrJ = [wybrJ j]; end
-    if (v(j).infoRecord == """11 podchwyt""") wybrJ = [wybrJ j]; end 
+    if (v(j).infoRecord == """22 pośredni NORAXON ELEKTRODY """) wybrJ = [wybrJ j]; end
+    if (v(j).infoRecord == """22 podchwyt NORAXON ELEKTRODY""") wybrJ = [wybrJ j]; end
+    % if (v(j).infoRecord == """11 pośredni""") wybrJ = [wybrJ j]; end
+    % if (v(j).infoRecord == """11 podchwyt""") wybrJ = [wybrJ j]; end 
 %     if (v(j).infoRecord == """35 pośredni """) wybrJ = [wybrJ j]; end
 %     if (v(j).infoRecord == """35 podchwyt""") wybrJ = [wybrJ j]; end 
 end

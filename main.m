@@ -13,8 +13,8 @@ if(DEBUG)
     close all;
     % delete segments.mat % 10s
     % delete signals.mat  % hann window 10s
-    delete spectrums.mat           
-    delete centroids.mat
+    % delete spectrums.mat           
+    % delete centroids.mat
     DEBUG = 1;
 end
 allElapsedTime = tic;
@@ -144,10 +144,11 @@ for(jakieDist = 1:4)
     if(mod(jakieDist,2) == 1 ) nrF = nrF+1; bf = 0; else bf = 4; end
     if(jakieDist>2) flagaMaxima = 0; else flagaMaxima = 1; end 
     nrFig = jakieDist*2+i+500; 
-    minkowskiDist;
+    minkowskiDist;    
     figure(nrF);
     disppolt;
 end
+
 %------MINKOWSKI-DISTANCE--CC-CentrWidm--CCE-CentrWidm---------------------
 for(jakieDist = 5:6)
     if(mod(jakieDist,2) == 1 ) nrF = nrF+1; bf = 0; figure(nrF); else bf = 4; end
@@ -155,7 +156,7 @@ for(jakieDist = 5:6)
     nrFig = jakieDist*2+500; 
      minkowskiDist;
     figure(nrF); 
-    ddplot;
+    ddplot; 
 end
 fprintf(1, "main = "); toc(allElapsedTime);
 

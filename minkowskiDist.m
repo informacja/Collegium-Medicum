@@ -125,28 +125,28 @@ end
 txDist = "Niezdefinowano";
 if (jakieDist == 1) txDist = "M (Euklides)"; end
 if (jakieDist == 3) txDist = "E (Euklides)"; end
-
-lbins = 30;
+txpi = '';
+lbins = 20;
 if(wybrJakieDist)
 
     figure(nrFig-1);
     for( c = 1:4 )
         subplot(2,2,c);
         switch(c)
-            case 1, nd = find(abs(dAll1)>0.1e-16); mhistf(dAll1(nd),lbins,1); nd = dAll1(nd); hold on; axis('tight'); subtitle(strcat("SygKat = ", string(c))); 
-            m = mean(nd); s = std(nd); ax = axis; plot([s+m s+m], ax(3:4), 'k--'); plot([m-s m-s], ax(3:4), 'k--'); plot([m m], ax(3:4), "m--");  hold off; xlabel(sprintf("$\\bar{x}$ = %g $\\sigma$ = %g", m, s),'Interpreter','latex');
-            case 2, nd = find(abs(dAll2)>0.1e-16); mhistf(dAll2(nd),lbins,1); nd = dAll2(nd); hold on; axis('tight'); subtitle(strcat("SygKat = ", string(c))); 
-            m = mean(nd); s = std(nd); ax = axis; plot([s+m s+m], ax(3:4), 'k--'); plot([m-s m-s], ax(3:4), 'k--'); plot([m m], ax(3:4), "m--");  hold off; xlabel(sprintf("$\\bar{x}$ = %g $\\sigma$ = %g", m, s),'Interpreter','latex');
-            case 3, nd = find(abs(dAll3)>0.1e-16); mhistf(dAll3(nd),lbins,1); nd = dAll3(nd); hold on; axis('tight'); subtitle(strcat("SygKat = ", string(c))); 
-            m = mean(nd); s = std(nd); ax = axis; plot([s+m s+m], ax(3:4), 'k--'); plot([m-s m-s], ax(3:4), 'k--'); plot([m m], ax(3:4), "m--");  hold off; xlabel(sprintf("$\\bar{x}$ = %g $\\sigma$ = %g", m, s),'Interpreter','latex');
-            case 4, nd = find(abs(dAll4)>0.1e-16); mhistf(dAll4(nd),lbins,1); nd = dAll4(nd); hold on; axis('tight'); subtitle(strcat("SygKat = ", string(c))); 
-            m = mean(nd); s = std(nd); ax = axis; plot([s+m s+m], ax(3:4), 'k--'); plot([m-s m-s], ax(3:4), 'k--'); plot([m m], ax(3:4), "m--");  hold off; xlabel(sprintf("$\\bar{x}$ = %g $\\sigma$ = %g", m, s),'Interpreter','latex');
+            case 1, nd = find(abs(dAll1)>0.1e-16); [pvg,pve,pvM]=mhistMGE(dAll1(nd),lbins); nd = dAll1(nd); hold on; axis('tight'); subtitle(strcat("SygKat = ", string(c))); 
+            m = mean(nd); s = std(nd); ax = axis; plot([s+m s+m], ax(3:4), 'k--'); plot([m-s m-s], ax(3:4), 'k--'); plot([m m], ax(3:4), "m--");  hold off; xlabel(sprintf("$\\bar{x}$ = %g $\\sigma$ = %g $\\pi_g$=%.2f$\\%%$  $\\pi_e$=%.2f$\\%%$  $\\pi_M$=%.2f$\\%%$ ", m, s, pvg*100, pve*100, pvM*100),'Interpreter','latex');
+            case 2, nd = find(abs(dAll2)>0.1e-16); [pvg,pve,pvM]=mhistMGE(dAll2(nd),lbins); nd = dAll2(nd); hold on; axis('tight'); subtitle(strcat("SygKat = ", string(c))); 
+            m = mean(nd); s = std(nd); ax = axis; plot([s+m s+m], ax(3:4), 'k--'); plot([m-s m-s], ax(3:4), 'k--'); plot([m m], ax(3:4), "m--");  hold off; xlabel(sprintf("$\\bar{x}$ = %g $\\sigma$ = %g $\\pi_g$=%.2f$\\%%$  $\\pi_e$=%.2f$\\%%$  $\\pi_M$=%.2f$\\%%$  ", m, s, pvg*100, pve*100, pvM*100),'Interpreter','latex');
+            case 3, nd = find(abs(dAll3)>0.1e-16); [pvg,pve,pvM]=mhistMGE(dAll3(nd),lbins); nd = dAll3(nd); hold on; axis('tight'); subtitle(strcat("SygKat = ", string(c))); 
+            m = mean(nd); s = std(nd); ax = axis; plot([s+m s+m], ax(3:4), 'k--'); plot([m-s m-s], ax(3:4), 'k--'); plot([m m], ax(3:4), "m--");  hold off; xlabel(sprintf("$\\bar{x}$ = %g $\\sigma$ = %g $\\pi_g$=%.2f$\\%%$  $\\pi_e$=%.2f$\\%%$  $\\pi_M$=%.2f$\\%%$ ", m, s, pvg*100, pve*100, pvM*100),'Interpreter','latex');
+            case 4, nd = find(abs(dAll4)>0.1e-16); [pvg,pve,pvM]=mhistMGE(dAll4(nd),lbins); nd = dAll4(nd); hold on; axis('tight'); subtitle(strcat("SygKat = ", string(c))); 
+            m = mean(nd); s = std(nd); ax = axis; plot([s+m s+m], ax(3:4), 'k--'); plot([m-s m-s], ax(3:4), 'k--'); plot([m m], ax(3:4), "m--");  hold off; xlabel(sprintf("$\\bar{x}$ = %g $\\sigma$ = %g $\\pi_g$=%.2f$\\%%$  $\\pi_e$=%.2f$\\%%$  $\\pi_M$=%.2f$\\%%$ ", m, s, pvg*100, pve*100, pvM*100),'Interpreter','latex');
         end
         sgtitle(txDist)
     end
-    figure(jakieDist+250), nd = [dAll1 dAll2 dAll3 dAll4]; mhistf(nd,lbins,1); hold on; axis('tight'); title(sprintf("Wykres zbiorczy, jakieDist = %d, %s", jakieDist, txDist));  
-    m = mean(nd); s = std(nd); ax = axis; plot([s+m s+m], ax(3:4), 'k--'); plot([m-s m-s], ax(3:4), 'k--'); plot([m m], ax(3:4), "m--");  hold off; xlabel(sprintf("$\\bar{x}$ = %g $\\sigma$ = %g", m, s),'Interpreter','latex');
+    figure(jakieDist+250), nd = [dAll1 dAll2 dAll3 dAll4]; [pvg,pve,pvM]=mhistMGE(nd,lbins); hold on; axis('tight'); title(sprintf("Wykres zbiorczy, jakieDist = %d, %s", jakieDist, txDist));  
+    m = mean(nd); s = std(nd); ax = axis; plot([s+m s+m], ax(3:4), 'k--'); plot([m-s m-s], ax(3:4), 'k--'); plot([m m], ax(3:4), "m--");  hold off; xlabel(sprintf("$\\bar{x}$ = %g $\\sigma$ = %g $\\pi_g$=%.2f$\\%%$  $\\pi_e$=%.2f$\\%%$  $\\pi_M$=%.2f$\\%%$ ", m, s, pvg*100, pve*100, pvM*100),'Interpreter','latex');
 end
-% [pvg,pvr,chi2e,chi2r,bins,Nemp]=mhistf(dAll1(nd),lbins,1); hold off;
+% [pvg,pve,pvM,bins,Nemp]=mhistMGE(dAll1(nd),lbins); hold off;
 % save centroids.mat CentrWidm dEM dCM dists_chebyM dEsyg Psyg dEM dCM dists_chebyM CC CCE Psr dC dE dists_cheby dEE dCE dists_chebyE dE2E dC2E dists_cheby2E dEsyg mx
 toc;
