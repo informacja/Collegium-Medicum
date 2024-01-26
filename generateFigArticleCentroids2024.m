@@ -1,9 +1,9 @@
-
-fromPath = "fig4Article/";
+% https://stackoverflow.com/questions/26084069/how-to-produce-unicode-characters-with-matlab-latex-interpreter
+fromPath = "figBase/";
 % załaduj z pliku zamiast liczyć
 figFilenames = dir(strcat(fromPath,"*.fig"));
-saveAllOpenedFigures = 0;
-if(~isempty(figFilenames))
+saveAllOpenedFigures = 1;
+if(~isempty(figFilenames)) % jeśli w katalogu są pliki *.fig
     close all force
     for (i = 1:length(figFilenames))
         [filepath,name,ext] = fileparts(figFilenames(i).name);
@@ -17,11 +17,13 @@ if(~isempty(figFilenames))
     end
     backup = 0;
     saveAllOpenedFigures = 1;
+    exportPath = "fig4ArticleStyleLudwin/";
 else
     main % policz    
     backup = 1;
+    saveAllOpenedFigures = 1;
+    exportPath = "figBase/"; % UWAGA: domyślny katalog zapisu *.fig
 end
-exportPath = "makeFig4Article/";
 
 % find figure 1000 (last nr)
 figHandles = findobj('Type', 'figure');
@@ -30,18 +32,36 @@ for(i = 1:length(figHandles))
     num = [num; figHandles(i).Number];
 end
 num = sort(num);
+
+fNrScale = [503 527];
+
 if(saveAllOpenedFigures)
     toSave = num;
     cetroidsFigNr = 2; % for scaling
 else
-    toSave = [];
-    
+    toSave = [];    
     index = [];
     index = find(num==501);
     toSave = [toSave; num(index)]; 
     index = find(num==502);
     toSave = [toSave; num(index)]; 
     
+    if(length(toSave) == 2) % make one figure
+        
+        figure(toSave(1))
+        ax1=gca;
+        figure(toSave(2))
+        ax2=gca;
+        
+        nrFigure = 555;
+        figure(nrFigure);
+        tcl=tiledlayout("flow");
+        ax1.Parent=tcl;
+        ax1.Layout.Tile=1;
+        ax2.Parent=tcl;
+        ax2.Layout.Tile=2;
+        toSave(nrFigure);
+    end
     % 1000 ------Spectrum--------
     index1 = [];
     for(i = 1:length(num))
@@ -88,10 +108,13 @@ else
 end
 
 for (i = toSave')
+    % if(i<5) continue;  end % for crashing matlab problem   
     figure(i);
     % if eg 1014 
+    
     mnoznik = 1;
-    if(i == cetroidsFigNr) mnoznik = 1.6; end
+    if( (i == cetroidsFigNr | find(i==fNrScale)) ) mnoznik = 1.6; end
+    if(i==527) mnoznik = 2.5; end;
     figPW("path", exportPath, "exportPDF", 1,"openFolder",1,"saveCopyFig", ...
-        backup,"skipSaveAs",1, "scale", mnoznik);
+        backup,"skipSaveAs",1, "scale", mnoznik,"styleLudwin",1);
 end
