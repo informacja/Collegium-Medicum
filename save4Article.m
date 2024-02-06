@@ -6,7 +6,7 @@ figFilenames = dir(strcat(sourcePath,"*.fig"));
 cetroidsFigNr = 0;
 fig527 = 0;
 stylL = 0;
-skipUpTo = 5;
+skipUpTo = 0;
 if(~isempty(figFilenames)) % jeśli w katalogu są pliki *.fig
     close all force
     for (i = 1:length(figFilenames))        

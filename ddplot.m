@@ -55,7 +55,7 @@ for(j = 1:length(v)) % grupa training
 end
 
 txCalcus(5) = "CC-CentrWidm";
-txCalcus(6) = "CCE-CentrWidm";
+txCalcus(6) = "CCE-CW";
 Nbf = bf; if(flagaMaxima) tx = "Maxima"; else tx = "Energia"; end
 for i = bf+1:Nbf+4
     if( ~length(find(i==[1,5])) ) % pomijaj rysowanie
@@ -63,14 +63,14 @@ for i = bf+1:Nbf+4
     else
         continue;
     end
-    if(i==2) title("Odległości wewnątrzgrupowe"); end
-    if(i==2+4) title("Odległości od centroidu centroidów"); end; %subtitle( tx ); end;
+    if(i==3) title("Odległości wewnątrzgrupowe");  subtitle(" "); end
+    if(i==3+4) title("Odległości od centroidu centroidów"); subtitle(" "); end; %subtitle( tx ); end;
 %     if(i==1+4) subtitle( "Maxsima" ); end;
 %     if(i==1+4) subtitle( "Energia" ); end;
   
     if i > 4 i = i-4; end; %podpisy na górze i dole
     xlabel(xlabels(mod(i,5)));    
-    if (i==4) subtitle( txCalcus(jakieDist) ); end
+    if (i==4) title( txCalcus(jakieDist) ); end; %if(jakieDist==6) subtitle(" ");end; end % for non overlay text plot scale
     if( i==2) subtitle(tx); end
 end
 toc;
