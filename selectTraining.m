@@ -1,5 +1,5 @@
 wybrJ = [];
-for (j=1:length(v))
+for (j=1:length(v)) % wykluczenie z liczenia centroidu kategorii
     if (v(j).infoRecord == """22 pośredni NORAXON ELEKTRODY """) wybrJ = [wybrJ j]; end
     if (v(j).infoRecord == """22 podchwyt NORAXON ELEKTRODY""") wybrJ = [wybrJ j]; end
     % if (v(j).infoRecord == """11 pośredni""") wybrJ = [wybrJ j]; end
