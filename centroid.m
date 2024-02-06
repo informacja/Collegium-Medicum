@@ -123,7 +123,9 @@ end
 %średnia z centoidów
 cwrr = []; cwrb = []; cwcr = []; cwcb = [];
 cwrrE = []; cwrbE = []; cwcrE = []; cwcbE = [];
+lpacj = 0;
 for( i = 1:length(v))
+    if(find(i==wybrJ)) continue; end
     for mkat = 1:2
         if v(i).infoTraining == 1 %&& v(i).mięsien
             if(mkat == 1)
@@ -144,8 +146,10 @@ for( i = 1:length(v))
                 cwcbE = [cwcbE; CentrWidm(i,mkat).AfE'];
             end
         end
-    end
+    end    
+    lpacj = lpacj + 1;
 end
+
 CC =[ (mean(cwrr)); (mean(cwrb)); (mean(cwcr)); (mean(cwcb)); ]; % Centroidy Centroidów
 CCE =[ (mean(cwrrE)); (mean(cwrbE)); (mean(cwcrE)); (mean(cwcbE)); ]; % Centroidy Centroidów
 
@@ -330,7 +334,7 @@ else
     disp("Pominęto wypisywanie odległości dla centroidów")
 end
 
-save centroids.mat CentrWidm wyglWidma dEM dCM dists_chebyM dEsyg Psyg dEM dCM dists_chebyM CC CCE Psr dC dE dists_cheby dEE dCE dists_chebyE dE2E dC2E dists_cheby2E dEsyg
+save centroids.mat CentrWidm wyglWidma dEM dCM dists_chebyM dEsyg Psyg dEM dCM dists_chebyM CC CCE Psr dC dE dists_cheby dEE dCE dists_chebyE dE2E dC2E dists_cheby2E dEsyg lpacj
 toc;
 
 % TEST =[]; for i = 1:length(wyglWidma) TEST(i) = isempty(CentrWidm(i).AfM); end; max(TEST)
