@@ -14,7 +14,7 @@ if(DEBUG)
     % delete segments.mat % 10s
     % delete signals.mat  % hann window 10s
     % delete spectrums.mat           
-    % delete centroids.mat
+    delete centroids.mat
     DEBUG = 1;
 end
 allElapsedTime = tic;
@@ -136,6 +136,7 @@ else
     nrF = 2000; fprintf(1, "Liczenie centroidów... ");centroid;
 end
 fprintf(1,"Rozmiar centroidów: %dx%d\n", size(CentrWidm)); 
+fprintf(1,"Rozmiar centroidów uśrednionych: %dx%d\n", size(lpacj)); 
 
 dCentr;
 %------MINKOWSKI-DISTANCE--CentrWidm-wyglWidma/maxAf-..-CCE-wyglWidma------
