@@ -12,8 +12,8 @@ if(DEBUG)
     clear all;
     close all;
     % delete segments.mat % 10s
-    % delete signals.mat  % hann window 10s
-    % delete spectrums.mat           
+    delete signals.mat  % hann window 10s
+    delete spectrums.mat           
     delete centroids.mat
     DEBUG = 1;
 end
@@ -102,13 +102,30 @@ if(exist("signals.mat"))
     load signals.mat
 else
     tic
+    l = 1e10;
+    for( i = 1:length(segment))
+        if(l > length(segment(i).data))
+            l = length(segment(i).data);
+        end
+    end
+    
     for( i = 1:length(segment)) % uzupełnianie zerami segmentów
         SygRawLen(i) = length(segment(i).data');
-        if (windowing)
-            win = hann(SygRawLen(i));
-            segment(i).data = segment(i).data.*win;
+        % if (windowing)
+        %     win = hann(SygRawLen(i));
+        %     segment(i).data = segment(i).data.*win;
+        % end
+        f = find(segment(i).data == max(segment(i).data));
+        begIndx = f(1)-(l/2);
+        if(begIndx<1) begIndx = 1; end
+        endIndx = begIndx + l-1;
+        if(endIndx > SygRawLen(i)) endIndx = SygRawLen(i); begIndx = endIndx-l+1; end
+        tmp = segment(i).data(begIndx:endIndx);
+        win = hann(l);
+        if (windowing)           
+            tmp = tmp.*win;
         end
-        Syg(i,1:lSyg) = [segment(i).data' zeros(1, lSyg-length(segment(i).data))];
+        Syg(i,1:l) = [tmp];% ,1:lSyg zeros(1, lSyg-length(segment(i).data))];
         SygKat(i) = segMio(i)+(segTraining(i)-1)*2; %plikSegMio(fileSegNr(nrs),nrB).i=2;  n+v(j).infoTraining-1*2; % training
         sygKat(i) = segment(i).miesien+(segment(i).gest-1)*2;
         segment(i).kat = sygKat(i);
