@@ -4,7 +4,8 @@ exportPath = "fig4Article/";
 figFilenames = dir(strcat(sourcePath,"*.fig"));
 
 cetroidsFigNr = 0;
-fig527 = 0;
+fig503M = 0;
+fig509E = 0;
 stylL = 0;
 skipUpTo = 0;
 if(~isempty(figFilenames)) % jeśli w katalogu są pliki *.fig
@@ -15,9 +16,10 @@ if(~isempty(figFilenames)) % jeśli w katalogu są pliki *.fig
         pos = find(name == '_', 1, 'last');
         a = openfig(strcat(figFilenames(i).folder,"/",figFilenames(i).name));
         if(strfind(figFilenames(i).name,"1023")) cetroidsFigNr = i; end
-        if(strfind(figFilenames(i).name,"503")) fig527 = i; end
+        if(strfind(figFilenames(i).name,"503")) fig503M = i; end
+        if(strfind(figFilenames(i).name,"509")) fig509E = i; end
         if(strfind(figFilenames(i).name,"555")) stylL = i; end
-        % if(i==4) break; end
+        % if(i==6) break; end
     end
     backup = 0;
 else
@@ -43,7 +45,8 @@ for (i = toSave')
     mnoznik = 1;
     style = "stylePiotr";
     if( (i == cetroidsFigNr) ) mnoznik = 1.6; end
-    if(i == fig527) mnoznik = 2.5;  end;
+    if(i == fig503M) mnoznik = 1.8;  end;
+    if(i == fig509E) mnoznik = 2.2;  end;
     if(i == stylL) style = "styleLudwin"; end
     % refresh
     figPW("path", exportPath, "exportPDF", 1, "openFolder", 1, "TNR", 0, ...
