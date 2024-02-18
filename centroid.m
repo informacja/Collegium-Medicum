@@ -12,7 +12,7 @@ for(j = 1:2) % grupa
         nrs = nseg(i);    nsp=SygKat(nrs);
         %         if(fileSegMio(nrs) == txBR)
         L = length(segment(nrs).data);
-        subplot(2,2,nsp), plot([1:L]/fpom,segment(nrs).data); hold on; title(nsp); xlabel("Czas [s]")
+        subplot(2,2,nsp), plot([1:L]/fpom, segment(nrs).data); hold on; title(nsp); xlabel("Czas [s]")
 
         title(sprintf("                                                                             Grupa dla ćwiczenia %s", v(j).infoRecord))
         %     end
@@ -27,7 +27,7 @@ for(j = 1:2) % grupa
 end
 % sgtitle(tmpTxt);
 
-f = [1:8500+1]; f = [1:6200+1]; xf = (f-1)/Tsyg;
+f = [1:8500+1]; f = [1:6200+1]; f = 1:(length(wyglWidma(j,1).Af))/3; xf = (f-1)/Tsyg;
 clear dCentrM dCentrE;
 nf=2;
 nrs = 0;
@@ -197,7 +197,7 @@ for(j = 1:length(v))
             hold off;
             %         title(fileSegMio(nrs)); xlabel("Widmo unormowane") %end;
             subplot(2,2,kat+2);  hold on;
-            plot(xf,CCE(kat+2,f),'k--','LineWidth',1);
+            plot(xf, CCE(kat+2,f),'k--','LineWidth',1);
             plot(xf, CentrWidm(j,kat).AfE(f),'r--','LineWidth',1);
             hold off;
 
