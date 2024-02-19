@@ -1,5 +1,5 @@
-sourcePath = "figBaseNEW/"; 
-exportPath = "fig4Article/";
+sourcePath = "figBaseNoParseval/"; 
+exportPath = "fig4ArticleNoParseval/";
 % załaduj z pliku zamiast liczyć
 figFilenames = dir(strcat(sourcePath,"*.fig"));
 
@@ -23,7 +23,7 @@ if(~isempty(figFilenames)) % jeśli w katalogu są pliki *.fig
     end
     backup = 0;
 else
-    fprintf(1,"In folder '%s' any *.fig file not found\n", sourcePath)
+    fprintf(1,"In folder '%s' any *.fig file not found\nContinue? Save all figure opened in matlab. (Enter)", sourcePath); pause
 end
 
 figHandles = findobj('Type', 'figure');

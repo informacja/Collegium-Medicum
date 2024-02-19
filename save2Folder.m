@@ -1,4 +1,4 @@
-exportPath = "figBaseNEW/"; 
+exportPath = "figBaseNoParseval/"; 
 
 figNrList = [
     251
