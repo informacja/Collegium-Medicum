@@ -27,7 +27,10 @@ for(j = 1:2) % grupa
 end
 % sgtitle(tmpTxt);
 
-f = [1:8500+1]; f = [1:6200+1]; f = 1:(length(wyglWidma(j,1).Af))/3; xf = (f-1)/Tsyg;
+% f = [1:8500+1]; f = [1:6200+1]; f = 1:(length(wyglWidma(j,1).Af)); % max
+f = 1:155*max(Tsyg)+1; % [Hz]*[samples]
+xf = (f-1)/Tsyg;     % [Hz]
+
 clear dCentrM dCentrE;
 nf=2;
 nrs = 0;
