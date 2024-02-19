@@ -6,7 +6,11 @@ for(j = 1:length(v)) % grupa
     fileSegNr; %TODO
     mnoznik = 2;
     mnoznik = .2;
-    mnoznik = .5;
+    if(l<10e4)
+        mnoznik = .15;
+    else
+        mnoznik = .5;
+    end
     nseg=find(fileSegNr==j);
     for (i = 1:length(nseg))
         ifig = segMio(nseg(i))-1; % ifigure SygKat

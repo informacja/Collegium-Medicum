@@ -12,8 +12,8 @@ if(DEBUG)
     clear all;
     close all;
     % delete segments.mat % 10s
-    % delete signals.mat  % hann window 10s
-    % delete spectrums.mat           
+    delete signals.mat  % hann window 10s
+    delete spectrums.mat           
     delete centroids.mat
     DEBUG = 1;
 end
