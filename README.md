@@ -26,7 +26,9 @@ Przed przystąpieniem do zapisu należy [przygotować skórę](https://github.co
 Ciekawostka:
 Czy wiesz że sygnałów mięśniowych można słuchać jak mowy?
 
-###
+### Wybrane rysunki
+![image](https://github.com/informacja/Collegium-Medicum/assets/22752828/dc90e562-ad5d-4fc0-b39c-7229e688b7cb)
+
 ![Collegium Medicum_figPW_mięśnie_treningi_PS_BR-k,_PS_BB-r_PC_BR-b_PC_BR-g__4001](https://github.com/informacja/Collegium-Medicum/assets/22752828/f9b3ed24-9e9f-4da4-b697-09f92dbe0fb4)
 
 ![Collegium Medicum_figPW_mięśnie_treningi_PS_BR-k,_PS_BB-r_PC_BR-b_PC_BR-g__4001](https://github.com/informacja/Collegium-Medicum/assets/22752828/e7d7af69-dd05-4609-9d38-58195d7f9eb9)
