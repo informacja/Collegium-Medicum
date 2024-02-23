@@ -5,8 +5,11 @@ for(j = 1:length(v)) % grupa
     nxf = 0; % nie drukuj figur
     fileSegNr; %TODO
     mnoznik = 2;
-    mnoznik = .2;
-    mnoznik = .5;
+    if(Parseval)
+        mnoznik = .5; % z zerami
+    else
+        mnoznik = .15; % bez zer
+    end
     nseg=find(fileSegNr==j);
     for (i = 1:length(nseg))
         ifig = segMio(nseg(i))-1; % ifigure SygKat
@@ -17,7 +20,7 @@ for(j = 1:length(v)) % grupa
        
         clear y;
         ksyg=nseg(i);
-        y = Syg(ksyg,:)'; %v(jdata(n1:Nbf);
+        y = Syg(ksyg, 1:segment(ksyg).len)';%Syg(ksyg,:)'; %v(jdata(n1:Nbf);
         X = (y.^2); Esyg(j,i)=sum(X)*dtpom;%/lSyg;         
         %segment(nrs).data = y;
         Nf=length(y); %todo
