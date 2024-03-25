@@ -12,7 +12,7 @@
 % figure(2), plot(a); hold on; plot(b); hold off;
 %     return
 tic; 
-txTraining = ["Pośredni" "Podchwyt"];
+txTraining = [txPr txPc];
 nrs = 0; dMM=[]; d=[]; dists_cheby=[]; k = 0; 
 for i = 1:2:3
     k = k +1;

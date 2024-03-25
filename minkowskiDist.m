@@ -4,6 +4,8 @@
 % 3 od CC i cenroidów J
 nrs = 0; nf=2; %nrF = nrF+1;
 
+lingua = dictionary2(lang);
+
 wybrJakieDist = (jakieDist == 1 || jakieDist == 3);
 % global Psyg, dEM, dCM, dists_chebyM; %ISTOTNE
 tic;
@@ -108,7 +110,7 @@ end
 % iloczyn wektorywy tylko w przestrzeni euclidesa
 if(printCentroids)
     % nag = ["między", "wew"]
-    fprintf(1,'\n\teuc. Max\tCity\tCheby\tEnerg')
+    fprintf(1,'\n\tEuc. Max\tCity\tCheby\tEnerg')
     for(j = 1:length(v)) % grupa
         fprintf(1,'\ngr.%-2d',j)
         %dE(j)=0; dC(j)=0; % norma Euklidesowa, City (Manhattan)
@@ -123,8 +125,8 @@ else
     disp("Pominęto wypisywanie odległości dla centroidów")
 end
 txDist = "Niezdefinowano";
-if (jakieDist == 1) txDist = "M (Euklides)"; end
-if (jakieDist == 3) txDist = "E (Euklides)"; end
+if (jakieDist == 1) txDist = lingua.me; end
+if (jakieDist == 3) txDist = lingua.ee; end
 txpi = '';
 lbins = 20;
 if(wybrJakieDist)
@@ -133,20 +135,36 @@ if(wybrJakieDist)
     for( c = 1:4 )
         subplot(2,2,c);
         switch(c)
-            case 1, nd = find(abs(dAll1)>0.1e-16); [pvg,pve,pvM]=mhistMGE(dAll1(nd),lbins); nd = dAll1(nd); hold on; axis('tight'); subtitle(strcat("SygKat = ", string(c))); 
+            case 1, nd = find(abs(dAll1)>0.1e-16); [pvg,pve,pvM]=mhistMGE(dAll1(nd),lbins); nd = dAll1(nd); hold on; axis('tight'); subtitle(strcat(lingua.sc, string(c))); 
             m = mean(nd); s = std(nd); ax = axis; plot([s+m s+m], ax(3:4), 'k--'); plot([m-s m-s], ax(3:4), 'k--'); plot([m m], ax(3:4), "m--");  hold off; xlabel(sprintf("$\\bar{x}$ = %g $\\sigma$ = %g $\\pi_g$=%.2f$\\%%$  $\\pi_e$=%.2f$\\%%$  $\\pi_M$=%.2f$\\%%$ ", m, s, pvg*100, pve*100, pvM*100),'Interpreter','latex');
-            case 2, nd = find(abs(dAll2)>0.1e-16); [pvg,pve,pvM]=mhistMGE(dAll2(nd),lbins); nd = dAll2(nd); hold on; axis('tight'); subtitle(strcat("SygKat = ", string(c))); 
+            case 2, nd = find(abs(dAll2)>0.1e-16); [pvg,pve,pvM]=mhistMGE(dAll2(nd),lbins); nd = dAll2(nd); hold on; axis('tight'); subtitle(strcat(lingua.sc, string(c))); 
             m = mean(nd); s = std(nd); ax = axis; plot([s+m s+m], ax(3:4), 'k--'); plot([m-s m-s], ax(3:4), 'k--'); plot([m m], ax(3:4), "m--");  hold off; xlabel(sprintf("$\\bar{x}$ = %g $\\sigma$ = %g $\\pi_g$=%.2f$\\%%$  $\\pi_e$=%.2f$\\%%$  $\\pi_M$=%.2f$\\%%$  ", m, s, pvg*100, pve*100, pvM*100),'Interpreter','latex');
-            case 3, nd = find(abs(dAll3)>0.1e-16); [pvg,pve,pvM]=mhistMGE(dAll3(nd),lbins); nd = dAll3(nd); hold on; axis('tight'); subtitle(strcat("SygKat = ", string(c))); 
+            case 3, nd = find(abs(dAll3)>0.1e-16); [pvg,pve,pvM]=mhistMGE(dAll3(nd),lbins); nd = dAll3(nd); hold on; axis('tight'); subtitle(strcat(lingua.sc, string(c))); 
             m = mean(nd); s = std(nd); ax = axis; plot([s+m s+m], ax(3:4), 'k--'); plot([m-s m-s], ax(3:4), 'k--'); plot([m m], ax(3:4), "m--");  hold off; xlabel(sprintf("$\\bar{x}$ = %g $\\sigma$ = %g $\\pi_g$=%.2f$\\%%$  $\\pi_e$=%.2f$\\%%$  $\\pi_M$=%.2f$\\%%$ ", m, s, pvg*100, pve*100, pvM*100),'Interpreter','latex');
-            case 4, nd = find(abs(dAll4)>0.1e-16); [pvg,pve,pvM]=mhistMGE(dAll4(nd),lbins); nd = dAll4(nd); hold on; axis('tight'); subtitle(strcat("SygKat = ", string(c))); 
+            case 4, nd = find(abs(dAll4)>0.1e-16); [pvg,pve,pvM]=mhistMGE(dAll4(nd),lbins); nd = dAll4(nd); hold on; axis('tight'); subtitle(strcat(lingua.sc, string(c))); 
             m = mean(nd); s = std(nd); ax = axis; plot([s+m s+m], ax(3:4), 'k--'); plot([m-s m-s], ax(3:4), 'k--'); plot([m m], ax(3:4), "m--");  hold off; xlabel(sprintf("$\\bar{x}$ = %g $\\sigma$ = %g $\\pi_g$=%.2f$\\%%$  $\\pi_e$=%.2f$\\%%$  $\\pi_M$=%.2f$\\%%$ ", m, s, pvg*100, pve*100, pvM*100),'Interpreter','latex');
         end
         sgtitle(txDist)
     end
-    figure(jakieDist+250), nd = [dAll1 dAll2 dAll3 dAll4]; [pvg,pve,pvM]=mhistMGE(nd,lbins); hold on; axis('tight'); title(sprintf("Wykres zbiorczy, jakieDist = %d, %s", jakieDist, txDist));  
+    figure(jakieDist+250), nd = [dAll1 dAll2 dAll3 dAll4]; [pvg,pve,pvM]=mhistMGE(nd,lbins); hold on; axis('tight'); title(sprintf(lingua.t1, jakieDist, txDist));  
     m = mean(nd); s = std(nd); ax = axis; plot([s+m s+m], ax(3:4), 'k--'); plot([m-s m-s], ax(3:4), 'k--'); plot([m m], ax(3:4), "m--");  hold off; xlabel(sprintf("$\\bar{x}$ = %g $\\sigma$ = %g $\\pi_g$=%.2f$\\%%$  $\\pi_e$=%.2f$\\%%$  $\\pi_M$=%.2f$\\%%$ ", m, s, pvg*100, pve*100, pvM*100),'Interpreter','latex');
 end
 % [pvg,pve,pvM,bins,Nemp]=mhistMGE(dAll1(nd),lbins); hold off;
 % save centroids.mat CentrWidm dEM dCM dists_chebyM dEsyg Psyg dEM dCM dists_chebyM CC CCE Psr dC dE dists_cheby dEE dCE dists_chebyE dE2E dC2E dists_cheby2E dEsyg mx
 toc;
+
+
+function [d] = dictionary2(lang)
+    PL = 1;
+    EN = 2;
+    dict(PL).t1 = "Wykres zbiorczy, jakieDist = %d, %s";
+    dict(PL).me = "M (Euklides)";
+    dict(PL).ee = "E (Euklides)";
+    dict(PL).sc = "SygKat = ";
+
+    dict(EN).t1 = "Summary chart, whichDist = %d, %s";
+    dict(EN).me = "M (Euclidean)";
+    dict(EN).ee = "E (Euclidean)";
+    dict(EN).sc = "SigCat = ";
+    d = dict(lang);
+end

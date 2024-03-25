@@ -105,8 +105,10 @@ while (j <= length(v))
             segment(nrs).data = s;
             segment(nrs).miesien = n;
             segment(nrs).gest = v(j).infoTraining;
+            sL = length(s);
+            
 %             v(j,k).klasyfikacjaSegmentów = nrs;
-            m = max(m, length(s));
+            m = max(m, sL);
             %n1 = Nbf+1; %Nbf = length(v(j).dataR); [n1 Nbf]
             nrs=nrs+1; 
         end    

@@ -1,4 +1,7 @@
 tic;
+
+lingua = dictionary2(lang);
+
 % if (flagaMaxima) czy robić dodawanie?
 %     %     nrF = 3001;
 %     distMCtmp = distMC; distMEtmp = distME; distM_chebytmp = distM_cheby;
@@ -53,18 +56,19 @@ for(j = 1:length(v)) % grupa training
         end
     end
 end
+%% 
 
-txCalcus(5) = "CC-CentrWidm";
-txCalcus(6) = "CCE-CW";
-Nbf = bf; if(flagaMaxima) tx = "Maxima"; else tx = "Energia"; end
+txCalcus(5) = lingua.t5;
+txCalcus(6) = lingua.t6;
+Nbf = bf; if(flagaMaxima) tx = lingua.m; else tx = lingua.e; end
 for i = bf+1:Nbf+4
     if( ~length(find(i==[1,5])) ) % pomijaj rysowanie
         subplot(2,4,i); axis('tight'); hold off; 
     else
         continue;
     end
-    if(i==3) title("Odległości wewnątrzgrupowe");  subtitle(" "); end
-    if(i==3+4) title("Odległości od centroidu centroidów"); subtitle(" "); end; %subtitle( tx ); end;
+    if(i==3) title(lingua.tdw);  subtitle(" "); end
+    if(i==3+4) title(lingua.tdcc); subtitle(" "); end; %subtitle( tx ); end;
 %     if(i==1+4) subtitle( "Maxsima" ); end;
 %     if(i==1+4) subtitle( "Energia" ); end;
   
@@ -74,3 +78,24 @@ for i = bf+1:Nbf+4
     if( i==2) subtitle(tx); end
 end
 toc;
+
+function [d] = dictionary2(lang)
+    PL = 1;
+    EN = 2;
+
+    dict(PL).t5 = "CC-CentrWidm";
+    dict(PL).t6 = "CCE-CW";
+    dict(PL).tdw = "Odległości wewnątrzgrupowe";
+    dict(PL).tdcc = "Odległości od centroidu centroidów";
+    dict(PL).m = "Maxima";
+    dict(PL).e = "Energia";
+    
+    dict(EN).t5 = "CC-CentrSpectra";
+    dict(EN).t6 = "CCE-CS";
+    dict(EN).tdw = "Intra-group distances";
+    dict(EN).tdcc = "Distances from the centroid of the centroids";
+    dict(EN).m = "Maxima";
+    dict(EN).e = "Energy";
+
+    d = dict(lang);
+end

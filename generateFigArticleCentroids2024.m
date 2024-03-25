@@ -1,4 +1,18 @@
 % https://stackoverflow.com/questions/26084069/how-to-produce-unicode-characters-with-matlab-latex-interpreter
+% rmdir("figBase",'s')
+parametry = -1:1;
+for(ppp = parametry)   
+    Parseval = ppp;
+    main
+    if(ppp~=end(parametry))
+        rmdir(sourcePath,'s')
+        clear all;
+        close all;    
+    end
+end
+
+return
+
 fromPath = "figBase/";
 % załaduj z pliku zamiast liczyć
 figFilenames = dir(strcat(fromPath,"*.fig"));

@@ -5,6 +5,8 @@ tic; n = 0; inx = 1:length(dEM(1,:));
 offset = size(Syg,1); old = [];
 % for(i = 1:offset)
 
+lingua = dictionary2(lang);
+
 % flagaMaxima = 0;
 if (flagaMaxima)
 %     nrF = 3001;
@@ -88,17 +90,17 @@ for(j = 1:length(v))
 end
 
 
-txCalcus(1) = "CentrWidm-wyglWidma/maxAf";
-txCalcus(2) = "CC-wyglWidma/maxAf";
-txCalcus(3) = "CentrWidm-wyglWidma/Ps";
-txCalcus(4) = "CCE-wyglWidma";
-figure(nrF); sgtitle("mięśnie / treningi (PS/BR-k, PS/BB-r PC/BR-b PC/BB-g)"); xlabels = ["Moc"; "Odległość Manhattan"; "Odległość Euklidesa"; "Odległość Czebyszewa";];
-if (flagaMaxima) txDist = "Maxima"; else txDist = "Energie"; end
+txCalcus(1) = lingua.t1;
+txCalcus(2) = lingua.t2;
+txCalcus(3) = lingua.t3;
+txCalcus(4) = lingua.t4;
+figure(nrF); sgtitle(lingua.sgt); xlabels = lingua.xlabels;
+if (flagaMaxima) txDist = lingua.m; else txDist = lingua.e; end
 Nbf = bf;
 for i = bf+1:Nbf+4
     subplot(2,4,i); axis('tight');
-    if(i==2) title("Odległości wewnątrzgrupowe");  subtitle(txDist); end
-    if(i==2+4) title("Odległości od centroidu centroidów"); end;
+    if(i==2) title(lingua.tdw);  subtitle(txDist); end
+    if(i==2+4) title(lingua.tdcc); end;
     if i > 4 i = i-4; end;
     xlabel(xlabels(mod(i,5)));
     hold off; 
@@ -114,3 +116,32 @@ end
 % dEsyg/liczba danych=moc
 
 toc;
+
+function [d] = dictionary2(lang)
+    PL = 1;
+    EN = 2;
+
+    dict(PL).xlabels = ["Moc"; "Odległość Manhattan"; "Odległość Euklidesa"; "Odległość Czebyszewa";]; 
+    dict(PL).m = "Maxima";
+    dict(PL).e = "Energia";    
+    dict(PL).t1 = "CentrWidm-wyglWidma/maxAf";
+    dict(PL).t2 = "CC-wyglWidma/maxAf";
+    dict(PL).t3 = "CentrWidm-wyglWidma/Ps";
+    dict(PL).t4 = "CCE-wyglWidma";
+    dict(PL).sgt = "mięśnie / treningi (PS/BR-k, PS/BB-r PC/BR-b PC/BB-g)";
+    dict(PL).tdw = "Odległości wewnątrzgrupowe";
+    dict(PL).tdcc = "Odległości od centroidu centroidów";
+
+    dict(EN).xlabels = ["Power"; "Manhattan Distance"; "Euclidean Distance"; "Chebyshev Distance";];    
+    dict(EN).m = "Maxima";
+    dict(EN).e = "Energy"; 
+    dict(EN).t1 = "CentrSpectra-SmoothSpectra/maxAf";
+    dict(EN).t2 = "CC-SmoothSpectra/maxAf";
+    dict(EN).t3 = "CentrSpectra-SmoothSpectra/Ps";
+    dict(EN).t4 = "CCE-SmoothSpectra";
+    dict(EN).sgt = "muscles / trainings (PS/BR-k, PS/BB-r PC/BR-b PC/BB-g)";
+    dict(EN).tdw = "Intra-group distances";
+    dict(EN).tdcc = "Distances from the centroid of the centroids";
+
+    d = dict(lang);
+end

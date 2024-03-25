@@ -5,18 +5,33 @@
 % dists_cheby OR dists_chebyM
 
 DEBUG = 1;
+% Parseval = 1; % setted from generate....m
+% -1 = ujemy relatywne Twygl względem length(segment)
+%  0 = zero nie przeliczamy Twygl i segmenty bez zer
+%  1 = dodaj zera
+PL = 1;
+EN = 2;
+lang = EN;
 if (isdeployed)
     DEBUG = 0;
+    % Parseval = -1; % 1  dodaj zera, ujemy relatywne Twygl wzgledem lentth(segment), zero nie przeliczamy Twygl i segmenty bez zer
 end
 if(DEBUG)
-    clear all;
-    close all;
+    % clear all;
+    % close all;
     % delete segments.mat % 10s
-    % delete signals.mat  % hann window 10s
-    % delete spectrums.mat           
-    % delete centroids.mat
+    delete signals.mat  % hann window 10s
+    delete spectrums.mat           
+    delete centroids.mat
     DEBUG = 1;
+    if(~exist("Parseval","var"))
+        Parseval = -1;
+    end
+    % Parseval = 0; % 0 - nie dodawaj zer
 end
+
+fWyswieltCentroidow = 555; % [Hz]
+
 allElapsedTime = tic;
 windowing = 1;
 printCentroids = 0; % a lot of console tables
@@ -34,6 +49,9 @@ files = dir(fullfile(dirname,'**','*.mat'));
 datafiles = fullfile({files.folder},{files.name});
 
 txPr = "Pośredni"; txPc = "Podchwyt";
+if(lang == EN)
+    txPr = "Indirect"; txPc = "Underhand";
+end
 txBR = "Brachioradialis"; txBB = "Biceps brachii";
 minActions = 10; skipedTrainingReppetinons = 0; % for segmentation selecting
 k = 0;
@@ -102,39 +120,52 @@ if(exist("signals.mat"))
     load signals.mat
 else
     tic
-    % l = 1e10;
-    % for( i = 1:length(segment))
-    %     if(l > length(segment(i).data))
-    %         l = length(segment(i).data);
-    %     end
-    % end
-    
+    if(1)%0<Parseval)
+        sLmin = 1e10; % minimal segment length 
+        for( i = 1:length(segment))
+            if(sLmin > length(segment(i).data))
+                sLmin = length(segment(i).data);
+            end
+        end
+        sLmax = 0; % maximal segment length 
+        for( i = 1:length(segment))
+            if(sLmax < length(segment(i).data))
+                sLmax = length(segment(i).data);
+            end
+        end
+    end
+    sLmax = lSyg;
+    if (windowing) fprintf(1, "Okienkowanie Hanna "); end;
     for( i = 1:length(segment)) % uzupełnianie zerami segmentów
         SygRawLen(i) = length(segment(i).data');
-        if (windowing)
-            win = hann(SygRawLen(i));
-            segment(i).data = segment(i).data.*win;
-        end
-        % from noParseval branch
-        % f = find(segment(i).data == max(segment(i).data));
-        % begIndx = f(1)-(l/2);
-        % if(begIndx<1) begIndx = 1; end
-        % endIndx = begIndx + l-1;
-        % if(endIndx > SygRawLen(i)) endIndx = SygRawLen(i); begIndx = endIndx-l+1; end
-        % tmp = segment(i).data(begIndx:endIndx);
-        % win = hann(l);
-        % if (windowing)           
-        %     tmp = tmp.*win;
+        % if(Parseval)
+        %     % from noParseval branch
+        %     f = find(segment(i).data == max(segment(i).data));
+        %     begIndx = f(1)-(l/2);
+        %     if(begIndx<1) begIndx = 1; end
+        %     endIndx = begIndx + l-1;
+        %     if(endIndx > SygRawLen(i)) endIndx = SygRawLen(i); begIndx = endIndx-l+1; end
+        %     tmp = segment(i).data(begIndx:endIndx);
+        %     win = hann(l);
+        %     if (windowing)           
+        %         tmp = tmp.*win;
+        %     end
+        %     Syg(i,1:l) = [tmp];
+        % else % noParseval            
+            if (windowing)
+                win = hann(SygRawLen(i));
+                segment(i).data = segment(i).data.*win;
+            end           
         % end
         Syg(i,1:lSyg) = [segment(i).data' zeros(1, lSyg-length(segment(i).data))];
         SygKat(i) = segMio(i)+(segTraining(i)-1)*2; %plikSegMio(fileSegNr(nrs),nrB).i=2;  n+v(j).infoTraining-1*2; % training
         sygKat(i) = segment(i).miesien+(segment(i).gest-1)*2;
         segment(i).kat = sygKat(i);
+        segment(i).len = SygRawLen(i); 
         % 1 - Pośred BR, 2 Poś BB, 3 - Podchwyt BRadialis, 4 Podch BBiceps          
-    end
-    fprintf(1, "Okienkowanie Hanna ")
+    end    
     toc;
-    save signals.mat Syg SygKat SygRawLen
+    save signals.mat Syg SygKat SygRawLen segment sLmax sLmin
 end
 %------SPECTRUMS-----------------------------------------------------------
 nrF = 500; selectTraining; % wybór indeksów "j"
@@ -180,6 +211,8 @@ end
 fprintf(1, "main = "); toc(allElapsedTime);
 
 nrF = 5e3; 
+tic; save2Folder; toc;
+tic; save4Article; toc;
 return
 
 %%%%%% END OF CODE %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -320,9 +353,9 @@ toc;
 return
 kol='kr';
 for(i=1:2)
-    ys=segment(i).data'; l = length(ys); tsym=l*dtpom; tsym=1;
-    W(i).Ays = abs(fft(ys))*2/l; LAs=l;
-    ys0=[ys  zeros(1,lSyg*16-l)]; l0=length(ys0);  tsym0=l*dtpom; tsym0=1;
+    ys=segment(i).data'; sLmin = length(ys); tsym=sLmin*dtpom; tsym=1;
+    W(i).Ays = abs(fft(ys))*2/sLmin; LAs=sLmin;
+    ys0=[ys  zeros(1,lSyg*16-sLmin)]; l0=length(ys0);  tsym0=sLmin*dtpom; tsym0=1;
     W(i).Ays0=abs(fft(ys0))*2/l0;
     figure(55), subplot(1,2,1); plot([0:LAs-1]/tsym,W(i).Ays(1:LAs),[kol(i) '.-']), hold on;
     subplot(1,2,2),plot([0:16*LAs-1]/tsym0,W(i).Ays0(1:16*LAs),[kol(i) '.-']); hold on;
