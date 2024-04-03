@@ -49,6 +49,7 @@ while (j <= length(v))
             peaksOfSignal(i) = 1;
         end
     end
+    
 %     TF = islocalmax(peaksOfSignal,'SamplePoints',y); 
 % TF = islocalmax(A,'MinSeparation',minutes(45),'SamplePoints',t);
     numOfActions = sum(peaksOfSignal);
@@ -59,8 +60,13 @@ while (j <= length(v))
         continue; 
     end % Skip not well segmented training
 %     names = [names; string(v(j).infoRecord)];
-    if (length(find(v(j).infoRecord=='r'))) countPosredni = countPosredni+1; v(j).infoTraining = 1; end;
-    if (length(find(v(j).infoRecord=='c'))) countPodchwyt = countPodchwyt+1; v(j).infoTraining = 2; end;
+    if(Qualisys)
+        if (v(j).infoRecord == "1") countPosredni = countPosredni+1; v(j).infoTraining = 1; end;
+        if (v(j).infoRecord == "2") countPodchwyt = countPodchwyt+1; v(j).infoTraining = 2; end;
+    else
+        if (length(find(v(j).infoRecord=='r'))) countPosredni = countPosredni+1; v(j).infoTraining = 1; end;
+        if (length(find(v(j).infoRecord=='c'))) countPodchwyt = countPodchwyt+1; v(j).infoTraining = 2; end;
+    end
 %     figure(50+j), plot(peaksOfSignal); hold on;plot(TF*cutoffA*10); hold off; 
 %     p2p = peak2peak(y);
     %mp = p2p/3; not recomended
@@ -80,7 +86,7 @@ while (j <= length(v))
         v(j).segLen = numOfActions;
         e = envelope(y(locs(k):locs(k+1)),1111,'rms'); %[n1,locs(k),locs(k+1), locs(k)+find(min(e)==e)]
         
-        if wybrJ(1) == j && DEBUG
+        if ~isempty(wybrJ) && wybrJ(1) == j && DEBUG
             figure("Name", "RMS Envelope")
             envelope(y(locs(k):locs(k+1)),1111,'rms'); hold on; axis('tight'); xlabel("Nr próbki (względny)"); ylabel("Amplituda")
             n = find(min(e)==e);
@@ -118,7 +124,7 @@ while (j <= length(v))
 end
 
 % if liczba segmentó mniejsza niż 9 skip
-
+clear s;
 save segments.mat segment fileSegNr fileSegMio m skipedTrainingReppetinons v countPodchwyt countPosredni segTraining segMio
 
 if(DEBUG) 

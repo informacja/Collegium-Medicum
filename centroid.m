@@ -160,8 +160,8 @@ for( i = 1:length(v))
     lpacj = lpacj + 1;
 end
 
-CC =[ (mean(cwrr)); (mean(cwrb)); (mean(cwcr)); (mean(cwcb)); ]; % Centroidy Centroidów
-CCE =[ (mean(cwrrE)); (mean(cwrbE)); (mean(cwcrE)); (mean(cwcbE)); ]; % Centroidy Centroidów
+CC =[ (mean(cwrr,1)); (mean(cwrb,1)); (mean(cwcr,1)); (mean(cwcb,1)); ]; % Centroidy Centroidów
+CCE =[ (mean(cwrrE,1)); (mean(cwrbE,1)); (mean(cwcrE,1)); (mean(cwcbE,1)); ]; % Centroidy Centroidów
 
 figure(nrF+1), subplot(2,1,1), plot(xf,CC(1,[1:length(xf)])); hold on; plot(xf,CC(2,[1:length(xf)])); title(lingua.ps); legend(txBR,txBB);hold off; axis tight; xlabel(lingua.fq); ylabel(lingua.amp);
 figure(nrF+1), subplot(2,1,2), plot(xf,CC(3,[1:length(xf)])); hold on; plot(xf,CC(4,[1:length(xf)])); title(lingua.pc); legend(txBR,txBB);hold off; axis tight; xlabel(lingua.fq); ylabel(lingua.amp);

@@ -19,7 +19,7 @@ end
 if(DEBUG)
     % clear all;
     % close all;
-    % delete segments.mat % 10s
+    delete segments.mat % 10s
     delete signals.mat  % hann window 10s
     delete spectrums.mat           
     delete centroids.mat
@@ -35,12 +35,13 @@ fWyswieltCentroidow = 555; % [Hz]
 allElapsedTime = tic;
 windowing = 1;
 printCentroids = 0; % a lot of console tables
-plotAllFigures = 0;
+plotAllFigures = 1;
 compareExampleData = 0;
 deprecated = 0; % unused code
 % dirname = 'Archiwum';
 % dirname = '23.05.23';
 dirname = '33unique'; % 2 times author was recorded (34 patients number in sum)
+% dirname = '/Users/puler/Documents/MATLAB/Ortheo3D/data'; % data via Qualisys from Delsys hardware
 if(compareExampleData)
     dirname = '"../2przypadki/dane/Miopatia zapalna/Emg_Qemf.003/MVA_000 (1).wav"';
 end
@@ -54,6 +55,7 @@ if(lang == EN)
 end
 txBR = "Brachioradialis"; txBB = "Biceps brachii";
 minActions = 10; skipedTrainingReppetinons = 0; % for segmentation selecting
+
 k = 0;
 for f = datafiles    
     k = k + 1;
@@ -61,44 +63,77 @@ for f = datafiles
 %     fieldname = fieldnames(df);
     vars = fieldnames(df);
     for i = 1:length(vars)
-        assignin('base', "tmp", df.(vars{i}));        
-        tmpData = tmp.movements.sources.signals.signal_1.data;
-        tmpName = tmp.movements.sources.signals.signal_1.name;
-        if ( tmpName == "Ultium EMG-BRACHIORAD. RT")
-            v(k).dataR = tmpData; % Radialis
-            v(k).infoRecord = tmp.info.record_name;
-            v(k).infoRName = tmpName;
-            v(k).infoRDisp = txBR; 
-        end
-        if ( tmpName == "Ultium EMG-BICEPS BR. RT")
-            v(k).dataB = tmpData; % Biceps
-            v(k).infoRecord = tmp.info.record_name;
-            v(k).infoBName = tmpName;
-            v(k).infoBDisp = txBB; 
-        end
-        
-        tmpData = tmp.movements.sources.signals.signal_2.data;
-        tmpName = tmp.movements.sources.signals.signal_2.name;
-        if ( tmpName == "Ultium EMG-BRACHIORAD. RT")
-            v(k).dataR = tmpData; % Radialis
-            v(k).infoRecord = tmp.info.record_name;
-            v(k).infoRName = tmpName;
-            v(k).infoRDisp = txBR; 
-        end
-        if ( tmpName == "Ultium EMG-BICEPS BR. RT")
-            v(k).dataB = tmpData; % Biceps
-            v(k).infoRecord = tmp.info.record_name;
-            v(k).infoBName = tmpName;
-            v(k).infoBDisp = txBB; 
-        end
-    end
-end
+        assignin('base', "tmp", df.(vars{i}));
+        if(isfield(tmp,"Analog")) % Qualisys
+            Qualisys = 1;
+            tmpData = tmp.Analog.Data;
+            tmpData = tmpData-mean(tmpData,2);
+            tmpName = tmp.Analog.BoardName;
+            if( tmpName == 'Delsys Trigno API')
+                for(c = tmp.Analog.ChannelNumbers)
+                    switch(tmp.Analog.Labels{c})
+                        case 'L_Rectus Femoris' 
+                            v(k).infoRDisp = txBR; 
+                            v(k).dataR = tmpData(c,:); % Radialis
+                            v(k).infoRecord = tmp.File(end-4);
+                            v(k).infoRName = tmp.Analog.Labels{c};                                   
+                        case 'L_Vastus Lateralis'
+                            v(k).dataB = tmpData(c,:); % Biceps
+                            v(k).infoRecord = tmp.File(end-4);              %to improve
+                            v(k).infoBName = tmp.Analog.Labels{c};                 
+                            v(k).infoBDisp = txBB; 
+                    end           
+                end
+            else
+                error("Unimplemented BoardName for Qualisys");
+            end
+        else % Noraxon Ultium
+            Qualisys = 0;
+            tmpData = tmp.movements.sources.signals.signal_1.data;
+            tmpName = tmp.movements.sources.signals.signal_1.name;
+            if ( tmpName == "Ultium EMG-BRACHIORAD. RT")
+                v(k).dataR = tmpData; % Radialis
+                v(k).infoRecord = tmp.info.record_name;
+                v(k).infoRName = tmpName;
+                v(k).infoRDisp = txBR; 
+            end
+            if ( tmpName == "Ultium EMG-BICEPS BR. RT")
+                v(k).dataB = tmpData; % Biceps
+                v(k).infoRecord = tmp.info.record_name;
+                v(k).infoBName = tmpName;
+                v(k).infoBDisp = txBB; 
+            end
+            
+            tmpData = tmp.movements.sources.signals.signal_2.data;
+            tmpName = tmp.movements.sources.signals.signal_2.name;
+            if ( tmpName == "Ultium EMG-BRACHIORAD. RT")
+                v(k).dataR = tmpData; % Radialis
+                v(k).infoRecord = tmp.info.record_name;
+                v(k).infoRName = tmpName;
+                v(k).infoRDisp = txBR; 
+            end
+            if ( tmpName == "Ultium EMG-BICEPS BR. RT")
+                v(k).dataB = tmpData; % Biceps
+                v(k).infoRecord = tmp.info.record_name;
+                v(k).infoBName = tmpName;
+                v(k).infoBDisp = txBB; 
+            end
+        end % Qualisys or Ultium 
+    end % vars
+end % datafiles
 fprintf(1,"Liczba pacjentów: %d\n", length(v)/2); toc(allElapsedTime); % / liczba mięśni mierzonych równocześnie lub wykonywanego ćwiczenia
 fprintf(1,"Macierz plików v: %d (ilość pomiarów * liczba ćwiczeń)\n", length(v));
 
 % get from last sample
-Yunits = tmp.movements.sources.signals.signal_1.units;
-fpom = tmp.movements.sources.signals.signal_1.frequency; dtpom=1/fpom; %  Hz
+if(Qualisys)
+    Yunits = 'uV';
+    fpom =  tmp.Analog.Frequency; 
+    minActions = 2; 
+else
+    Yunits = tmp.movements.sources.signals.signal_1.units;
+    fpom = tmp.movements.sources.signals.signal_1.frequency; 
+end
+dtpom=1/fpom; %  Hz
 
 %------SEGMENTATION--------------------------------------------------------
 if(exist("segments.mat"))
@@ -154,7 +189,11 @@ else
         % else % noParseval            
             if (windowing)
                 win = hann(SygRawLen(i));
-                segment(i).data = segment(i).data.*win;
+                if(iscolumn(segment(i).data))
+                    segment(i).data = segment(i).data.*win;
+                else
+                    segment(i).data = segment(i).data'.*win;
+                end
             end           
         % end
         Syg(i,1:lSyg) = [segment(i).data' zeros(1, lSyg-length(segment(i).data))];
@@ -211,8 +250,24 @@ end
 fprintf(1, "main = "); toc(allElapsedTime);
 
 nrF = 5e3; 
-tic; save2Folder; toc;
-tic; save4Article; toc;
+clear s;
+  PL = 1; EN = 2;
+  s.lang = EN;
+  % s.figNrList = [ 1 22 33 34 ];
+  % s.figPath = strcat("figBase/",string(k),"_",date,nameWithoutExt,"/");
+  % s.exportPath = "article/fig/";
+  % s.prefix = string(k);
+
+  % h = strfind(folder,"/data/");
+  % d = folder(h+6:end);
+  % g = strfind(d,"/");
+  % d = d(1:g-1);
+  % s.filename = strcat("_", d, date, "_");
+  % s.skipSavedFig = 1;
+ s.figNrList = [  ]; 
+
+tic; save2folder(s); toc;
+tic; save4article(s); toc;
 return
 
 %%%%%% END OF CODE %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
