@@ -4,7 +4,7 @@ lAfMin = 10e1000;
 lAfMax = 0;
 mnoznik = 2;
 
-lingua = dictionary2(lang, Yunits);
+lingua = dictionary2(lang, Yunits, [ txPr txPc ]);
 
 if(Parseval>0)    mnoznik = .5; % z zerami
 else              mnoznik = .15; % bez zer
@@ -37,8 +37,9 @@ for(j = 1:length(v)) % grupa
        if( ifLastSeg || plotAllFigures )
             subplot(lfrow,lc,1+ifig), plot(nx*dtpom, y); axis('tight');
             if( ifig == 0) title(lingua.t1); end
-            subtitle(sprintf(lingua.subt1, fileSegMio(ksyg), ksyg));
-            xlabel(sprintf(lingua.xl1, i));
+            title(sprintf(lingua.t1, fileSegMio(ksyg)));%, ksyg));
+            subtitle(" "); subtitle(sprintf("%s", lingua.grip( segment(i).gest )));
+            xlabel(sprintf(lingua.xl1));%, i));
             ylabel(lingua.yl1)
             subplot(lfrow,lc,1+ifig+lc),  plot(nx*dtpom, X);axis('tight');
         end 
@@ -50,7 +51,8 @@ for(j = 1:length(v)) % grupa
         if( ifLastSeg || plotAllFigures )
             hold on; plot(xf*dtpom,Ayf,'Color','#0072BD'); % ciemy niebieski - domyślny
             plot([0:Ldf]*dtpom,Af,'k'); axis('tight');  hold off; axis('tight');
-            xlabel(sprintf(lingua.xl2, i,Tu*dtpom*1000));
+            xlabel(sprintf(lingua.xl2, Tu*dtpom*1000));%i,
+            ylabel(lingua.yl1); subtitle(lingua.st2);
         end
         
         s.y = y; s.l = SygRawLen(ksyg); s.Nf = Nf; s.mnoznik = mnoznik; s.Parseval = Parseval; s.Tsyg = Tsyg; s.sL = Nf; s.dtpom = dtpom; s.MTF = MTF; s.nxf = nxf; s.sLmax = sLmax; 
@@ -65,14 +67,15 @@ for(j = 1:length(v)) % grupa
         % kf=SygKat(nseg(i));
 
         Ldf = length(Af)-1; % by PSW 27.02.24
-        if( ifLastSeg || plotAllFigures )
+        if( ifLastSeg || plotAllFigures ) % row = 3
             subplot(lfrow,lc,1+ifig+2*lc),   plot([0:nk-1]/Tsyg,Ayf(1:nk),'c',x,Af(1:ix),'k'); axis('tight'); %
             % figure(nrFw), subplot(1,2,1); hold on; 
              %kf=mod(kf,4)+1; 
             % plot([0:dx:(length(Af)-1)*dx],Af,kol(kf)); axis('tight'); %plot(wyglWidma(j,i).Af); hold off; 
             figure(nrF+j)
             if( 1+ifig+2*lc == 5 ) title(lingua.t2); end
-            xlabel(sprintf(lingua.xl3,i,Tu*dtpom*1000,1/(Tu*dtpom)));
+            xlabel(sprintf(lingua.xl4,Tu*dtpom*1000,1/(Tu*dtpom))); %,i
+            ylabel(lingua.yl2); subtitle(lingua.st3);
         end
         
         s.doKwadratu = 1;
@@ -81,10 +84,11 @@ for(j = 1:length(v)) % grupa
         Widma(j,i).Ayf2=Ayf; wyglWidma(j,i).Af2=Af;
         % nf=round(Nf/Podzial);
 
-        if( ifLastSeg || plotAllFigures )
+        if( ifLastSeg || plotAllFigures ) % row = 4
 %             figure(nrFw+j),
             subplot(lfrow,lc,1+ifig+3*lc), plot([0:nf-1]/Tsyg,Ayf(1:nf),'c',x,Af(1:ix),'k');
-            xlabel(sprintf(lingua.xl4,i,Tu*dtpom*1000));
+            xlabel(sprintf(lingua.xl4, Tu*dtpom*1000));
+            ylabel(lingua.yl2); subtitle(lingua.st4);
             % sgtitle( sprintf("%s",v(j).infoBDisp)); 
             axis('tight');
             % figure(nrFw), subplot(1,2,2); hold on; plot([0:nf-1]/Tsyg,Af(1:nf),kol(kf)); %plot(wyglWidma(j,i).Af); hold off; 
@@ -136,28 +140,37 @@ function [Ayf Af Afw nk dx ix x] = st(s) % spectrum&trend
     end
 end
 
-function [d] = dictionary2(lang,Yunits)
-    PL = 1;
+function [d] = dictionary2(lang,Yunits, grips)
+    PL = 1; % non suported 20.07.2024
     EN = 2;
+    
     dict(PL).t1 = "                                                                                               Dziedzina czasu";
-    dict(PL).subt1 = "Mięsień: %s, segment nr: %d ";
-    dict(PL).xl1 = "Chwyt pośredni nr (względny) %d : y(t) t[sek]";
+    dict(PL).t1 = "Mięsień: %s"; %, segment nr: %d 
+    dict(PL).xl1 = "Chwyt pośredni t[sek]"; %nr (względny) %d : y(t)
     dict(PL).yl1 = ['Amplituda [' Yunits ']'];
-    dict(PL).xl2 = "Kwadrat y i wygł. y(t)^2 %d (Tu=%.1fms): t[sek]";
-    dict(PL).t2 = "                                                                                            Dziedzina częstotliwości";
-    dict(PL).xl3 = "Widmo %d [Hz] Tu=%.1fms f_g=1/Tu=%.0fHz ";
+    dict(PL).xl2 = "y(t)^2 i wygł. y(t)^2 Tu=%.1fms Czas [sek]";%  %d 
+    dict(PL).t2 = "                                                                        Dziedzina częstotliwości";
+    dict(PL).yl2 = 'Amplituda';
+    dict(PL).xl3 = "Widmo Tu=%.1fms f_g=1/Tu=%.0fHz "; %%d [Hz] 
     dict(PL).xl4 = "Widmo mocy %d f_g=1/Tu Tu=%.1fms";
     dict(PL).sgt = "Widma sygnałów wewn. grupy dla raw i mocy";
 
-    dict(EN).t1 = "                                                                                                    Time domain";
-    dict(EN).subt1 = "Muscle: %s, segment nr: %d ";
-    dict(EN).xl1 = "Intermediate grip nr (relative) %d : y(t) t[s]";
+    % dict(EN).t1 = "                                                                                                    Time domain";
+    dict(EN).t1 = "Muscle: %s"; %, segment nr: %d 
+    dict(EN).xl1 = "Time [s]"; % nr (relative) %d : y(t)
+    % dict(EN).IM = "Intermediate grip"; %subtitle1
+    dict(EN).grip = grips;
     dict(EN).yl1 = ['Amplitude [' Yunits ']'];
-    dict(EN).xl2 = "Square y and smooth y(t)^2 %d (Tu=%.1fms): t[s]";
-    dict(EN).t2 = "                                                                                            Frequency domain";
-    dict(EN).xl3 = "Spectrum %d [Hz] Tu=%.1fms f_g=1/Tu=%.0fHz ";
-    dict(EN).xl4 = "Spectrum of power %d f_g=1/Tu Tu=%.1fms";
-    dict(EN).sgt = "Spectrum for intra-group raw & power signals";
+    dict(EN).xl2 = "Tu=%.1f [ms] Time [s]"; % %d
+    dict(EN).st2 = "y(t)^2 and smooth y(t)^2";
+    % dict(EN).t2 = "                                                                        Frequency domain";
+    dict(EN).yl2 = 'Amplitude';
+    dict(EN).st3 = "Spectrum";
+    % dict(EN).xl3 = " f_g=1/Tu=%.0f [Hz]";%%d [Hz]
+    dict(EN).st4 = "Spectrum of power";
+    dict(EN).xl4 = "f_g = 1/Tu = %.1f [Hz]";
+    % dict(EN).sgt = "Spectrum for intra-group\nraw & power signals\nb-timedomain, c=frequency";
+    dict(EN).sgt = "Time and Frequency Domain for intra-group raw & power signals";
 
     d = dict(lang);
 end

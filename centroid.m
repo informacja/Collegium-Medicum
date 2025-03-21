@@ -103,7 +103,7 @@ for(j = 1:length(v)) % grupa
             title(segment(nrs).miesien); xlabel(lingua.xl22)
         end
     end
-    sgtitle(sprintf(lingua.sgt, v(fileSegNr(nrs)).infoRecord))
+    sgtitle(sprintf(lingua.sgt));%, v(fileSegNr(nrs)).infoRecord))
     for(kat = 1:2)
         CentrWidm(j, kat).AfM=CentrWidm(j, kat).AfM/nAf(kat); CentrWidm(j, kat).Af2M=CentrWidm(j,kat).Af2M/nAf(kat);
         CentrWidm(j, kat).AfE=CentrWidm(j, kat).AfE/nAf(kat); CentrWidm(j, kat).Af2E=CentrWidm(j,kat).Af2E/nAf(kat);
@@ -355,7 +355,7 @@ function [d] = dictionary2(lang)
     dict(PL).xl21 = "Widmo względem wartości maksymalnej";
     dict(PL).xl22 = "Widmo unormowane sumą amplitud";
     dict(PL).xl3 = "Widmo unormowane sumą amplitud";
-    dict(PL).sgt = "Widma wewnątrzgrupowe, ćwiczenie %s";
+    dict(PL).sgt = "Widma wewnątrzgrupowe";%, ćwiczenie %s";
     dict(PL).sgt41 = "Średnia z centroidów (Max)";
     dict(PL).ps = "Pośredni";
     dict(PL).pc = "Podchwyt";
@@ -375,10 +375,10 @@ function [d] = dictionary2(lang)
     dict(EN).xl21 = "Spectrum relative to the maximum value";
     dict(EN).xl22 = "Spectrum normalized by sum of amplitudes";
     dict(EN).xl3 = "Spectrum normalized by sum of amplitudes";
-    dict(EN).sgt = "Intra-group spectra, training %s";
+    dict(EN).sgt = "Intra-group spectra";%, training %s";
     dict(EN).sgt41 = "Mean of centroids (Max)";
-    dict(EN).ps = "Indirect";
-    dict(EN).pc = "Underhand";
+    dict(EN).ps = "Intermediate";
+    dict(EN).pc = "Supinated grip";
     dict(EN).fq = "Frequency [Hz]";
     dict(EN).amp = "Amplitude";
     dict(EN).t4 = "Muscle centroid and training average (Max)";

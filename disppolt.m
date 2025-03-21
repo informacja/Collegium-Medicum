@@ -139,7 +139,7 @@ function [d] = dictionary2(lang)
     dict(EN).t2 = "CC-SmoothSpectra/maxAf";
     dict(EN).t3 = "CentrSpectra-SmoothSpectra/Ps";
     dict(EN).t4 = "CCE-SmoothSpectra";
-    dict(EN).sgt = "muscles / trainings (PS/BR-k, PS/BB-r PC/BR-b PC/BB-g)";
+    dict(EN).sgt = "muscles / trainings (IM/BR-k, IM/BB-r SP/BR-b SP/BB-g)";
     dict(EN).tdw = "Intra-group distances";
     dict(EN).tdcc = "Distances from the centroid of the centroids";
 
