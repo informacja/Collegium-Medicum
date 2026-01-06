@@ -3,7 +3,7 @@ Go to project directory and run *main* script in console, just like below
 ```
 main
 ```
-# [PL]Protokół zbierania sygnałów sEMG
+# [PL] Protokół zbierania sygnałów sEMG
 Przed przystąpieniem do zapisu należy [przygotować skórę](https://github.com/informacja/EMG/tree/master/matlab/instrukcja#przygotowanie-przed-zbieraniem-sygnałów)
 
 ## Lokalizujemy elektrody pomiarowe na Brachioradialis i Biceps brachii na ręce prawej
