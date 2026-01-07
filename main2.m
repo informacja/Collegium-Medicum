@@ -1,7 +1,3 @@
-
-%% ========================================================================
-%  sEMG Processing Pipeline (BR & BB) — Noraxon Ultium / Qualisys+Delsys
-%  Author: (Your name)
 %  Purpose:
 %    - Load EMG recordings from folder structure (MAT files)
 %    - Segment repetitions for selected exercises
@@ -9,12 +5,6 @@
 %    - Compute spectra and spectral centroids
 %    - Compare conditions using Minkowski distances (several variants)
 %    - Compose & export publication-ready figures (IEEE inches)
-%
-%  Important Domain Note:
-%    After electrode detachment/reattachment, **amplitudes are not comparable**
-%    without proper normalization. This pipeline focuses on **frequency-domain**
-%    features (spectra/centroids) which are less sensitive to raw amplitude scale.
-% ========================================================================
 
 %% --------------------------- Configuration ------------------------------
 DEBUG         = 1;   % 1 = verbose, figures left open; 0 = quiet (e.g., compiled)
@@ -80,10 +70,8 @@ compareExampleData  = 0;   % 1 = load demo Neurosoft data (outside Noraxon/Quali
 deprecated          = 0;   % code that is not used
 
 % Root data dir:
-% dirname = 'Archiwum';
-% dirname = '23.05.23';
-dirname = '33unique'; % NOTE: author recorded twice (sum patients ≈ 34)
-% dirname = '/Users/puler/Documents/MATLAB/Ortheo3D/data'; % example path
+dirname = 'data'; % NOTE: author recorded twice (sum patients ≈ 34)
+% dirname = '../../Ortheo3D/data'; % example path
 
 % Pre-allocate recording container
 v = [];                   % array of structs; each entry stores a single muscle stream
@@ -116,6 +104,9 @@ global fromSzU;   % used when loading Neurosoft demo data
 if (isempty(datafiles))
     error("No datafiles found\n");
 end
+
+addpath(fullfile('additionalFiles'));
+addpath(fullfile('processData'));
 
 %% -------------------- Optional: Load demo Neurosoft data ----------------
 if (compareExampleData)
@@ -491,21 +482,3 @@ if (forArticle)
     fprintf(1, "main + forArticle(1) = "); toc(allElapsedTime);
 end
 return
-
-%% ---------------------------- Demo (inactive) ---------------------------
-% The code below is demonstration/testing only (after 'return'):
-
-% Audio export (stereo: BR=left, BB=right), resampled & normalized
-mnoznik = 24;
-BR = v(11).dataR; BB = v(11).dataB;
-L  = resample(BR,mnoznik,1); R = resample(BB,mnoznik,1);
-L  = L/max(abs(L)); R = R/max(abs(R));
-stereo_mtx = [L, R];
-audiowrite('stereo sound normalized.wav', stereo_mtx, fpom*mnoznik);
-
-% FFT demos for specific 'infoRecord' strings (verify exact strings)
-% ...
-
-% figPSW demonstration and synthetic signal examples
-% ...
-
