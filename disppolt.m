@@ -6,16 +6,18 @@ offset = size(Syg,1); old = [];
 % for(i = 1:offset)
 
 lingua = dictionary2(lang);
-
+% distsMC(nband).fb = distMC; distsME(nband).fb = distME; distsM_cheby(nband).fb = distM_cheby;
+% distsMC(nband).fbE = distEC; distsME(nband).fbE = distEE; distsM_cheby(nband).fbE = distE_cheby;
+    
 % flagaMaxima = 0;
 if (flagaMaxima)
 %     nrF = 3001;
-    distMCtmp = distMC; distMEtmp = distME; distM_chebytmp = distM_cheby;
-    dCx = dCM; dEx = dEM;  dCzx = dists_chebyM;
+    distMCtmp = Sb(nband).distMC; distMEtmp = Sb(nband).distME; distM_chebytmp = Sb(nband).distM_cheby;
+    dCx = Sb(nband).dCM; dEx = Sb(nband).dEM;  dCzx = Sb(nband).dists_chebyM;
 else % function of distribution of freq in spectrum
 %     nrF = 3002;
-    distMCtmp = distEC; distMEtmp = distEE; distM_chebytmp = distE_cheby;
-     dCx = dCE; dEx = dEE; dCzx = dists_chebyE;
+    distMCtmp = Sb(nband).distEC; distMEtmp = Sb(nband).distEE; distM_chebytmp = Sb(nband).distE_cheby;
+     dCx = Sb(nband).dCE; dEx = Sb(nband).dEE; dCzx = Sb(nband).dists_chebyE;
 end
 
 if (bf==0) distMEtmp(:) = 0; distMCtmp(:) = 0; distM_chebytmp(:) = 0;
@@ -26,17 +28,25 @@ figure(nrF)
 for(j = 1:length(v))
     %     j = fileSegNr(i);
     nseg=find(fileSegNr==j);
-    for (s = 1:length(nseg))
-        zakres1 = [];
-        zakres2 = [];
+    for (s = 1:length(nseg))   
+
+        zakres1 = []; zakres2 = []; zakres3 = []; zakres4 = [];
+        
         for (p = 1:length(nseg)) % na nowo zakresy
             %         i =s;
             nrs = nseg(p);
             %         wyglWidma(j,k).maxAf = max(wyglWidma(j,k).Af);
-            if (segMio(nseg(p)) == 1 ) kat = 1;
-                zakres1 = [ zakres1 nrs];
-            else kat = 2; zakres2 = [ zakres2 nrs];
+            % if (segMio(nseg(p)) == 1 ) kat = 1;
+            %     zakres1 = [ zakres1 nrs];
+            % else kat = 2; zakres2 = [ zakres2 nrs];
+            % end
+            switch(SygKat(nrs))
+                case 1, zakres1 = [ zakres1 nrs];
+                case 2, zakres2 = [ zakres2 nrs];
+                case 3, zakres3 = [ zakres3 nrs];
+                case 4, zakres4 = [ zakres4 nrs];
             end
+
         end
         % ze względu na Psyg
         %     zakres1 = 1:v(j).segLen;%1:max([v(:).segLen]);%;;
@@ -46,7 +56,8 @@ for(j = 1:length(v))
         %     SygKat(i) % BR
         %         if(fileSegMio(nrs)==txBR)
         n = n+1;
-        pom=int32(s/2); %if old == pom continue; end;
+        pom=int32(s); %if old == pom continue; end;
+        if(pom==0)pom=1; end
         old = pom;
         zakres1 = (pom);
         zakres2 = (pom);
@@ -56,6 +67,18 @@ for(j = 1:length(v))
 %             dCzx = ddists_chebyM(1,1,1);
 %         end
         % n = i;
+
+     if(s==3) %(for legend valid colors)
+            tmp1 = find(SygKat==3);
+                k = SygKat(tmp1(1));
+                plotDistance(nrF, bf, n+offset*(k-1), j, zakres1, k, Psyg, ...
+                    dCx+distMCtmp(2,1), dEx+distMEtmp(2,1), dCzx+distM_chebytmp(2,1));
+            tmp1 = find(SygKat==4);
+                k = SygKat(tmp1(1));
+                plotDistance(nrF, bf, n+offset*(k-1), j, zakres2, k, Psyg, ...
+                    dCx+distMCtmp(2,2)+distMCtmp(1,2), dEx+distMEtmp(2,2)+distMEtmp(1,2), dCzx+distM_chebytmp(2,2)+distM_chebytmp(1,2));
+        end
+
         i=nseg(s);
         switch(SygKat(i))
             %         distEE
@@ -81,7 +104,7 @@ for(j = 1:length(v))
                 k = SygKat(i);
 %                 plotDistance(nrF, bf, n+offset*(k-1), j, zakres1, k, Psyg, ...
 %                     dEx+distMEtmp(2,2)+distMEtmp(1,2), dCx+distMCtmp(2,2)+distMCtmp(1,2), dCzx+distM_chebytmp(2,2)+distM_chebytmp(1,2));
-                 plotDistance(nrF, bf, n+offset*(k-1), j, zakres2, k, Psyg, ...
+                plotDistance(nrF, bf, n+offset*(k-1), j, zakres2, k, Psyg, ...
                     dCx+distMCtmp(2,2)+distMCtmp(1,2), dEx+distMEtmp(2,2)+distMEtmp(1,2), dCzx+distM_chebytmp(2,2)+distM_chebytmp(1,2));
         end
         % [ i n j k pom s]
@@ -94,17 +117,21 @@ txCalcus(1) = lingua.t1;
 txCalcus(2) = lingua.t2;
 txCalcus(3) = lingua.t3;
 txCalcus(4) = lingua.t4;
-figure(nrF); sgtitle(lingua.sgt); xlabels = lingua.xlabels;
+figure(nrF);% sgtitle(lingua.sgt); 
+labels = lingua.xlabels;
 if (flagaMaxima) txDist = lingua.m; else txDist = lingua.e; end
 Nbf = bf;
 for i = bf+1:Nbf+4
-    subplot(2,4,i); axis('tight');
+    subplot(2,4,i); 
+    axis('tight');
+    if(i==1) legend(lingua.l,'Location','southeast','Position', [0.1057    0.8357    0.0980    0.1186]); end;
     if(i==2) title(lingua.tdw);  subtitle(txDist); end
     if(i==2+4) title(lingua.tdcc); end;
     if i > 4 i = i-4; end;
-    xlabel(xlabels(mod(i,5)));
+    ylabel(labels(mod(i,5))); xticklabels({}); xlabel("Case nr");
+            subtitle(char(96+i+Nbf)+")"); 
     hold off; 
-    if (i==4) subtitle( txCalcus(jakieDist) ); end
+    % if (i==4) subtitle( txCalcus(jakieDist) ); end
 end
 % figure(nrF+1); hold off; title("mięśnie / treningi"); xlabel("Odległość City")
 % figure(nrF+2); hold off; title("mięśnie / treningi"); xlabel("Odległość Eukidesa")
@@ -122,26 +149,26 @@ function [d] = dictionary2(lang)
     EN = 2;
 
     dict(PL).xlabels = ["Moc"; "Odległość Manhattan"; "Odległość Euklidesa"; "Odległość Czebyszewa";]; 
-    dict(PL).m = "Maxima";
-    dict(PL).e = "Energia";    
-    dict(PL).t1 = "CentrWidm-wyglWidma/maxAf";
-    dict(PL).t2 = "CC-wyglWidma/maxAf";
-    dict(PL).t3 = "CentrWidm-wyglWidma/Ps";
-    dict(PL).t4 = "CCE-wyglWidma";
-    dict(PL).sgt = "mięśnie / treningi (PS/BR-k, PS/BB-r PC/BR-b PC/BB-g)";
-    dict(PL).tdw = "Odległości wewnątrzgrupowe";
-    dict(PL).tdcc = "Odległości od centroidu centroidów";
+    dict(PL).m = "";%Maxima";
+    dict(PL).e = "";%Energia";    
+    dict(PL).t1 = "";%CentrWidm-wyglWidma/maxAf";
+    dict(PL).t2 = "";%CC-wyglWidma/maxAf";
+    dict(PL).t3 = "";%CentrWidm-wyglWidma/Ps";
+    dict(PL).t4 = "";%CCE-wyglWidma";
+    dict(PL).l = "mięśnie / treningi PS/BR-k, PS/BB-r PC/BR-b PC/BB-g";
+    dict(PL).tdw = "";%Odległości wewnątrzgrupowe";
+    dict(PL).tdcc = "";%Odległości od centroidu centroidów";
 
-    dict(EN).xlabels = ["Power"; "Manhattan Distance"; "Euclidean Distance"; "Chebyshev Distance";];    
-    dict(EN).m = "Maxima";
-    dict(EN).e = "Energy"; 
-    dict(EN).t1 = "CentrSpectra-SmoothSpectra/maxAf";
-    dict(EN).t2 = "CC-SmoothSpectra/maxAf";
-    dict(EN).t3 = "CentrSpectra-SmoothSpectra/Ps";
-    dict(EN).t4 = "CCE-SmoothSpectra";
-    dict(EN).sgt = "muscles / trainings (IM/BR-k, IM/BB-r SP/BR-b SP/BB-g)";
-    dict(EN).tdw = "Intra-group distances";
-    dict(EN).tdcc = "Distances from the centroid of the centroids";
+    dict(EN).xlabels = ["Power"; "Distance"; "Distance"; "Distance";];    
+    dict(EN).m = "";%Maxima";
+    dict(EN).e = "";%Energy"; 
+    dict(EN).t1 = "";%CentrSpectra-SmoothSpectra/maxAf";
+    dict(EN).t2 = "";%CC-SmoothSpectra/maxAf";
+    dict(EN).t3 = "";%CentrSpectra-SmoothSpectra/Ps";
+    dict(EN).t4 = "";%CCE-SmoothSpectra";
+    dict(EN).l = ["NT/BR,";"NT/BB";"SP/BR";"SP/BB"]; %"muscles / trainings,";
+    dict(EN).tdw = "";%Intra-group distances";
+    dict(EN).tdcc = "";%Distances from the centroid of the centroids";
 
     d = dict(lang);
 end

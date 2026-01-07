@@ -2,14 +2,14 @@ tic;
 ksyg = 0;
 lAfMin = 10e1000;
 lAfMax = 0;
-mnoznik = 2;
-
-lingua = dictionary2(lang, Yunits, [ txPr txPc ]);
+mnoznik = 2; null = 0; cntt=0; mutex =0; 
+clear s;
+s.doKwadratu = 1;
+lingua = dictionary2(lang, Yunits, [ txPr txPc ], s);
 
 if(Parseval>0)    mnoznik = .5; % z zerami
 else              mnoznik = .15; % bez zer
 end
-
 for(j = 1:length(v)) % grupa
 %     figure(nrF+j),
     nxf = 0; % nie drukuj figur
@@ -21,7 +21,13 @@ for(j = 1:length(v)) % grupa
 %         ifig = SygKat(nseg(i))-1; % ifigure SygKat
         nj = find(wybrJ==j);
         ifLastSeg = (~isempty(nj) && (i == length(nseg) || i == length(nseg)-1));
-        if( ifLastSeg || plotAllFigures) figure(j+nrF); end
+        if( ifLastSeg || plotAllFigures)
+            figure(nrF+nj);if(mutex==0) mutex = 1; 
+tiledlayout(2,2,'TileIndexing', 'columnmajor');end
+            % if(mod(cntt,2) ==0) figure(nrF);  [nrF ifig nj]  %if(null==0) null=null+1; 
+             % tiledlayout("flow",'TileIndexing', 'columnmajor');% end; 
+        % end, 
+        end
        
         clear y;
         ksyg=nseg(i);
@@ -35,28 +41,36 @@ for(j = 1:length(v)) % grupa
         Nf=length(y); %todo
         nx=[0:Nf-1];
        if( ifLastSeg || plotAllFigures )
-            subplot(lfrow,lc,1+ifig), plot(nx*dtpom, y); axis('tight');
+            % subplot(lfrow,lc,1+ifig),
+            nexttile, cntt=cntt+1; plot(nx*dtpom, y); axis('tight');
             if( ifig == 0) title(lingua.t1); end
-            title(sprintf(lingua.t1, fileSegMio(ksyg)));%, ksyg));
-            subtitle(" "); subtitle(sprintf("%s", lingua.grip( segment(i).gest )));
+            subtitle(sprintf(lingua.t1, fileSegMio(ksyg)));%, ksyg));
             xlabel(sprintf(lingua.xl1));%, i));
             ylabel(lingua.yl1)
-            subplot(lfrow,lc,1+ifig+lc),  plot(nx*dtpom, X);axis('tight');
-        end 
+            subtitle(char(97+ifig)+")");
+             % subplot(lfrow,lc,1+ifig+lc), 
+if(0)            nexttile, cntt=cntt+1; plot(nx*dtpom, X);axis('tight');  end
+       end
         % LSyg / nTu jest liczbą próbek w oknie wygładzania
+      
         Twygl=0.25*mnoznik; nTu = Tsyg/Twygl;
         Tu=Twygl/dtpom; nfw = 1;
         run("../MTF/filtrWidma.m");
         xf = [0:LwAm-1];
-        if( ifLastSeg || plotAllFigures )
+     if(0)
+        if( ifLastSeg || plotAllFigures )           
+           
             hold on; plot(xf*dtpom,Ayf,'Color','#0072BD'); % ciemy niebieski - domyślny
             plot([0:Ldf]*dtpom,Af,'k'); axis('tight');  hold off; axis('tight');
             xlabel(sprintf(lingua.xl2, Tu*dtpom*1000));%i,
-            ylabel(lingua.yl1); subtitle(lingua.st2);
+            ylabel(lingua.yl1);  subtitle(char(97+ifig+lc)+")");
+            
+            % sgtitle(lingua.sgtT); axis('tight');
+            if(mod(cntt,8) ==0) figure(nrF+ifig+nj); [nrF ifig nj lc], tiledlayout("flow",'TileIndexing', 'columnmajor'); end;
         end
-        
+      end
         s.y = y; s.l = SygRawLen(ksyg); s.Nf = Nf; s.mnoznik = mnoznik; s.Parseval = Parseval; s.Tsyg = Tsyg; s.sL = Nf; s.dtpom = dtpom; s.MTF = MTF; s.nxf = nxf; s.sLmax = sLmax; 
-        s.doKwadratu = 0;
+        s.doKwadratu = 1;
         [Ayf, Af, ~, nk, dx, ix, x] = st(s);
 
         Widma(j,i).Ayf=Ayf;     % raw spectrum
@@ -68,33 +82,39 @@ for(j = 1:length(v)) % grupa
 
         Ldf = length(Af)-1; % by PSW 27.02.24
         if( ifLastSeg || plotAllFigures ) % row = 3
-            subplot(lfrow,lc,1+ifig+2*lc),   plot([0:nk-1]/Tsyg,Ayf(1:nk),'c',x,Af(1:ix),'k'); axis('tight'); %
+            nexttile,cntt=cntt+1;
+            % subplot(lfrow,lc,1+ifig+2*lc), 
+            plot([0:nk-1]/Tsyg,Ayf(1:nk),'c',x,Af(1:ix),'k'); axis('tight'); %
             % figure(nrFw), subplot(1,2,1); hold on; 
              %kf=mod(kf,4)+1; 
             % plot([0:dx:(length(Af)-1)*dx],Af,kol(kf)); axis('tight'); %plot(wyglWidma(j,i).Af); hold off; 
-            figure(nrF+j)
+            % figure(nrF+j)
             if( 1+ifig+2*lc == 5 ) title(lingua.t2); end
+            
             xlabel(sprintf(lingua.xl4,Tu*dtpom*1000,1/(Tu*dtpom))); %,i
-            ylabel(lingua.yl2); subtitle(lingua.st3);
+            ylabel(lingua.yl2); subtitle(char(97+ifig+2*lc)+")"); subtitle(char(97+ifig+lc)+")");
         end
         
-        s.doKwadratu = 1;
         [Ayf, Af, Afw, nf, dx, ix, x] = st(s);
 
         Widma(j,i).Ayf2=Ayf; wyglWidma(j,i).Af2=Af;
         % nf=round(Nf/Podzial);
-
+    if(0)
         if( ifLastSeg || plotAllFigures ) % row = 4
 %             figure(nrFw+j),
-            subplot(lfrow,lc,1+ifig+3*lc), plot([0:nf-1]/Tsyg,Ayf(1:nf),'c',x,Af(1:ix),'k');
+            % subplot(lfrow,lc,1+ifig+3*lc), 
+            nexttile, cntt=cntt+1;plot([0:nf-1]/Tsyg,Ayf(1:nf),'c',x,Af(1:ix),'k');
             xlabel(sprintf(lingua.xl4, Tu*dtpom*1000));
-            ylabel(lingua.yl2); subtitle(lingua.st4);
+            ylabel(lingua.yl2); 
+            subtitle(char(97+ifig+3*lc)+")"); 
             % sgtitle( sprintf("%s",v(j).infoBDisp)); 
             axis('tight');
             % figure(nrFw), subplot(1,2,2); hold on; plot([0:nf-1]/Tsyg,Af(1:nf),kol(kf)); %plot(wyglWidma(j,i).Af); hold off; 
             maxAf(j)=max(Af); 
-            sgtitle(lingua.sgt); axis('tight');
+            % sgtitle(lingua.sgtF); 
+            axis('tight');
         end
+    end
         lAfMin = min(length(Af),lAfMin);
         lAfMax = max(length(Af),lAfMax);
     end
@@ -140,7 +160,7 @@ function [Ayf Af Afw nk dx ix x] = st(s) % spectrum&trend
     end
 end
 
-function [d] = dictionary2(lang,Yunits, grips)
+function [d] = dictionary2(lang,Yunits, grips, s)
     PL = 1; % non suported 20.07.2024
     EN = 2;
     
@@ -156,21 +176,25 @@ function [d] = dictionary2(lang,Yunits, grips)
     dict(PL).sgt = "Widma sygnałów wewn. grupy dla raw i mocy";
 
     % dict(EN).t1 = "                                                                                                    Time domain";
-    dict(EN).t1 = "Muscle: %s"; %, segment nr: %d 
+    dict(EN).t1 =  "";%[grips ", %s"]; %, segment nr: %d 
     dict(EN).xl1 = "Time [s]"; % nr (relative) %d : y(t)
     % dict(EN).IM = "Intermediate grip"; %subtitle1
-    dict(EN).grip = grips;
+    % dict(EN).grip = "a)";
     dict(EN).yl1 = ['Amplitude [' Yunits ']'];
-    dict(EN).xl2 = "Tu=%.1f [ms] Time [s]"; % %d
+    dict(EN).xl2 = "Frequency [Hz]"; %"Tu=%.1f [ms] Time [s]"; % %d
     dict(EN).st2 = "y(t)^2 and smooth y(t)^2";
     % dict(EN).t2 = "                                                                        Frequency domain";
-    dict(EN).yl2 = 'Amplitude';
+    dict(EN).yl2 = 'Power [a. u.]'; % if s.doKwadratu = true
+% if(s.doKwadratu)
+%     dict(EN).yl1 = 'Power [a. u.]';
+% end
     dict(EN).st3 = "Spectrum";
     % dict(EN).xl3 = " f_g=1/Tu=%.0f [Hz]";%%d [Hz]
     dict(EN).st4 = "Spectrum of power";
-    dict(EN).xl4 = "f_g = 1/Tu = %.1f [Hz]";
+    dict(EN).xl4 = "Frequency [Hz]";%"f_g = 1/Tu = %.1f [Hz]";
     % dict(EN).sgt = "Spectrum for intra-group\nraw & power signals\nb-timedomain, c=frequency";
-    dict(EN).sgt = "Time and Frequency Domain for intra-group raw & power signals";
+    dict(EN).sgtT = "Time Domain for intra-group raw & power signals";
+    dict(EN).sgtF = "Frequency Domain for intra-group raw & power signals";
 
     d = dict(lang);
 end

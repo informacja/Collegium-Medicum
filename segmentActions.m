@@ -13,6 +13,24 @@ while (j <= length(v))
     n1 = 1;  
 
     y = v(j).dataR; %a(j).d;%v(j).data;
+    if(skipSegmentationIndex>=j)         
+        fileSegNr(nrs) = j; % w przypadku różnych ilości segmentów w plikach
+        segment(nrs).data = v(j).dataB;
+        segment(nrs).miesien = 2; %Biceps
+        segment(nrs).gest = v(j).infoTraining;
+        segMio(nrs) = 2;
+        SygKat(nrs) = 2;
+        fileSegMio(nrs) = txBB;
+        segTraining(nrs) = 2;
+        sL = 1;
+        
+%             v(j,k).klasyfikacjaSegmentów = nrs;
+        m = max(m, sL);
+        %n1 = Nbf+1; %Nbf = length(v(j).dataR); [n1 Nbf]
+        nrs=nrs+1; 
+        j = j+1; 
+        continue;   
+    end
     tmpData = v(j).dataR + v(j).dataB; % założenie o byciu w fazie
     y = tmpData;
 %     Nokno = 12;

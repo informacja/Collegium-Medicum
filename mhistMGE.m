@@ -31,7 +31,7 @@ for(i=1:La)
     for(m=1:lbins)
         z=bins(m); fM=pdfMBn(z,xa); NfM=fM*ldanych*Dy; sx=sx+((Nemp(m)-NfM)^2)/NfM;  % NfM - liczba teoretyczna w pude³ku
     end,
-    J(i)=sx; if(sx<Jmin) Jmin=sx; aOpt=xa; end
+    if(~isempty(sx)) if(isinf(sx)||isnan(sx)) sx=0; end; else sx=0; end, J(i)=sx; if(sx<Jmin) Jmin=sx; aOpt=xa; end
         xa=xa+da;
 end, % nbm=i;ysr
 a=aOpt;
@@ -82,9 +82,9 @@ end
 % histogram jest ZGODNY z zalozonym rozkladem
 % (cdf - cumulated distribution function)
 % pvg=1-chi2distr(chi2e,lbins-1); %liczymy p rawdfopodobienstwwo ze mozliwe chi2 jest wieksze od chi2e czyli 1-f(chi2e)
-pvg=1-cdf('chi2',chi2g,lbins-1); %liczymy prawdfopodobienstwwo ze mozliwe chi2 jest wieksze od chi2e czyli 1-f(chi2e)
+pvg=1-cdf('chi2',chi2g,lbins-3); %liczymy prawdfopodobienstwwo ze mozliwe chi2 jest wieksze od chi2e czyli 1-f(chi2e)
 % pvg=1-f gdzie f(chi2e) jest wartoscia dystrybuanty  rozkladu chi2
 %pvr jest prawodopodobienstwem odrzucenia hipotezy blednego ze nasza suma chi2e  jest zmienna o rozkladzie chi2 a wiec ze histogram jest zgodny z zalozonym  rozkladem  
 % pvr=1-chi2distr(chi2r,lbins-1); %liczymy prawdfopodobienstwwo ze mozliwe chi2 jest wieksze od chi2e czyli 1-f(chi2e)
-pve=1-cdf('chi2',chi2e,lbins-1);
-pvM=1-cdf('chi2',chi2M,lbins-1);
+pve=1-cdf('chi2',chi2e,lbins-2);
+pvM=1-cdf('chi2',chi2M,lbins-2);

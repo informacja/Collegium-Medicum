@@ -1,6 +1,7 @@
-
-clear  dEM dCM dists_chebyM %Psyg
+function [dEM dCM dists_chebyM]=cc4(v,fileSegNr,wyglWidma,segMio,CC, CCE, fileSegMio,Esyg,SygRawLen)
+% clear  dEM dCM dists_chebyM %Psyg
 nrs = 0; nf=2; 
+global txBB txBR;
 % global Psyg, dEM, dCM, dists_chebyM;
 for(j = 1:length(v)) % grupa training
 %     nk = (find(fileSegNr==j))
