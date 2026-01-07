@@ -508,4 +508,4 @@ audiowrite('stereo sound normalized.wav', stereo_mtx, fpom*mnoznik);
 
 % figPSW demonstration and synthetic signal examples
 % ...
-``
+

@@ -23,8 +23,7 @@ experimental= 0; % two band ploting
 % -1 = ujemny relatywne Twygl względem length(segment)
 %  0 = zero nie przeliczamy Twygl i segmenty bez zer
 %  1 = dodaj zera
-PL = 1;
-EN = 2;
+PL = 1; EN = 2;
 lang = EN;
 if(isdeployed)
     DEBUG = 0;

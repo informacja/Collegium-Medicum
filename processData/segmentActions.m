@@ -137,6 +137,7 @@ while (j <= length(v))
             nrs=nrs+1; 
         end    
         n1 = Nbf+1;
+        if(k>10) break; end
     end
     j = j + 1;
 end
@@ -149,8 +150,10 @@ if(DEBUG)
 %      figure,histogram(fileSegNr, length(v), 'BinWidth',1); title("Rozkład segmentów w plikach"); ylabel("Segmenty per ćwiczenie"); xlabel("Liczba ćwiczeń");  % ilość segmentów per plik
     sLens = []; for i = 1:length(segment) sLens(i) = length(segment(i).data);end
     figure,
-    subplot(211),mhistogr(fileSegNr, length(v),1); axis("tight"); title("Rozkład segmentów w plikach"); ylabel("Segmenty per ćwiczenie"); xlabel("Liczba ćwiczeń");
-    subplot(212),plot(sLens/fpom,'.'); hold on; axis("tight"); title("Rozkład długości segmentów"); ylabel("Długość segmentu [s]"); xlabel("Nr segmentu");
+    % subplot(211),
+    mhistogr(fileSegNr, length(v),1); axis("tight"); title("Rozkład segmentów w plikach"); ylabel("Segmenty per ćwiczenie"); xlabel("Liczba ćwiczeń");
+    nrF=nrF+1;
+    figure(nrF),plot(sLens/fpom,'.'); hold on; axis("tight"); title("Segment length distribution"); ylabel("Segment length [s]"); xlabel("Number of the segment"); yline(mean(sLens/fpom))
     axis auto 
 %     figPW("nomargin") TODO?
     if(deprecated) 
