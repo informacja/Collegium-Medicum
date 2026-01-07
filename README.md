@@ -27,7 +27,9 @@ Intermediate results are cached to avoid recomputation.
   - Supinated grip
 
 This repository contains data collected with Noraxon Ultium wireless hardware. 
+
 ---
+
 ## Structure
 ### Files
 Go to project directory and run *main* script in console, just like below
@@ -35,13 +37,20 @@ Go to project directory and run *main* script in console, just like below
 main
 ```
 This script takes raw EMG recordings, segments exercise repetitions, normalizes them, performs spectral and centroid analysis, compares conditions using multiple Minkowski distance formulations, and assembles publication-ready figures for an academic paper.
+
+```
+afterCalculations
+```
+This script is good to plot figures after all calculations are done. For free plotting when workspace is ready.
 ### Folders
 All **.mat* files are in **data** folder
 
 **processData** folder aontains key functions
 
 **additionalFiles** contains all rest files
+
 ---
+
 #### Protocol how to collect data can by found here: [PL prototkół](protokół.md)
-Project uses [fig Library](github.com/informacja/fig)
+Project uses [fig Library](https://github.com/informacja/fig)
 
