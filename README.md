@@ -10,3 +10,5 @@ main
 ### Folders
 All **.mat* files are in *33unique* folder
 
+#### Protocol how to collect data can by found here: [PL prototkół](protokół.md)
+
