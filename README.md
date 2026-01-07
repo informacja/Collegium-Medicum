@@ -9,7 +9,7 @@ main
 ```
 This script takes raw EMG recordings, segments exercise repetitions, normalizes them, performs spectral and centroid analysis, compares conditions using multiple Minkowski distance formulations, and assembles publication-ready figures for an academic paper.
 ### Folders
-All **.mat* files are in *33unique* folder
+All **.mat* files are in *data* folder
 
 #### Protocol how to collect data can by found here: [PL prototkół](protokół.md)
 
