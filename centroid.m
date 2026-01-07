@@ -9,28 +9,32 @@ tmpTxt = "";
 for(j = 1:2) % grupa
     tmpTxt = [tmpTxt;v(j).infoRecord];
     nseg=find(fileSegNr==j);
+    % title(nsp);
+
+       
     for (i = 1:length(nseg))
+        % if(nrs<=4) fpom = 25000; else fpom = 2000; end %TO ERASE - PATCH
         nrs = nseg(i);    nsp=SygKat(nrs);
+        % if(max(wybrJ)>=nrs) nsp = nrs; end % PATCH to erase
         %         if(fileSegMio(nrs) == txBR)
         L = length(segment(nrs).data);
-        subplot(2,2,nsp), plot([1:L]/fpom, segment(nrs).data); hold on; title(nsp); xlabel(lingua.xl1)
+        subplot(2,2,nsp), plot([1:L]/fpom, segment(nrs).data); hold on;  xlabel(lingua.xl1)
 
-        title(sprintf(lingua.t1, v(j).infoRecord))
         %     end
         %         if(fileSegMio(nrs) == txBB) subplot(2,2,ns), plot(segment(nrs).data); hold on; title(txBB);end
         %         if(fileSegMio(nrs) == txBR) subplot(2,2,3), plot(segment(nrs).data); hold on; end
         %         if(fileSegMio(nrs) == txBB) subplot(2,2,4), plot(segment(nrs).data); hold on; end
     end
     subplot(2,2,1), hold off;
-    subplot(2,2,2), hold off;
-    subplot(2,2,3), hold off;
-    subplot(2,2,4), hold off;
+    subplot(2,2,2), hold off; 
+    subplot(2,2,3), hold off; 
+    subplot(2,2,4), hold off; 
 end
 % sgtitle(tmpTxt);
 
 % f = [1:8500+1]; f = [1:6200+1]; f = 1:(length(wyglWidma(j,1).Af)); % max
-% f = 1:155*max(Tsyg)+1; % [Hz]*[samples]
-f = 1:fWyswieltCentroidow*max(Tsyg)+1; % [Hz]*[samples]
+f = 1:280*max(Tsyg)+1; % [Hz]*[samples]
+% f = 1:fWyswieltCentroidow*max(Tsyg)+1; % [Hz]*[samples]
 xf = (f-1)/Tsyg;     % [Hz]
 
 clear dCentrM dCentrE;
@@ -95,12 +99,15 @@ for(j = 1:length(v)) % grupa
 
         if( length(nj) > 0 || plotAllFigures )
 
-            subplot(2,2,kat);    hold on; plot(xf, wyglWidma(j,i).Af(f)/wyglWidma(j,i).maxAf);
-            title(fileSegMio(nrs)); xlabel(lingua.xl21) %end;
-            subplot(2,2,kat+2);  hold on; plot(xf, wyglWidma(j,i).Af(f)/sum(wyglWidma(j,i).Af));
+            subplot(2,2,kat);    hold on; plot(xf, wyglWidma(j,i).Af(f)/wyglWidma(j,i).maxAf,"Color",'k');  axis tight; % '#0072BD'
+            subtitle(char(96+kat)+")");%title(fileSegMio(nrs)); 
+            xlabel(lingua.xl21);  ylabel(lingua.yl); %end;
+            subplot(2,2,kat+2);  hold on; plot(xf, wyglWidma(j,i).Af(f)/sum(wyglWidma(j,i).Af),"Color",'k'); axis tight;
             %         subplot(2,2,kat);    hold on; plot(xf, wyglWidma(j,i).Af(f)/wyglWidma(j,i).maxAf);
             %         subplot(2,2,2+kat);  hold on; plot(xf, wyglWidma(j,i).Af(f)/(Psyg(j,i);
-            title(segment(nrs).miesien); xlabel(lingua.xl22)
+          
+            subtitle(char(96+kat+2)+")"); xlabel(lingua.xl22);  ylabel(lingua.yl);
+          
         end
     end
     sgtitle(sprintf(lingua.sgt));%, v(fileSegNr(nrs)).infoRecord))
@@ -109,10 +116,11 @@ for(j = 1:length(v)) % grupa
         CentrWidm(j, kat).AfE=CentrWidm(j, kat).AfE/nAf(kat); CentrWidm(j, kat).Af2E=CentrWidm(j,kat).Af2E/nAf(kat);
 
         if( length(nj) > 0 || plotAllFigures )
-            subplot(2,2,kat); hold on; plot(xf, CentrWidm(j, kat).AfM(f),'k--'); hold off; axis('tight'); 
-            title(fileSegMio(nrskat(kat)));
-            subplot(2,2,kat+2); hold on; plot(xf, CentrWidm(j, kat).AfE(f),'k--'); hold off; axis('tight');
-            title(fileSegMio(nrskat(kat))); xlabel(lingua.xl3)
+            % subplot(2,2,kat); hold on; plot(xf, CentrWidm(j, kat).AfM(f),'k--'); hold off; axis('tight'); 
+            % title(fileSegMio(nrskat(kat)));
+            % subplot(2,2,kat+2); hold on; plot(xf, CentrWidm(j, kat).AfE(f),'k--'); hold off; axis('tight');
+            % title(fileSegMio(nrskat(kat))); 
+            xlabel(lingua.xl3)
         end
     end
     % TODO
@@ -163,20 +171,20 @@ end
 CC =[ (mean(cwrr,1)); (mean(cwrb,1)); (mean(cwcr,1)); (mean(cwcb,1)); ]; % Centroidy Centroidów
 CCE =[ (mean(cwrrE,1)); (mean(cwrbE,1)); (mean(cwcrE,1)); (mean(cwcbE,1)); ]; % Centroidy Centroidów
 
-figure(nrF+1), subplot(2,1,1), plot(xf,CC(1,[1:length(xf)])); hold on; plot(xf,CC(2,[1:length(xf)])); title(lingua.ps); legend(txBR,txBB);hold off; axis tight; xlabel(lingua.fq); ylabel(lingua.amp);
-figure(nrF+1), subplot(2,1,2), plot(xf,CC(3,[1:length(xf)])); hold on; plot(xf,CC(4,[1:length(xf)])); title(lingua.pc); legend(txBR,txBB);hold off; axis tight; xlabel(lingua.fq); ylabel(lingua.amp);
+figure(nrF+1), subplot(2,1,1), plot(xf,CC(1,[1:length(xf)])); hold on; plot(xf,CC(2,[1:length(xf)])); subtitle(lingua.ps); legend(txBR,txBB);hold off; axis tight; xlabel(lingua.fq); ylabel(lingua.amp);
+figure(nrF+1), subplot(2,1,2), plot(xf,CC(3,[1:length(xf)])); hold on; plot(xf,CC(4,[1:length(xf)])); subtitle(lingua.pc); legend(txBR,txBB);hold off; axis tight; xlabel(lingua.fq); ylabel(lingua.amp);
 sgtitle(lingua.sgt41)
 
-figure(nrF+2), hold on; plot(xf,CC(1,[1:length(xf)])); plot(xf,CC(2,[1:length(xf)])); plot(xf,CC(3,[1:length(xf)])); plot(xf,CC(4,[1:length(xf)])); title(lingua.t4);
+figure(nrF+2), hold on; plot(xf,CC(1,[1:length(xf)])); plot(xf,CC(2,[1:length(xf)])); plot(xf,CC(3,[1:length(xf)])); plot(xf,CC(4,[1:length(xf)])); subtitle(lingua.t4);
 legend(lingua.l4);xlabel (lingua.fq); ylabel(lingua.amp); axis tight; hold off;
 %--------------------------------------------------------------------------
 % dCentr posrRad, posrBiceps, podChwytRad, podChwytBiceps
 
-figure(nrF+3), subplot(2,1,1), plot(xf, CCE(1,[1:length(xf)])); hold on; plot(xf, CCE(2,[1:length(xf)])); title(lingua.ps); legend(txBR,txBB);hold off; axis tight; xlabel(lingua.fq); ylabel(lingua.amp);
-figure(nrF+3), subplot(2,1,2), plot(xf, CCE(3,[1:length(xf)])); hold on; plot(xf, CCE(4,[1:length(xf)])); title(lingua.pc); legend(txBR,txBB);hold off; axis tight; xlabel(lingua.fq); ylabel(lingua.amp);
+figure(nrF+3), subplot(2,1,1), plot(xf, CCE(1,[1:length(xf)])); hold on; plot(xf, CCE(2,[1:length(xf)])); subtitle(lingua.ps); legend(txBR,txBB);hold off; axis tight; xlabel(lingua.fq); ylabel(lingua.amp);
+figure(nrF+3), subplot(2,1,2), plot(xf, CCE(3,[1:length(xf)])); hold on; plot(xf, CCE(4,[1:length(xf)])); subtitle(lingua.pc); legend(txBR,txBB);hold off; axis tight; xlabel(lingua.fq); ylabel(lingua.amp);
 sgtitle(lingua.sgt42)
 
-figure(nrF+4), hold on; plot(xf,CCE(1,[1:length(xf)])); plot(xf,CCE(2,[1:length(xf)])); plot(xf,CCE(3,[1:length(xf)])); plot(xf,CCE(4,[1:length(xf)])); title(lingua.t6); hold off;
+figure(nrF+4), hold on; plot(xf,CCE(1,[1:length(xf)])); plot(xf,CCE(2,[1:length(xf)])); plot(xf,CCE(3,[1:length(xf)])); plot(xf,CCE(4,[1:length(xf)])); subtitle(lingua.t6); hold off;
 legend(lingua.l4); xlabel (lingua.fq); ylabel(lingua.amp); axis tight; hold off;
 %--------------------------------------------------------------------------
 
@@ -187,30 +195,42 @@ for(j = 1:length(v))
         %Centr(j, kat).AfE = Centr(j,kat).AfE
         figure(nrF-50)
         if(v(j).infoTraining == 1) % pośredni
-            subplot(4,2,kat);  hold on; plot(xf, CentrWidm(j,kat).AfM(f),'k--'); plot(xf, CC(kat, f),'r--','LineWidth',1); hold off; axis('tight'); xlabel(lingua.xl51); if kat == 1 title(v(1).infoRDisp); end; if kat == 2 title(v(1).infoBDisp); end
-            subplot(4,2,kat+2);  hold on; plot(xf, CentrWidm(j,kat).AfE(f),'k--'); plot(xf, CCE(kat, f),'r--','LineWidth',1);  hold off; axis('tight'); xlabel(lingua.xl52); if kat == 1 title(v(1).infoRDisp); end; if kat == 2 title(v(1).infoBDisp); end
+            subplot(4,2,kat);  hold on; p11 = plot(xf, CentrWidm(j,kat).AfM(f),'k--'); p12 = plot(xf, CC(kat, f),'r--','LineWidth',1); hold off; axis('tight'); xlabel(lingua.xl51); ylabel(lingua.yl); if kat == 1 subtitle(v(1).infoRDisp); end; if kat == 2 subtitle(v(1).infoBDisp); end
+            subtitle(char(96+kat)+")"); 
+            subplot(4,2,kat+2);  hold on; p21 = plot(xf, CentrWidm(j,kat).AfE(f),'k--',"DisplayName", "CW"); p22 = plot(xf, CCE(kat, f),'r--','LineWidth',1,"DisplayName", "CCE");  hold off; axis('tight'); xlabel(lingua.xl52); ylabel(lingua.yl); % if kat == 1 title(v(1).infoRDisp); end; %if kat == 2 title(v(1).infoBDisp); end
+            subtitle(char(96+kat+2)+")"); 
+            % legend([p11 p12], ["CW","CC"])
+            % legend([p21 p22], ["CW","CCE"])
         else
             %         if(v(j).infoTraining == 2)
-            subplot(4,2,4+kat);  hold on; plot(xf, CentrWidm(j,kat).AfM(f),'k--'); plot(xf, CC(kat+2, f),'r--','LineWidth',1); hold off; axis('tight'); xlabel(lingua.xl51); if kat == 1 title(v(1).infoRDisp); end; if kat == 2 title(v(1).infoBDisp); end
-            subplot(4,2,6+kat);  hold on; plot(xf, CentrWidm(j,kat).AfE(f),'k--'); plot(xf, CCE(kat+2, f),'r--','LineWidth',1); hold off; axis('tight'); xlabel(lingua.xl52); if kat == 1 title(v(1).infoRDisp); end; if kat == 2 title(v(1).infoBDisp); end
+            if(0)
+            subplot(4,2,4+kat);  hold on; p31=plot(xf, CentrWidm(j,kat).AfM(f),'k--'); p32=plot(xf, CC(kat+2, f),'r--','LineWidth',1 ); hold off; axis('tight'); xlabel(lingua.xl51); ylabel(lingua.yl);  % if kat == 1 title(v(1).infoRDisp); end; if kat == 2 title(v(1).infoBDisp); end
+            subtitle(char(96+kat+4)+")"); 
+            subplot(4,2,6+kat);  hold on; p41=plot(xf, CentrWidm(j,kat).AfE(f),'k--'); p42=plot(xf, CCE(kat+2, f),'r--','LineWidth',1); hold off; axis('tight'); xlabel(lingua.xl52); ylabel(lingua.yl); % if kat == 1 title(v(1).infoRDisp); end; %if kat == 2 title(v(1).infoBDisp); end
+            subtitle(char(96+kat+6)+")"); 
+            end
+            % legend([p31 p32], ["CW","CC"])
+            % legend([p41 p42], ["CW","CCE"])
         end
     end
+    
     sgtitle(sprintf(lingua.sgt5, length(CentrWidm)));
 
     if( length(nj) > 0 || plotAllFigures )
         figure(j+nrF);
         for(kat = 1:2)
             subplot(2,2,kat);    hold on;
-            plot(xf, CC(kat,f),'k--','LineWidth',1);
-            plot(xf, CentrWidm(j,kat).AfM(f),'r--','LineWidth',1);
-            subtitle(lingua.subt);
-            hold off;
+            % p1=plot(xf, CC(kat,f),'k--','LineWidth',1);
+            p2=plot(xf, CentrWidm(j,kat).AfM(f),'r--','LineWidth',1);
+            % subtitle(char(97+kat)+")");
+            hold off; 
+            % legend([p1 p2], ["CC" "CW"])
             %         title(fileSegMio(nrs)); xlabel("Widmo unormowane") %end;
             subplot(2,2,kat+2);  hold on;
-            plot(xf, CCE(kat+2,f),'k--','LineWidth',1);
-            plot(xf, CentrWidm(j,kat).AfE(f),'r--','LineWidth',1);
-            hold off;
-
+            % p3=plot(xf, CCE(kat+2,f),'k--','LineWidth',1);
+            p4=plot(xf, CentrWidm(j,kat).AfE(f),'r--','LineWidth',1);
+            hold off;             
+            % legend([p3 p4], ["CCE" "CW"])
             %         subplot(2,2,kat);    hold on; plot(xf, wyglWidma(j,i).Af(f)/wyglWidma(j,i).maxAf);
             %         subplot(2,2,2+kat);  hold on; plot(xf, wyglWidma(j,i).Af(f)/(Psyg(j,i);
             %         title(fileSegMio(nrs)); xlabel("Widmo mocy")
@@ -250,7 +270,7 @@ for(j = 1:length(v)) % grupa trainig
         %         figure(30), plot(j,dists_chebyM(j,k),'k.'); hold on;
     end % odległość w grupie
 
-    figure(nrF-2), subplot(2,2,nf), plot(abs(d)); title("abs(d)"); hold on;
+    % figure(nrF-2), subplot(2,2,nf), plot(abs(d)); title("abs(d)"); hold on;
     for(i=j+1:length(v))
         %         abs(Esr(i)-Esr(j))/2
         %         dEsgr(j,i)=abs(Esr(i)-Esr(j))/2;
@@ -298,6 +318,9 @@ if(1)
                 if v(j).infoTraining == 2
                     c=2+2;
                 end
+                if v(j).infoTraining == 3
+                    c=2+2;
+                end
             end
             d=CC(c,:)-wyglWidma(j,i).Af/wyglWidma(j,i).maxAf;
             kategoria = segment(nrs).miesien;
@@ -318,7 +341,7 @@ if(1)
             dists_cheby2E(j,k) = max(abs(d2));  %2-mocy
             dEsyg(j,k)=abs(Psyg(j,k)-Psr(j));
         end % odległość w grupie
-        figure(nrF-2), subplot(2,2,nf), plot(abs(d)); title("abs(d)"); hold on;
+        % figure(nrF-2), subplot(2,2,nf), plot(abs(d)); title("abs(d)"); hold on;
     end
 end
 
@@ -369,27 +392,29 @@ function [d] = dictionary2(lang)
     dict(PL).xl52 = 'Widma wygładzone unorm.Energia [Hz]';
     dict(PL).t6 = "Średnia z centroidów mięśni i ćwiczeń (Energia)";
     dict(PL).subt = "k--CC, r--CentrWidm";
+    dict(PL).yl = "Amplituda [j. a.]";
 
-    dict(EN).t1 = "                                                                             Group for training %s";
+    dict(EN).t1 = "";%                                                                             Group for training %s";
     dict(EN).xl1 = "Time [s]";
-    dict(EN).xl21 = "Spectrum relative to the maximum value";
-    dict(EN).xl22 = "Spectrum normalized by sum of amplitudes";
-    dict(EN).xl3 = "Spectrum normalized by sum of amplitudes";
-    dict(EN).sgt = "Intra-group spectra";%, training %s";
-    dict(EN).sgt41 = "Mean of centroids (Max)";
-    dict(EN).ps = "Intermediate";
-    dict(EN).pc = "Supinated grip";
+    dict(EN).xl21 = "Frequency [Hz]";%Spectrum relative to the maximum value";
+    dict(EN).xl22 = "Frequency [Hz]";%Spectrum normalized by sum of amplitudes";
+    dict(EN).xl3 = "Frequency [Hz]";%Spectrum normalized by sum of amplitudes";
+    dict(EN).sgt = "";%Intra-group spectra";%, training %s";
+    dict(EN).sgt41 = "";%Mean of centroids (Max)";
+    dict(EN).ps = "";%Intermediate";
+    dict(EN).pc = "";%Supinated grip";
     dict(EN).fq = "Frequency [Hz]";
-    dict(EN).amp = "Amplitude";
-    dict(EN).t4 = "Muscle centroid and training average (Max)";
+    dict(EN).amp = "Power [a. u.]";
+    dict(EN).t4 = "";%Muscle centroid and training average (Max)";
     dict(EN).l4 = [ strcat(dict(EN).ps, " Radialis"), strcat(dict(EN).ps, " Biceps"),
                     strcat(dict(EN).pc, " Radialis"), strcat(dict(EN).pc, " Biceps")];
-    dict(EN).sgt42 ="Centroid average (Energy)";
-    dict(EN).sgt5 = strcat("Centroids from all trainings (%d) ", dict(EN).ps,"(1:4) and ", dict(EN).pc,"(5:8)");
-    dict(EN).xl51 = 'Smoothed normalized spectra by Max value [Hz]';
-    dict(EN).xl52 = 'Smoothed normalized spectra by Energy [Hz]';
-    dict(EN).t6 = "Muscle and training centroid average (Energy)";
-    dict(EN).subt = "k--CC, r--CentrSpectra";
+    dict(EN).sgt42 ="";%Centroid average (Energy)";
+    dict(EN).sgt5 = "";%Centroids from all trainings (%d) ", dict(EN).ps,"(1:4) and ", dict(EN).pc,"(5:8)");
+    dict(EN).xl51 = "Frequency [Hz]";%Smoothed normalized spectra by Max value [Hz]';
+    dict(EN).xl52 = "Frequency [Hz]";%Smoothed normalized spectra by Energy [Hz]';
+    dict(EN).t6 = "";%Muscle and training centroid average (Energy)";
+    dict(EN).subt = "";%k--CC, r--CentrSpectra";
+    dict(EN).yl = "Power [a. u.]";
     
     d = dict(lang);
 end
