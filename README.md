@@ -1,12 +1,13 @@
 # Intra- and Inter-individual Spectral Pattern Variability of sEMG in Elbow Flexor Motor Tasks
 ## Overview
-This repository collected data with Noraxon Ultium wireless hardware.
+This repository collected data with Noraxon Ultium wireless hardware. 
 ## Structure
 ### Files
 Go to project directory and run *main* script in console, just like below
 ```
 main
 ```
+This script takes raw EMG recordings, segments exercise repetitions, normalizes them, performs spectral and centroid analysis, compares conditions using multiple Minkowski distance formulations, and assembles publication-ready figures for an academic paper.
 ### Folders
 All **.mat* files are in *33unique* folder
 
