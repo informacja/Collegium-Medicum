@@ -45,7 +45,7 @@ This script is good to plot figures after all calculations are done. For free pl
 ### Folders
 All **.mat* files are in **data** folder
 
-**processData** folder aontains key functions
+**processData** folder contains key functions
 
 **additionalFiles** contains all rest files
 
