@@ -33,9 +33,13 @@ end
 % sgtitle(tmpTxt);
 
 % f = [1:8500+1]; f = [1:6200+1]; f = 1:(length(wyglWidma(j,1).Af)); % max
-f = 1:280*max(Tsyg)+1; % [Hz]*[samples]
-% f = 1:fWyswieltCentroidow*max(Tsyg)+1; % [Hz]*[samples]
-xf = (f-1)/Tsyg;     % [Hz]
+% f = 1:280*max(Tsyg)+1; % [Hz]*[samples]
+L = lSyg; % signal length
+f = fpom/L*(0:(L/2-1));
+indx = find(f>fWyswieltCentroidow);
+
+xf = f(1:indx(1));      % [Hz]
+f = 1:indx(1); % [samples]
 
 clear dCentrM dCentrE;
 nf=2;

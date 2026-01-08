@@ -137,7 +137,7 @@ while (j <= length(v))
             nrs=nrs+1; 
         end    
         n1 = Nbf+1;
-        if(k>10) break; end
+        if(k>9) break; end
     end
     j = j + 1;
 end
