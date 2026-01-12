@@ -12,7 +12,7 @@ forArticle    = 1;   % 1 = clean caches + export figures for publication
 experimental  = 0;   % 1 = enable extra two-band plotting (experimental)
 % Parseval flag is set later if not defined; see DEBUG section
 
-figure_configuration_IEEE_standard_inches
+% figure_configuration_IEEE_standard_inches
 
 % Language codes (used for labels on plots/strings)
 PL = 1; EN = 2;
