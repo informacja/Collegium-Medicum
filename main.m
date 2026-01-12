@@ -12,6 +12,8 @@ forArticle    = 1;   % 1 = clean caches + export figures for publication
 experimental  = 0;   % 1 = enable extra two-band plotting (experimental)
 % Parseval flag is set later if not defined; see DEBUG section
 
+figure_configuration_IEEE_standard_inches
+
 % Language codes (used for labels on plots/strings)
 PL = 1; EN = 2;
 lang = EN;
@@ -444,10 +446,10 @@ copyobj(ax1Chil(3), f2)
 f2.Children(1).Subtitle.String = "a)";
 f2.Children(2).Subtitle.String = "b)";
 f2.Children(3).Subtitle.String = "c)";
-copyobj([ax1Chil(8) ax1Chil(9)], f2)
-f2.Children(2).Visible = "off";
-for (i = 1:numel(f2.Children(2).Children)), f2.Children(2).Children(i).Visible = "off"; end
-set(f2.Children(1),'Position',[0.3093 0.3579 0.0769 0.1038]);
+% copyobj([ax1Chil(8) ax1Chil(9)], f2)
+% f2.Children(2).Visible = "off";
+% for (i = 1:numel(f2.Children(2).Children)), f2.Children(2).Children(i).Visible = "off"; end
+% set(f2.Children(1),'Position',[0.3093 0.3579 0.0769 0.1038]);
 
 ax1Chil = figure(4002).Children;
 f3 = figure(42);
@@ -457,10 +459,10 @@ copyobj(ax1Chil(3), f3)
 f3.Children(1).Subtitle.String = "a)";
 f3.Children(2).Subtitle.String = "b)";
 f3.Children(3).Subtitle.String = "c)";
-copyobj([ax1Chil(8) ax1Chil(9)], f3);
-f3.Children(2).Visible = "off";
-for (i = 1:numel(f3.Children(2).Children)), f3.Children(2).Children(i).Visible = "off"; end
-set(f3.Children(1),'Position',[0.3046 0.3429 0.0864 0.1338]);
+% copyobj([ax1Chil(8) ax1Chil(9)], f3);
+% f3.Children(2).Visible = "off";
+% for (i = 1:numel(f3.Children(2).Children)), f3.Children(2).Children(i).Visible = "off"; end
+% set(f3.Children(1),'Position',[0.3046 0.3429 0.0864 0.1338]);
 
 ax1Chil = figure(2005).Children;
 f4 = figure(25);
