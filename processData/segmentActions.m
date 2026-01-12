@@ -120,9 +120,9 @@ while (j <= length(v))
         end
 %         Nbf = Nbf(1);
         for(n = 1:2) % muscules signals const TODO 1
-            if (n==1) s = v(j).dataR(n1:Nbf); fileSegMio(nrs) = txBR; segMio(nrs) = 1; nrR=nrR+1; segTraining(nrs) = v(j).infoTraining; plikSegMio(j,nrR).i=1;
+            if (n==1) s = v(j).dataR(n1(1):Nbf(1)); fileSegMio(nrs) = txBR; segMio(nrs) = 1; nrR=nrR+1; segTraining(nrs) = v(j).infoTraining; plikSegMio(j,nrR).i=1;
 %             plikSegMio(j,nrR). = nrs dla segmentu
-            else   s = v(j).dataB(n1:Nbf); fileSegMio(nrs) = txBB; segMio(nrs) = 2; nrB=nrB+1; segTraining(nrs) = v(j).infoTraining; plikSegMio(j,nrB).i=2; end
+            else   s = v(j).dataB(n1(1):Nbf(1)); fileSegMio(nrs) = txBB; segMio(nrs) = 2; nrB=nrB+1; segTraining(nrs) = v(j).infoTraining; plikSegMio(j,nrB).i=2; end
     
     %         figure(100+nrs), plot (s);
             fileSegNr(nrs) = j; % w przypadku różnych ilości segmentów w plikach
