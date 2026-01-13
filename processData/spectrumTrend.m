@@ -55,7 +55,7 @@ if(0)            nexttile, cntt=cntt+1; plot(nx*dtpom, X);axis('tight');  end
       
         Twygl=0.25*mnoznik; nTu = Tsyg/Twygl;
         Tu=Twygl/dtpom; nfw = 1;
-        run("../MTF/filtrWidma.m");
+        run("./MTF/filtrWidma.m");
         xf = [0:LwAm-1];
      if(0)
         if( ifLastSeg || plotAllFigures )           
@@ -124,7 +124,7 @@ end
 hold off;
 
 toc;
-save spectrums.mat Widma wyglWidma Esyg lAfMin lAfMax
+save spectrums.mat Widma wyglWidma Esyg lAfMin lAfMax xf
 
 function [Ayf Af Afw nk dx ix x] = st(s) % spectrum&trend
     A = fft(s.y); lA = length(A);
@@ -143,7 +143,7 @@ function [Ayf Af Afw nk dx ix x] = st(s) % spectrum&trend
     Tu=Twygl/s.dtpom; nfw = 2;
     MTF = s.MTF;
     nxf = s.nxf;
-    run("../MTF/filtrWidma.m");
+    run("./MTF/filtrWidma.m");
     nk=round(s.sL/Podzial); 
     snL=length(Af);
     
