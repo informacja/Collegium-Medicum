@@ -33,9 +33,9 @@ if (forArticle)
     % WARNING: destructive actions
     % delete segments.mat    % Uncomment only if you want to force re-segmentation
     % delete signals.mat     % Uncomment only if you want to recompute signals
-    %delete spectrums.mat     % force recomputation of spectra
-    %delete centroids.mat     % force recomputation of centroids
-    %delete figBase/*         % remove previously saved figures
+    delete spectrums.mat     % force recomputation of spectra
+    delete centroids.mat     % force recomputation of centroids
+    delete figBase/*         % remove previously saved figures
     % TODO: add a safety check or backup before deleting artifacts
 end
 
