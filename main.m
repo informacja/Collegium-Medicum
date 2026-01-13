@@ -316,12 +316,12 @@ end
 fprintf(1, "Spectra size: %dx%d\n", size(Widma));
 
 %% --------------------------- Spectral Centroids -------------------------
-%if (exist("centroids.mat", "file"))
- %   load centroids.mat
-%else
+if (exist("centroids.mat", "file"))
+    load centroids.mat
+else
     nrF = 2000; fprintf(1, "Computing centroids...\n");
     centroid;                    % external function: fills 'CentrWidm', 'lpacj'
-%end
+end
 fprintf(1, "Centroids size: %dx%d\n", size(CentrWidm));
 fprintf(1, "Averaged centroids size: %dx%d\n", size(lpacj));
 

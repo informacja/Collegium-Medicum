@@ -1,6 +1,6 @@
 
-clear all
-clc
+% clear all
+% clc
 
 %% Example: Statistical comparison of two groups with normality check and visualization
 rng(1); % For reproducibility
