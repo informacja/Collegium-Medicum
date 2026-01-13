@@ -9,7 +9,7 @@ lingua = dictionary2(lang);
 % wybrJakieDist = (jakieDist == 1 || jakieDist == 3);
 % global Psyg, dEM, dCM, dists_chebyM; %ISTOTNE
 tic;
-for(nband=1:2)
+for(nband=1:twoOrOne)
  Sb(nband).ddEM = []; Sb(nband).ddCM = []; Sb(nband).ddists_chebyM = []; %zeros(1 length(SygKat)*length(CentrWidm(1,1).AfM));
 end; dAll1 = []; dAll2 = []; dAll3 = []; dAll4=[];
 if(1)
@@ -53,7 +53,7 @@ if(1)
             % [dCM,dEM,dists_chebyM,dCE,dEE,dists_chebyE,ddCM,ddEM,ddists_chebyM,ddCE,ddEE,ddists_chebyE] = segDist(Afw(1:nflim),Af(1:nflim),wybrJakieDist,jakieDist,c,dAll1,dAll2,dAll3,dAll4,nrG,jj,kat);
              % podzielWidmo()
             % 
-            for(nband=1:2)
+            for(nband=1:twoOrOne)
                 if(nband-1)
                     d=Afw(nflim+1:end)-Af(nflim+1:end);
                 else
@@ -150,24 +150,24 @@ if(wybrJakieDist)
 
     figure(nrFig-1+jakieDist); if(lang==PL) fprintf("nrFig = %d, jakieDist = %d flagaMaxima = %d\n", nrFig-1+jakieDist, jakieDist, flagaMaxima); end
     for( c = 1:4 )
-        subplot(2,2,c);
+        subplot(2,2,c); eps= 0.1e-16;
         switch(c)
-            case 1, nd = find(abs(dAll1)>0.1e-16); [pvg,pve,pvM]=mhistMGE(dAll1(nd),lbins); nd = dAll1(nd); hold on; axis('tight'); subtitle( char(c+96)+")"); 
+            case 1, nd = find(abs(dAll1)>eps); [pvg,pve,pvM]=mhistMGE(dAll1(nd),lbins); nd = dAll1(nd); hold on; axis('tight'); subtitle( char(c+96)+")"); 
             m = mean(nd); s = std(nd); ax = axis; plot([s+m s+m], ax(3:4), 'k--'); plot([m-s m-s], ax(3:4), 'k--'); plot([m m], ax(3:4), "m--");  hold off; ylabel(yTxt); xlabel(xTxt); 
             % results = mhistMGEfromLMA(nd, lbins, false); 
             % pvgeMa = [ results.Normal.p_chi2, results.DoubleExponential.p_chi2 results.Maxwell.p_chi2]
             if(lang==PL) fprintf("$\\bar{x}$ = %g $\\sigma$ = %g $\\pi_g$=%.2f$\\%%$  $\\pi_e$=%.2f$\\%%$  $\\pi_M$=%.2f$\\%%$ \n", m, s, pvg*100, pve*100, pvM*100); end%,'Interpreter','latex'); end
-            case 2, nd = find(abs(dAll2)>0.1e-16); [pvg,pve,pvM]=mhistMGE(dAll2(nd),lbins); nd = dAll2(nd); hold on; axis('tight'); subtitle( char(c+96)+")"); 
+            case 2, nd = find(abs(dAll2)>eps); [pvg,pve,pvM]=mhistMGE(dAll2(nd),lbins); nd = dAll2(nd); hold on; axis('tight'); subtitle( char(c+96)+")"); 
             m = mean(nd); s = std(nd); ax = axis; plot([s+m s+m], ax(3:4), 'k--'); plot([m-s m-s], ax(3:4), 'k--'); plot([m m], ax(3:4), "m--");  hold off; ylabel(yTxt); xlabel(xTxt);
             % results = mhistMGEfromLMA(nd, lbins, false); 
             % pvgeMb = [ results.Normal.p_chi2, results.DoubleExponential.p_chi2 results.Maxwell.p_chi2]  
             if(lang==PL) fprintf("$\\bar{x}$ = %g $\\sigma$ = %g $\\pi_g$=%.2f$\\%%$  $\\pi_e$=%.2f$\\%%$  $\\pi_M$=%.2f$\\%%$  \n", m, s, pvg*100, pve*100, pvM*100); end%,'Interpreter','latex'); end
-            case 3, nd = find(abs(dAll3)>0.1e-16); [pvg,pve,pvM]=mhistMGE(dAll3(nd),lbins); nd = dAll3(nd); hold on; axis('tight'); subtitle( char(c+96)+")"); 
+            case 3, nd = find(abs(dAll3)>eps); [pvg,pve,pvM]=mhistMGE(dAll3(nd),lbins); nd = dAll3(nd); hold on; axis('tight'); subtitle( char(c+96)+")"); 
             m = mean(nd); s = std(nd); ax = axis; plot([s+m s+m], ax(3:4), 'k--'); plot([m-s m-s], ax(3:4), 'k--'); plot([m m], ax(3:4), "m--");  hold off; ylabel(yTxt); xlabel(xTxt); 
             % results = mhistMGEfromLMA(nd, lbins, false); 
             % pvgeMc = [ results.Normal.p_chi2, results.DoubleExponential.p_chi2 results.Maxwell.p_chi2]     
             if(lang==PL) fprintf("$\\bar{x}$ = %g $\\sigma$ = %g $\\pi_g$=%.2f$\\%%$  $\\pi_e$=%.2f$\\%%$  $\\pi_M$=%.2f$\\%%$ \n", m, s, pvg*100, pve*100, pvM*100); end %,'Interpreter','latex'); end
-            case 4, nd = find(abs(dAll4)>0.1e-16); [pvg,pve,pvM]=mhistMGE(dAll4(nd),lbins); nd = dAll4(nd); hold on; axis('tight'); subtitle( char(c+96)+")");   
+            case 4, nd = find(abs(dAll4)>eps); [pvg,pve,pvM]=mhistMGE(dAll4(nd),lbins); nd = dAll4(nd); hold on; axis('tight'); subtitle( char(c+96)+")");   
             m = mean(nd); s = std(nd); ax = axis; plot([s+m s+m], ax(3:4), 'k--'); plot([m-s m-s], ax(3:4), 'k--'); plot([m m], ax(3:4), "m--");  hold off; ylabel(yTxt); xlabel(xTxt); 
             % results = mhistMGEfromLMA(nd, lbins, true); 
             % pvgeMd = [ results.Normal.p_chi2, results.DoubleExponential.p_chi2 results.Maxwell.p_chi2]

@@ -33,9 +33,9 @@ if (forArticle)
     % WARNING: destructive actions
     % delete segments.mat    % Uncomment only if you want to force re-segmentation
     % delete signals.mat     % Uncomment only if you want to recompute signals
-    delete spectrums.mat     % force recomputation of spectra
-    delete centroids.mat     % force recomputation of centroids
-    delete figBase/*         % remove previously saved figures
+    %delete spectrums.mat     % force recomputation of spectra
+    %delete centroids.mat     % force recomputation of centroids
+    %delete figBase/*         % remove previously saved figures
     % TODO: add a safety check or backup before deleting artifacts
 end
 
@@ -52,6 +52,12 @@ if (DEBUG)
         Parseval = 1;        % 1 = add zeros
     end
     % Parseval = 0;          % example: 0 = do not add zeros
+end
+
+if(experimental)
+    twoOrOne = 2;
+else
+    twoOrOne = 1;
 end
 
 % Display cutoff for centroid plots (Hz)
@@ -481,7 +487,7 @@ if (forArticle)
 
     % Adjust figure layout to article specs and save
     adjust4article(s);
-    %save4article(s);
+    save4article(s);
     fprintf(1, "main + forArticle(1) = "); toc(allElapsedTime);
 end
 return

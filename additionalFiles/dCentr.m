@@ -19,7 +19,7 @@ for i = 1:4 %2:3  % 12,34, 13,24
     if(i==3) k=0; end,
     k = k +1; 
     if(i>2) nk=2; end 
-    for(nband=1:2)
+    for(nband=1:twoOrOne)
         if(nband-1)
             d=CC(i1(i),nflim+1:end)-CC(i2(i),nflim+1:end);
         else
