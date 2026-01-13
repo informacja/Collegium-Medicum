@@ -10,7 +10,6 @@ for(j = 1:2) % grupa
     tmpTxt = [tmpTxt;v(j).infoRecord];
     nseg=find(fileSegNr==j);
     % title(nsp);
-
        
     for (i = 1:length(nseg))
         % if(nrs<=4) fpom = 25000; else fpom = 2000; end %TO ERASE - PATCH
