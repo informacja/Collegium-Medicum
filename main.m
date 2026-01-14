@@ -480,6 +480,7 @@ copyobj(ax1Chil(3), f4)
 copyobj(ax1Chil(2), f4)
 copyobj(ax1Chil(4), f4)
 % Optional: set subtitles "a) ... d)" here
+end
 
 % Export block: adjust sizes and save figures if forArticle is ON
 if (forArticle)
