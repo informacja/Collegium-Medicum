@@ -12,6 +12,7 @@ forArticle    = 1;   % 1 = clean caches + export figures for publication
 experimental  = 0;   % 1 = enable extra two-band plotting (experimental)
 % Parseval flag is set later if not defined; see DEBUG section
 
+dbstop if error
 % figure_configuration_IEEE_standard_inches
 
 % Language codes (used for labels on plots/strings)
@@ -471,6 +472,7 @@ f3.Children(3).Subtitle.String = "c)";
 % for (i = 1:numel(f3.Children(2).Children)), f3.Children(2).Children(i).Visible = "off"; end
 % set(f3.Children(1),'Position',[0.3046 0.3429 0.0864 0.1338]);
 
+if(ishandle(2005))
 ax1Chil = figure(2005).Children;
 f4 = figure(25);
 copyobj(ax1Chil(5), f4)

@@ -152,7 +152,7 @@ if(DEBUG)
     figure,
     % subplot(211),
     mhistogr(fileSegNr, length(v),1); axis("tight"); title("Rozkład segmentów w plikach"); ylabel("Segmenty per ćwiczenie"); xlabel("Liczba ćwiczeń");
-    nrF=nrF+1;
+    nrF=nrF+3;
     figure(nrF),plot(sLens/fpom,'.'); hold on; axis("tight"); title("Segment length distribution"); ylabel("Segment length [s]"); xlabel("Number of the segment"); yline(mean(sLens/fpom))
     axis auto 
 %     figPW("nomargin") TODO?
@@ -171,4 +171,14 @@ if(DEBUG)
     %     hold off; axis('tight')
     end
 end
+%%
+nrF=nrF+1;
+f4 = figure(nrF);
+ax1Chil = figure(22).Children;
+figure(nrF), nexttile, copyobj(ax1Chil(1).Children, gca)
+legend(txBR,txBB), ylabel("Amplitude [uV]"), xlabel("Time [s]"), subtitle("a)"), xlim([0 55.5]), box on,
+
+ax1Chil = figure(21).Children;
+figure(nrF),nexttile, copyobj(ax1Chil(1).Children, gca)
+legend(txBR,txBB), ylabel("Amplitude [uV]"), xlabel("Time [s]"), subtitle("b)"), xlim([0 61]), box on,
   toc;
