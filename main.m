@@ -337,6 +337,13 @@ flim12 = 0.075;                            % kHz
 nlim   = find(xf * dtpom <= flim12);       % harmonic index threshold
 nflim  = nlim(end);
 
+if(experimental)
+    flim12 = 0.075;                            % kHz
+    nlim   = find(xf * dtpom <= flim12);       % harmonic index threshold
+    nflim  = nlim(end);
+else
+    nflim = length(CC);
+end
 % Compute centroid deltas/differences
 dCentr;
 

@@ -6,6 +6,7 @@ function adjust4article(s)
         for(i=1:numel(F))
             if(exist("figNrList", "var") && isempty(find(figNrList==F(i)))) continue; end
             figure(F(i))   
+            set(0, 'currentfigure', F(i));
 
             set(gcf,'WindowStyle','normal') % undock
             width = 13; % inches
@@ -47,10 +48,10 @@ function adjust4article(s)
             end
             if(gcf().Number==509) 
                 delete(findobj(gcf, 'type', 'Legend'));
-                set(figure(509), 'CurrentAxes', gcf().Children(2)); legend(gcf().CurrentAxes.Children( [end-1 end-2 end-1] ), ["Gaussian" "Doubly exponential" "Maxwell–Boltzmann"], 'Location','northeast','FontSize',fontSize);
-                set(figure(509), 'CurrentAxes', gcf().Children(4)); legend(gcf().CurrentAxes.Children( [end-1 end-2 end-1] ), ["Gaussian" "Doubly exponential" "Maxwell–Boltzmann"], 'Location','northeast','FontSize',fontSize);
-                set(figure(509), 'CurrentAxes', gcf().Children(6)); legend(gcf().CurrentAxes.Children( [end-1 end-2 end-1] ), ["Gaussian" "Doubly exponential" "Maxwell–Boltzmann"], 'Location','northeast','FontSize',fontSize);
-                set(figure(509), 'CurrentAxes', gcf().Children(8)); legend(gcf().CurrentAxes.Children( [end-1 end-2 end-1] ), ["Gaussian" "Doubly exponential" "Maxwell–Boltzmann"], 'Location','northeast','FontSize',fontSize);
+                set(figure(509), 'CurrentAxes', gcf().Children(2)); legend(gcf().CurrentAxes.Children( [end-1 end-2 end-3] ), ["Gaussian" "Doubly exponential" "Maxwell–Boltzmann"], 'Location','northeast','FontSize',fontSize);
+                set(figure(509), 'CurrentAxes', gcf().Children(4)); legend(gcf().CurrentAxes.Children( [end-1 end-2 end-3] ), ["Gaussian" "Doubly exponential" "Maxwell–Boltzmann"], 'Location','northeast','FontSize',fontSize);
+                set(figure(509), 'CurrentAxes', gcf().Children(6)); legend(gcf().CurrentAxes.Children( [end-1 end-2 end-3] ), ["Gaussian" "Doubly exponential" "Maxwell–Boltzmann"], 'Location','northeast','FontSize',fontSize);
+                set(figure(509), 'CurrentAxes', gcf().Children(8)); legend(gcf().CurrentAxes.Children( [end-1 end-2 end-3] ), ["Gaussian" "Doubly exponential" "Maxwell–Boltzmann"], 'Location','northeast','FontSize',fontSize);
                 set(gcf,'Units','inches');                        % jednostka wymiarowania okna
                 set(gcf,'Position', [0 0 width hight]); % wymiary okna: (x,y,dx,dy), (x,y)- lewy dolny
            
@@ -65,17 +66,17 @@ function adjust4article(s)
            
             end
             if(gcf().Number==4003) m = 1; delete(findobj(gcf, 'type', 'Legend'));
-                set(figure(4003), 'CurrentAxes', gcf().Children(1)); legend(gcf().CurrentAxes.Children( legendHelper(gcf().CurrentAxes) ), ["NT/BR";"NT/BB";"SP/BR";"SP/BB"],'Location','northeast','FontSize',fontSize); ylim(gca, [0 gca().YLim(2)*m]);
-                set(figure(4003), 'CurrentAxes', gcf().Children(3)); legend(gcf().CurrentAxes.Children( legendHelper(gcf().CurrentAxes) ), ["NT/BR";"NT/BB";"SP/BR";"SP/BB"],'Location','northeast','FontSize',fontSize); ylim(gca, [0 gca().YLim(2)*m]);
-                set(figure(4003), 'CurrentAxes', gcf().Children(5)); legend(gcf().CurrentAxes.Children( legendHelper(gcf().CurrentAxes) ), ["NT/BR";"NT/BB";"SP/BR";"SP/BB"],'Location','northeast','FontSize',fontSize); ylim(gca, [0 gca().YLim(2)*m]);
-                set(figure(4003), 'CurrentAxes', gcf().Children(7)); legend(gcf().CurrentAxes.Children( legendHelper(gcf().CurrentAxes) ), ["NT/BR";"NT/BB";"SP/BR";"SP/BB"],'Location','northeast','FontSize',fontSize); ylim(gca, [0 gca().YLim(2)*m]);
-                set(figure(4003), 'CurrentAxes', gcf().Children(9)); legend(gcf().CurrentAxes.Children( legendHelper(gcf().CurrentAxes) ), ["NT/BR";"NT/BB";"SP/BR";"SP/BB"],'Location','northeast','FontSize',fontSize); ylim(gca, [0 gca().YLim(2)*m]);
-                set(figure(4003), 'CurrentAxes', gcf().Children(11));legend(gcf().CurrentAxes.Children( legendHelper(gcf().CurrentAxes) ), ["NT/BR";"NT/BB";"SP/BR";"SP/BB"],'Location','northeast','FontSize',fontSize); ylim(gca, [0 gca().YLim(2)*m]);
+                set(figure(4003), 'CurrentAxes', gcf().Children(6)); legend(gcf().CurrentAxes.Children( legendHelper(gcf().CurrentAxes) ), ["NT/BR";"NT/BB";"SP/BR";"SP/BB"],'Location','bestoutside','FontSize',fontSize); ylim(gca, [0 gca().YLim(2)*m]);
+                % set(figure(4003), 'CurrentAxes', gcf().Children(3)); legend(gcf().CurrentAxes.Children( legendHelper(gcf().CurrentAxes) ), ["NT/BR";"NT/BB";"SP/BR";"SP/BB"],'Location','northeast','FontSize',fontSize); ylim(gca, [0 gca().YLim(2)*m]);
+                % set(figure(4003), 'CurrentAxes', gcf().Children(5)); legend(gcf().CurrentAxes.Children( legendHelper(gcf().CurrentAxes) ), ["NT/BR";"NT/BB";"SP/BR";"SP/BB"],'Location','northeast','FontSize',fontSize); ylim(gca, [0 gca().YLim(2)*m]);
+                % set(figure(4003), 'CurrentAxes', gcf().Children(7)); legend(gcf().CurrentAxes.Children( legendHelper(gcf().CurrentAxes) ), ["NT/BR";"NT/BB";"SP/BR";"SP/BB"],'Location','northeast','FontSize',fontSize); ylim(gca, [0 gca().YLim(2)*m]);
+                % set(figure(4003), 'CurrentAxes', gcf().Children(9)); legend(gcf().CurrentAxes.Children( legendHelper(gcf().CurrentAxes) ), ["NT/BR";"NT/BB";"SP/BR";"SP/BB"],'Location','northeast','FontSize',fontSize); ylim(gca, [0 gca().YLim(2)*m]);
+                % set(figure(4003), 'CurrentAxes', gcf().Children(11));legend(gcf().CurrentAxes.Children( legendHelper(gcf().CurrentAxes) ), ["NT/BR";"NT/BB";"SP/BR";"SP/BB"],'Location','northeast','FontSize',fontSize); ylim(gca, [0 gca().YLim(2)*m]);
                 set(gcf,'Units','inches');                        % jednostka wymiarowania oknanortheast
                 set(gcf,'Position', [0 0 width hight]); % wymiary okna: (x,y,dx,dy), (x,y)- lewy dolny
             end
 
-            return
+            continue;
             if(exist("figNrGridSize","var"))
                 rowNr = find(gcf().Number==cell2mat(figNrGridSize(:,1)));
                 if(~isempty(rowNr))
