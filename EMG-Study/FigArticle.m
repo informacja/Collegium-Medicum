@@ -40,10 +40,14 @@ for ax = axes_handles'
     % Set labels and title fonts
     ax.XLabel.FontName = 'Helvetica';
     ax.XLabel.FontSize = fontSize;
+    ax.XLabel.Interpreter = "latex";
     ax.YLabel.FontName = 'Helvetica';
     ax.YLabel.FontSize = fontSize;
+    ax.YLabel.Interpreter = "latex";
     ax.Title.FontName  = 'Helvetica';
-    ax.Title.FontSize  = fontSize;
+    ax.Title.FontSize  = fontSize;    
+    ax.Title.Interpreter = "latex";
+    ax.TickLabelInterpreter = 'latex';
 end
 
 % ---------------- Force Helvetica font for legends ----------------
@@ -51,6 +55,7 @@ legend_handles = findobj(gcf, 'Type', 'Legend');
 for lg = legend_handles'
     lg.FontName = 'Helvetica';
     lg.FontSize = fontSize - 1;  % slightly smaller for legend
+    lg.Interpreter = "latex";
 end
 
 % ---------------- Build full filename with PDF extension ----------------
