@@ -355,6 +355,9 @@ for n = 1:length(normTypes)
         set(get(get(hBar,'Annotation'),'LegendInformation'),'IconDisplayStyle','off'); % bar not in legend
         
         % ===== Normal fit =====
+        %resampling for plots
+        [counts, edges] = histcounts(distVec, length(distVec), 'Normalization','pdf');
+        centers = edges(1:end-1) + diff(edges)/4; 
         pd_norm = fitdist(distVec,'Normal');
         y_norm = pdf(pd_norm, centers);
         plot(centers, y_norm, 'k-', 'LineWidth',1.5, 'DisplayName','Normal')
