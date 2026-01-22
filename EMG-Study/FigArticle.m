@@ -19,6 +19,8 @@ if nargin < 3
     fontSize = 12;  % default font size
 end
 
+inerpreter = "latex";
+
 % ---------------- Ensure Results folder exists ----------------
 if ~exist('Results','dir')
     mkdir('Results');
@@ -40,14 +42,14 @@ for ax = axes_handles'
     % Set labels and title fonts
     ax.XLabel.FontName = 'Helvetica';
     ax.XLabel.FontSize = fontSize;
-    ax.XLabel.Interpreter = "latex";
+    ax.XLabel.Interpreter = inerpreter;
     ax.YLabel.FontName = 'Helvetica';
     ax.YLabel.FontSize = fontSize;
-    ax.YLabel.Interpreter = "latex";
+    ax.YLabel.Interpreter = inerpreter;
     ax.Title.FontName  = 'Helvetica';
     ax.Title.FontSize  = fontSize;    
-    ax.Title.Interpreter = "latex";
-    ax.TickLabelInterpreter = 'latex';
+    ax.Title.Interpreter = inerpreter;
+    ax.TickLabelInterpreter = inerpreter;
 end
 
 % ---------------- Force Helvetica font for legends ----------------
@@ -55,11 +57,16 @@ legend_handles = findobj(gcf, 'Type', 'Legend');
 for lg = legend_handles'
     lg.FontName = 'Helvetica';
     lg.FontSize = fontSize - 1;  % slightly smaller for legend
-    lg.Interpreter = "latex";
+    lg.Interpreter = inerpreter;
 end
 
 % ---------------- Build full filename with PDF extension ----------------
 filenameFull = fullfile('Results', [filename, '.pdf']);
+
+width = 7.5*1.618; % golden ratio
+hight = 7.5;
+set(gcf,'Units','inches');                        
+set(gcf,'Position', [0 0 width hight]); 
 
 % ---------------- Export figure ----------------
 switch lower(format)
