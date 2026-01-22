@@ -89,10 +89,10 @@ figure('Name','Raw sEMG data','NumberTitle','off','Color','w');
 ax1 = subplot(2,1,1);
 plot(t1, x1, 'LineWidth',1.5); hold on
 plot(t1, x2, 'LineWidth',1.5); hold off
-ylim([-8500 8500])
+ylim([-8000 8000])
 xlim([0 60])
 xlabel('Time (s)','FontSize',12,'FontWeight','bold')
-ylabel('EMG amplitude (µV)','FontSize',12,'FontWeight','bold')
+ylabel('EMG amplitude ($\mu$V)','FontSize',12,'FontWeight','bold')
 legend({'Biceps brachii','Brachioradialis'},'Location','northeast','FontSize',12)
 box off
 set(ax1,'FontSize',12,'LineWidth',1,'TickDir','out')
@@ -106,7 +106,7 @@ plot(t2, x4, 'LineWidth',1.5); hold off
 ylim([-8000 8000])
 xlabel('Time (s)','FontSize',12,'FontWeight','bold')
 xlim([0 60])
-ylabel('EMG amplitude (µV)','FontSize',12,'FontWeight','bold')
+ylabel('EMG amplitude ($\mu$V)','FontSize',12,'FontWeight','bold')
 legend({'Biceps brachii','Brachioradialis'},'Location','northeast','FontSize',12)
 box off
 set(ax2,'FontSize',12,'LineWidth',1,'TickDir','out')

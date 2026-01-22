@@ -63,8 +63,9 @@ end
 % ---------------- Build full filename with PDF extension ----------------
 filenameFull = fullfile('Results', [filename, '.pdf']);
 
-width = 7.5*1.618; % golden ratio
-hight = 7.5;
+inches = 7.5; % full Page
+width = inches*1.618; % golden ratio
+hight = inches;
 set(gcf,'Units','inches');                        
 set(gcf,'Position', [0 0 width hight]); 
 
