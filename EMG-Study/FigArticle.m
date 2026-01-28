@@ -1,4 +1,4 @@
-function FigArticle(filename, format, fontSize)
+function FigArticle(filename, format, fontSize, figSizeScalar)
 % FigArticle - Save current figure in Nature-style format
 %
 % Usage:
@@ -17,6 +17,9 @@ if nargin < 2
 end
 if nargin < 3
     fontSize = 12;  % default font size
+end
+if nargin < 4
+    figSizeScalar = 1;  % default font size
 end
 
 inerpreter = "latex";
@@ -46,6 +49,7 @@ for ax = axes_handles'
     ax.YLabel.FontName = 'Helvetica';
     ax.YLabel.FontSize = fontSize;
     ax.YLabel.Interpreter = inerpreter;
+    if(inerpreter=="latex") mod=(strrep(yticklabels,'-','$-$')); ax.YTickLabel = mod; end
     ax.Title.FontName  = 'Helvetica';
     ax.Title.FontSize  = fontSize;    
     ax.Title.Interpreter = inerpreter;
@@ -64,8 +68,8 @@ end
 filenameFull = fullfile('Results', [filename, '.pdf']);
 
 inches = 7.5; % full Page
-width = inches*1.618; % golden ratio
-hight = inches;
+width = inches*1.618*figSizeScalar; % golden ratio
+hight = inches*figSizeScalar;
 set(gcf,'Units','inches');                        
 set(gcf,'Position', [0 0 width hight]); 
 

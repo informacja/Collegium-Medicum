@@ -114,7 +114,7 @@ title(['(', subplotLetters{2},')'],'FontSize',14,'FontWeight','bold','Interprete
 
 
 % Save figure in Nature style
-FigArticle('Raw_data','vector',14);  % vector PDF in ./Results folder
+FigArticle('Raw_data','vector',14, 1.2);  % vector PDF in ./Results folder
 
 %% ========================================================================
 %  4. EMG segmentation parameters
