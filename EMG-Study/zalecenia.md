@@ -1,4 +1,4 @@
-# Prokokół zbierania danych
+# Zalecenia zbierania danych
  - Stosowanie past typu NuPrep
  - Środek brzuśca, od elektrody igłowej 1,5 cm elektrody powierzchniowe
  - Maksymalny skurcz
