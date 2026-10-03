@@ -1,7 +1,7 @@
 # Zalecenia zbierania danych
 [Protokół](https://github.com/informacja/Collegium-Medicum/blob/main/protok%C3%B3%C5%82.md)
  - Stosowanie past typu NuPrep
- - Środek brzuśca, od elektrody igłowej w promieniu 1,5 cm elektrody powierzchniowe
+ - Namierzamy środek brzuśca, od elektrody igłowej w promieniu 1,5 cm elektrody powierzchniowe
  - Skurcz maksymalny 
  - Zapis danych do formatów EDF, WAV, CSV
 
